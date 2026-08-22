@@ -1,0 +1,101 @@
+/* Style guide document layout — reuses tokens.css + styles.css components. */
+
+.guide-header {
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-white);
+}
+.guide-header .app-header { padding-top: var(--space-4); padding-bottom: var(--space-4); }
+
+.guide-hero {
+  max-width: 1180px; margin: 0 auto;
+  padding: var(--space-16) var(--space-8) var(--space-12);
+}
+.guide-hero .h-display { color: var(--color-ink-900); margin-top: var(--space-3); max-width: 760px; }
+.guide-hero .body-lg { max-width: 640px; margin-top: var(--space-4); }
+
+.guide-shell { display: flex; max-width: 1180px; margin: 0 auto; align-items: flex-start; }
+
+.guide-nav {
+  position: sticky; top: var(--space-8);
+  flex: none; width: 220px;
+  padding: var(--space-8) var(--space-4);
+  display: flex; flex-direction: column; gap: var(--space-1);
+}
+.guide-nav a {
+  text-decoration: none; color: var(--color-gray-700);
+  font: var(--text-label); padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm); border-left: 2px solid transparent;
+}
+.guide-nav a:hover { color: var(--color-ink-900); background: var(--color-cloud); }
+.guide-nav a.is-active { color: var(--color-ink-900); border-left-color: var(--color-teal-600); background: var(--color-cloud); }
+
+.guide-content { flex: 1; min-width: 0; padding: var(--space-8) var(--space-8) var(--space-24); }
+
+.guide-section { padding-top: var(--space-16); margin-top: calc(-1 * var(--space-16)); }
+.guide-section + .guide-section { border-top: 1px solid var(--color-line); margin-top: var(--space-16); }
+.guide-section-head { margin-bottom: var(--space-8); }
+.guide-section-head .eyebrow { display: block; margin-bottom: var(--space-2); }
+.guide-section-head .h1 { color: var(--color-ink-900); }
+.guide-section-head .body-lg { margin-top: var(--space-3); max-width: 640px; }
+
+.guide-block { margin-bottom: var(--space-12); }
+.guide-block-title { color: var(--color-ink-900); margin-bottom: var(--space-4); }
+.guide-block-note { color: var(--color-gray-500); margin-top: var(--space-3); max-width: 640px; }
+
+/* ---- Foundations: swatches + type scale ---- */
+.swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--space-4); }
+.swatch { border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-resting); }
+.swatch-color { height: 72px; }
+.swatch-meta { padding: var(--space-3); background: var(--color-white); }
+.swatch-meta .name { display: block; font: var(--text-label); color: var(--color-ink-900); }
+.swatch-meta .hex { display: block; font: var(--text-caption); color: var(--color-gray-500); text-transform: uppercase; }
+
+.type-row { display: flex; align-items: baseline; gap: var(--space-6); padding: var(--space-4) 0; border-bottom: 1px solid var(--color-line); }
+.type-row:last-child { border-bottom: none; }
+.type-row .tag { flex: none; width: 120px; font: var(--text-caption); color: var(--color-gray-500); text-transform: uppercase; letter-spacing: var(--tracking-caption); }
+.type-row .sample { color: var(--color-charcoal); }
+
+.spacing-row { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-2) 0; }
+.spacing-row .bar { background: var(--color-teal-500); height: 12px; border-radius: 3px; }
+.spacing-row .tag { width: 80px; font: var(--text-caption); color: var(--color-gray-500); }
+
+/* ---- Component demo shells ---- */
+.demo-shell {
+  background: var(--color-white); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-resting); padding: var(--space-8);
+}
+.demo-row { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; }
+.demo-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+@media (max-width: 900px) { .demo-grid-3 { grid-template-columns: 1fr; } }
+.demo-label { font: var(--text-caption); text-transform: uppercase; letter-spacing: var(--tracking-caption); color: var(--color-gray-500); margin-bottom: var(--space-3); display: block; }
+
+.mini-card { transform: scale(1); }
+
+/* ---- Motion ---- */
+.motion-spec-table { width: 100%; border-collapse: collapse; }
+.motion-spec-table th, .motion-spec-table td { text-align: left; padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-line); font: var(--text-body); }
+.motion-spec-table th { font: var(--text-label); color: var(--color-gray-500); text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.7rem; }
+.motion-spec-table code { font-family: ui-monospace, "SF Mono", monospace; font-size: 0.85em; background: var(--color-cloud); padding: 2px 6px; border-radius: 4px; }
+
+.ease-curve { display: flex; align-items: center; gap: var(--space-2); }
+.ease-curve svg { flex: none; }
+
+.bounce-demo-btn { cursor: pointer; }
+
+/* ---- Applied examples ---- */
+.screen-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); }
+@media (max-width: 800px) { .screen-grid { grid-template-columns: 1fr; } }
+.screen-figure { margin: 0; }
+.screen-figure img { width: 100%; border-radius: var(--radius-md); box-shadow: var(--shadow-raised); display: block; background: var(--color-cloud); }
+.screen-figure figcaption { margin-top: var(--space-3); font: var(--text-label); color: var(--color-gray-700); }
+.screen-figure .caption-note { display: block; font: var(--text-body); color: var(--color-gray-500); margin-top: 2px; }
+
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); margin-top: var(--space-8); }
+@media (max-width: 800px) { .compare-grid { grid-template-columns: 1fr; } }
+.compare-card { border-radius: var(--radius-lg); padding: var(--space-6); }
+.compare-card.is-dont { background: var(--color-error-100); }
+.compare-card.is-do { background: var(--color-success-100); }
+.compare-card .tag { display: inline-flex; align-items: center; gap: var(--space-2); font: var(--text-caption); text-transform: uppercase; letter-spacing: var(--tracking-caption); margin-bottom: var(--space-4); }
+.compare-card.is-dont .tag { color: var(--color-error-700); }
+.compare-card.is-do .tag { color: var(--color-success-700); }
+.compare-card .mock { background: var(--color-white); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-4); box-shadow: var(--shadow-resting); }

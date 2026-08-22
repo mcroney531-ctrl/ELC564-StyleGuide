@@ -1,0 +1,103 @@
+/* ==========================================================================
+   Design Tokens — "AI Do's & Don'ts at Work"
+   Single source of truth for color, type, spacing, motion. Every component
+   in styles.css and every swatch in the style guide reads from this file.
+   ========================================================================== */
+
+:root {
+  /* ---- Color: brand ---- */
+  --color-ink-900: #14213A;   /* primary — deep ink navy */
+  --color-ink-700: #223259;
+  --color-ink-500: #3A4E7E;
+  --color-ink-300: #7C8AB0;
+  --color-ink-100: #E4E8F2;
+
+  --color-teal-600: #2E6B70;  /* secondary — muted teal */
+  --color-teal-500: #397E84;
+  --color-teal-300: #8FB8BB;
+  --color-teal-100: #E3EFEF;
+
+  /* ---- Color: neutrals ---- */
+  --color-white:     #FFFFFF;
+  --color-paper:     #F7F8FA;  /* app background */
+  --color-cloud:     #EDEFF3;  /* section fills, dividers */
+  --color-line:      #DBDFE7;  /* hairlines */
+  --color-gray-500:  #6B7280;  /* secondary text */
+  --color-gray-700:  #454C56;
+  --color-charcoal:  #1C1F26;  /* primary text */
+
+  /* ---- Color: semantic ---- */
+  --color-success-700: #1E6B4C;
+  --color-success-500: #2E7D5B;
+  --color-success-100: #E1F1E9;
+
+  --color-error-700: #8C3320;
+  --color-error-500: #B3432B;
+  --color-error-100: #FBEAE5;
+
+  --color-warning-700: #8A6600;
+  --color-warning-500: #B98900;
+  --color-warning-100: #FBF1D9;
+
+  --color-info-700:  #3F5064;
+  --color-info-500:  #5B6B7C;
+  --color-info-100:  #EAEDF1;
+
+  /* ---- Cluster accents (mapped to the three card themes) ---- */
+  --cluster-bring:        var(--color-teal-600);
+  --cluster-bring-tint:   var(--color-teal-100);
+  --cluster-verify:       var(--color-warning-700);
+  --cluster-verify-tint:  #FBF1D9;
+  --cluster-present:      var(--color-ink-700);
+  --cluster-present-tint: var(--color-ink-100);
+
+  /* ---- Typography ---- */
+  --font-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --text-display: 700 clamp(2.25rem, 1.9rem + 1.5vw, 3rem)/1.1 var(--font-base);
+  --text-h1:      700 clamp(1.75rem, 1.55rem + 0.8vw, 2.25rem)/1.2 var(--font-base);
+  --text-h2:      600 1.5rem/1.3 var(--font-base);
+  --text-h3:      600 1.25rem/1.35 var(--font-base);
+  --text-body-lg: 400 1.125rem/1.6 var(--font-base);
+  --text-body:    400 1rem/1.6 var(--font-base);
+  --text-label:   500 0.875rem/1.4 var(--font-base);
+  --text-caption: 600 0.75rem/1.2 var(--font-base);
+
+  --tracking-caption: 0.08em;
+
+  /* ---- Spacing scale (4px base) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* ---- Radius ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-card: 20px;
+  --radius-pill: 999px;
+
+  /* ---- Elevation ---- */
+  --shadow-resting: 0 1px 2px rgba(20, 33, 58, 0.06), 0 1px 1px rgba(20, 33, 58, 0.04);
+  --shadow-raised:  0 12px 24px -8px rgba(20, 33, 58, 0.22), 0 4px 8px -4px rgba(20, 33, 58, 0.12);
+  --shadow-focus:   0 0 0 3px rgba(57, 126, 132, 0.35);
+
+  /* ---- Motion ----
+     Two conventions only, used consistently everywhere:
+     - "micro" for hover/press/focus feedback
+     - "system" for state transitions (feedback reveals, card expansion)
+     Easing: a single custom standard curve (deceleration-weighted, no bounce)
+     is used for all UI motion so the system reads as one hand, not many. */
+  --ease-standard: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --duration-micro: 0.2s;
+  --duration-system: 0.5s;
+  --duration-hero: 0.7s;
+}

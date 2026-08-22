@@ -1,0 +1,306 @@
+/* ==========================================================================
+   Component library — shared by the module (index.html) and the style
+   guide (style-guide.html). Every visual decision here is documented there.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-font-smoothing: antialiased; }
+
+body {
+  margin: 0;
+  font: var(--text-body);
+  color: var(--color-charcoal);
+  background: var(--color-paper);
+}
+
+h1, h2, h3, p, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+button { font: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; }
+img, svg { display: block; max-width: 100%; }
+a { color: var(--color-teal-600); }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---- Type utilities ---- */
+.eyebrow {
+  font: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  text-transform: uppercase;
+  color: var(--color-teal-600);
+}
+.h-display { font: var(--text-display); letter-spacing: -0.01em; }
+.h1 { font: var(--text-h1); letter-spacing: -0.01em; }
+.h2 { font: var(--text-h2); }
+.h3 { font: var(--text-h3); }
+.body-lg { font: var(--text-body-lg); color: var(--color-gray-700); }
+.body { font: var(--text-body); color: var(--color-gray-700); }
+.label { font: var(--text-label); }
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-pill);
+  font: var(--text-label);
+  transition: transform var(--duration-micro) var(--ease-standard),
+              background-color var(--duration-micro) var(--ease-standard),
+              box-shadow var(--duration-micro) var(--ease-standard);
+}
+.btn:active { transform: scale(0.97); }
+.btn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.btn-primary { background: var(--color-ink-900); color: var(--color-white); }
+.btn-primary:hover { background: var(--color-ink-700); }
+
+.btn-secondary { background: var(--color-white); color: var(--color-ink-900); box-shadow: 0 0 0 1.5px var(--color-line) inset; }
+.btn-secondary:hover { box-shadow: 0 0 0 1.5px var(--color-ink-500) inset; }
+
+.btn-ghost { background: transparent; color: var(--color-gray-700); padding: var(--space-2) var(--space-3); }
+.btn-ghost:hover { color: var(--color-ink-900); }
+
+.btn[disabled] { opacity: 0.45; pointer-events: none; }
+
+/* ---- App shell ---- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6) var(--space-8);
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.brand { display: flex; align-items: center; gap: var(--space-3); font: var(--text-label); color: var(--color-ink-900); }
+.brand-mark {
+  width: 32px; height: 32px; border-radius: var(--radius-sm);
+  background: var(--color-ink-900);
+  display: grid; place-items: center;
+  color: var(--color-white); font: 700 0.8rem var(--font-base);
+}
+
+.app-main { position: relative; }
+
+/* ---- Landing ---- */
+.landing {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-8) var(--space-24);
+}
+.landing-intro { max-width: 640px; margin-bottom: var(--space-12); }
+.landing-intro .h1 { margin-top: var(--space-3); color: var(--color-ink-900); }
+.landing-intro .body-lg { margin-top: var(--space-4); }
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+}
+@media (max-width: 900px) {
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+/* ---- Card ----
+   Each card lives inside a .card-slot that never leaves the grid's normal
+   flow. The .card itself switches from position:relative (a slot's only
+   child) to position:fixed (a full-viewport overlay) on expand — since the
+   slot stays put, the grid never reflows the other two cards. */
+.card-slot { position: relative; }
+
+.card {
+  position: relative;
+  background: var(--color-white);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-resting);
+  overflow: hidden;
+  text-align: left;
+  cursor: pointer;
+  will-change: transform;
+  --illo-ink: var(--color-ink-900);
+}
+.card:focus-visible { outline: none; box-shadow: var(--shadow-focus), var(--shadow-resting); }
+
+.card.is-expanded {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  border-radius: 0;
+  overflow-y: auto;
+  cursor: default;
+  background: var(--color-paper);
+}
+
+.card-section { display: none; }
+.card.is-expanded .card-preview { display: none; }
+.card.is-expanded .card-section { display: block; min-height: 100%; }
+
+.card[data-accent="bring"]   { --illo-tint: var(--cluster-bring-tint);   --illo-accent: var(--cluster-bring); }
+.card[data-accent="verify"]  { --illo-tint: var(--cluster-verify-tint);  --illo-accent: var(--cluster-verify); }
+.card[data-accent="present"] { --illo-tint: var(--cluster-present-tint); --illo-accent: var(--cluster-present); }
+
+.card-art { aspect-ratio: 16 / 10; background: var(--illo-tint); }
+.card-art svg { width: 100%; height: 100%; }
+
+.card-body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); }
+.card-index { font: var(--text-caption); letter-spacing: var(--tracking-caption); color: var(--illo-accent); text-transform: uppercase; }
+.card-title { font: var(--text-h2); color: var(--color-ink-900); }
+.card-dek { color: var(--color-gray-500); font: var(--text-body); }
+
+.card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--space-6) var(--space-6);
+}
+.card-cta { font: var(--text-label); color: var(--color-ink-900); display: flex; align-items: center; gap: var(--space-1); }
+.card-cta::after { content: "→"; transition: transform var(--duration-micro) var(--ease-standard); }
+.card:hover .card-cta::after { transform: translateX(3px); }
+
+/* Progress badge: three explicit states, no partial-credit gradient between them */
+.progress-badge {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font: var(--text-caption); text-transform: uppercase; letter-spacing: var(--tracking-caption);
+  padding: var(--space-1) var(--space-3); border-radius: var(--radius-pill);
+}
+.progress-badge .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+.progress-badge[data-state="not-started"] { background: var(--color-cloud); color: var(--color-gray-500); }
+.progress-badge[data-state="not-started"] .dot { background: var(--color-gray-500); }
+
+.progress-badge[data-state="in-progress"] { background: var(--color-warning-100); color: var(--color-warning-700); }
+.progress-badge[data-state="in-progress"] .dot { background: var(--color-warning-500); }
+
+.progress-badge[data-state="complete"] { background: var(--color-success-100); color: var(--color-success-700); }
+.progress-badge[data-state="complete"] .dot { background: var(--color-success-500); }
+
+/* ---- Section content (lives inside .card-section once a card expands) ---- */
+.section-inner { max-width: 780px; margin: 0 auto; padding: var(--space-8) var(--space-6) var(--space-24); }
+.section-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-12); }
+.section-progress-track { display: flex; gap: var(--space-2); }
+.section-progress-track .tick { width: 28px; height: 4px; border-radius: var(--radius-pill); background: var(--color-line); }
+.section-progress-track .tick.is-done { background: var(--illo-accent, var(--color-ink-900)); }
+
+.section-content { display: none; opacity: 0; }
+.section-content.is-active { display: block; }
+.section-content.is-visible { opacity: 1; transition: opacity var(--duration-system) var(--ease-out); }
+
+.info-beat .eyebrow { display: block; margin-bottom: var(--space-3); }
+.info-beat .h1 { color: var(--color-ink-900); margin-bottom: var(--space-6); }
+.info-beat p + p { margin-top: var(--space-4); }
+.info-beat .point-list { margin-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-3); }
+.info-beat .point-list li {
+  display: flex; gap: var(--space-3); align-items: flex-start;
+  padding: var(--space-4); background: var(--color-white); border-radius: var(--radius-md); box-shadow: var(--shadow-resting);
+}
+.info-beat .point-list li::before {
+  content: ""; flex: none; width: 8px; height: 8px; margin-top: 8px; border-radius: 50%;
+  background: var(--illo-accent, var(--color-ink-900));
+}
+.info-beat .start-cta { margin-top: var(--space-8); }
+
+/* ---- Scenario / MCQ ---- */
+.scenario-meta { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4); }
+.scenario-number {
+  width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--color-ink-100); color: var(--color-ink-900); font: var(--text-caption);
+}
+.scenario-prompt { font: var(--text-h2); color: var(--color-ink-900); margin-bottom: var(--space-8); }
+
+.option-list { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.option {
+  display: flex; align-items: center; gap: var(--space-4);
+  width: 100%; text-align: left;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 1.5px var(--color-line) inset;
+  transition: box-shadow var(--duration-micro) var(--ease-standard), background-color var(--duration-micro) var(--ease-standard);
+}
+.option-marker {
+  flex: none; width: 24px; height: 24px; border-radius: 50%;
+  box-shadow: 0 0 0 1.5px var(--color-line) inset;
+  display: grid; place-items: center; font: var(--text-caption); color: transparent;
+  transition: background-color var(--duration-micro) var(--ease-standard), box-shadow var(--duration-micro) var(--ease-standard);
+}
+.option-text { font: var(--text-body); color: var(--color-charcoal); }
+
+.option:hover:not([disabled]) { box-shadow: 0 0 0 1.5px var(--color-ink-500) inset; }
+.option:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+/* State 1 — selected, unconfirmed: a holding state while the "answer" registers */
+.option.is-selected {
+  box-shadow: 0 0 0 1.5px var(--color-ink-900) inset;
+  background: var(--color-ink-100);
+}
+.option.is-selected .option-marker { box-shadow: 0 0 0 1.5px var(--color-ink-900) inset; background: var(--color-white); }
+
+/* State 2 — confirmed correct */
+.option.is-correct {
+  box-shadow: 0 0 0 1.5px var(--color-success-500) inset;
+  background: var(--color-success-100);
+}
+.option.is-correct .option-marker { background: var(--color-success-500); box-shadow: none; color: var(--color-white); }
+.option.is-correct .option-marker::after { content: "✓"; color: inherit; }
+
+/* State 3 — confirmed wrong */
+.option.is-wrong {
+  box-shadow: 0 0 0 1.5px var(--color-error-500) inset;
+  background: var(--color-error-100);
+}
+.option.is-wrong .option-marker { background: var(--color-error-500); box-shadow: none; color: var(--color-white); }
+.option.is-wrong .option-marker::after { content: "✕"; color: inherit; }
+
+.option[disabled] { cursor: default; }
+.option:not(.is-selected):not(.is-correct):not(.is-wrong)[disabled] { opacity: 0.5; }
+
+/* ---- Feedback panel: corrective (retry) vs success, as one documented system ---- */
+.feedback {
+  margin-top: var(--space-6);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-md);
+  display: none;
+  gap: var(--space-3);
+  opacity: 0;
+}
+.feedback.is-visible { display: flex; opacity: 1; transition: opacity var(--duration-system) var(--ease-out); }
+.feedback-icon { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: var(--text-caption); color: var(--color-white); }
+.feedback-body .label { display: block; margin-bottom: var(--space-1); }
+
+.feedback.is-corrective { background: var(--color-error-100); }
+.feedback.is-corrective .feedback-icon { background: var(--color-error-500); }
+.feedback.is-corrective .feedback-icon::after { content: "✕"; }
+.feedback.is-corrective .label { color: var(--color-error-700); }
+
+.feedback.is-success { background: var(--color-success-100); }
+.feedback.is-success .feedback-icon { background: var(--color-success-500); }
+.feedback.is-success .feedback-icon::after { content: "✓"; }
+.feedback.is-success .label { color: var(--color-success-700); }
+
+.feedback-actions { margin-top: var(--space-5); }
+
+/* ---- Section complete state ---- */
+.section-complete { text-align: center; padding-top: var(--space-16); }
+.section-complete .badge-check {
+  width: 64px; height: 64px; border-radius: 50%; margin: 0 auto var(--space-6);
+  background: var(--color-success-100); color: var(--color-success-700);
+  display: grid; place-items: center; font-size: 1.75rem;
+}
+.section-complete .h1 { color: var(--color-ink-900); margin-bottom: var(--space-3); }
+.section-complete .actions { margin-top: var(--space-8); display: flex; justify-content: center; }
+
+/* ---- Callouts (used in style guide + reused as a component) ---- */
+.callout { padding: var(--space-5); border-radius: var(--radius-md); display: flex; gap: var(--space-3); }
+.callout-icon { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: var(--text-caption); color: var(--color-white); }
+.callout.info { background: var(--color-info-100); }
+.callout.info .callout-icon { background: var(--color-info-500); }
+.callout.success { background: var(--color-success-100); }
+.callout.success .callout-icon { background: var(--color-success-500); }
+.callout.warning { background: var(--color-warning-100); }
+.callout.warning .callout-icon { background: var(--color-warning-500); }
+.callout.error { background: var(--color-error-100); }
+.callout.error .callout-icon { background: var(--color-error-500); }
+
+/* ---- Motion helpers ---- */
+.js-flip-ghost { position: fixed; z-index: 50; pointer-events: none; }

@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Style Guide — AI Do's &amp; Don'ts at Work</title>
+<meta name="description" content="The design system behind the AI Do's & Don'ts at Work module: foundations, components, interaction states, motion, and imagery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/style-guide.css">
+</head>
+<body>
+
+<header class="guide-header">
+  <div class="app-header">
+    <div class="brand"><span class="brand-mark">Ai</span> AI Do's &amp; Don'ts at Work</div>
+    <a class="btn btn-ghost" href="index.html">← Back to module</a>
+  </div>
+</header>
+
+<div class="guide-hero">
+  <span class="eyebrow">Style Guide</span>
+  <h1 class="h-display">The system behind the module</h1>
+  <p class="body-lg">This documents the actual decisions made building "AI Do's &amp; Don'ts at Work" — not a hypothetical brand exercise. Every color, component, and motion spec below is pulled from the same CSS the module runs on.</p>
+</div>
+
+<div class="guide-shell">
+  <nav class="guide-nav" id="guide-nav">
+    <a href="#foundations">01 · Foundations</a>
+    <a href="#components">02 · Components</a>
+    <a href="#interaction-states">03 · Interaction States</a>
+    <a href="#motion">04 · Motion</a>
+    <a href="#imagery">05 · Imagery / Illustration</a>
+    <a href="#applied-examples">06 · Applied Examples</a>
+  </nav>
+
+  <main class="guide-content">
+
+    <!-- 01 FOUNDATIONS ============================================== -->
+    <section class="guide-section" id="foundations">
+      <div class="guide-section-head">
+        <span class="eyebrow">01</span>
+        <h2 class="h1">Foundations</h2>
+        <p class="body-lg">A small, disciplined palette and a single type family, used consistently rather than several used sparingly.</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Color — Primary &amp; Secondary</h3>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-ink-900)"></div><div class="swatch-meta"><span class="name">Ink 900 · Primary</span><span class="hex">#14213A</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-ink-700)"></div><div class="swatch-meta"><span class="name">Ink 700</span><span class="hex">#223259</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-ink-500)"></div><div class="swatch-meta"><span class="name">Ink 500</span><span class="hex">#3A4E7E</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-ink-100)"></div><div class="swatch-meta"><span class="name">Ink 100</span><span class="hex">#E4E8F2</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-teal-600)"></div><div class="swatch-meta"><span class="name">Teal 600 · Secondary</span><span class="hex">#2E6B70</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-teal-500)"></div><div class="swatch-meta"><span class="name">Teal 500</span><span class="hex">#397E84</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-teal-300)"></div><div class="swatch-meta"><span class="name">Teal 300</span><span class="hex">#8FB8BB</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-teal-100)"></div><div class="swatch-meta"><span class="name">Teal 100</span><span class="hex">#E3EFEF</span></div></div>
+        </div>
+        <p class="body guide-block-note">Ink navy carries authority and text; teal is reserved for interactive accents and the "Bring" cluster. Neither reads as playful — both sit close to conventional enterprise-software blues, deliberately.</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Color — Neutrals</h3>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-paper); box-shadow:inset 0 0 0 1px var(--color-line)"></div><div class="swatch-meta"><span class="name">Paper (bg)</span><span class="hex">#F7F8FA</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-cloud)"></div><div class="swatch-meta"><span class="name">Cloud</span><span class="hex">#EDEFF3</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-line)"></div><div class="swatch-meta"><span class="name">Line</span><span class="hex">#DBDFE7</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-gray-500)"></div><div class="swatch-meta"><span class="name">Gray 500</span><span class="hex">#6B7280</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-gray-700)"></div><div class="swatch-meta"><span class="name">Gray 700</span><span class="hex">#454C56</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-charcoal)"></div><div class="swatch-meta"><span class="name">Charcoal (text)</span><span class="hex">#1C1F26</span></div></div>
+        </div>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Color — Semantic</h3>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-success-500)"></div><div class="swatch-meta"><span class="name">Success</span><span class="hex">#2E7D5B</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-error-500)"></div><div class="swatch-meta"><span class="name">Error</span><span class="hex">#B3432B</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-warning-500)"></div><div class="swatch-meta"><span class="name">Warning / in progress</span><span class="hex">#B98900</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--color-info-500)"></div><div class="swatch-meta"><span class="name">Info / neutral</span><span class="hex">#5B6B7C</span></div></div>
+        </div>
+        <p class="body guide-block-note">Semantic hues are muted, not saturated — a brick red and forest green rather than stoplight red/green — so the feedback system reads as corporate signal, not alarm.</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Typography</h3>
+        <div class="type-row"><span class="tag">Display</span><span class="sample" style="font:var(--text-display)">Three habits worth building</span></div>
+        <div class="type-row"><span class="tag">H1</span><span class="sample" style="font:var(--text-h1)">Bring more than a question</span></div>
+        <div class="type-row"><span class="tag">H2</span><span class="sample" style="font:var(--text-h2)">Scenario 1 of 2</span></div>
+        <div class="type-row"><span class="tag">H3</span><span class="sample" style="font:var(--text-h3)">Component title</span></div>
+        <div class="type-row"><span class="tag">Body Large</span><span class="sample" style="font:var(--text-body-lg)">An AI tool only works with what you give it.</span></div>
+        <div class="type-row"><span class="tag">Body</span><span class="sample" style="font:var(--text-body)">Fluent isn't the same as accurate.</span></div>
+        <div class="type-row"><span class="tag">Label</span><span class="sample" style="font:var(--text-label)">Try again</span></div>
+        <div class="type-row"><span class="tag">Caption</span><span class="sample" style="font:var(--text-caption); text-transform:uppercase; letter-spacing:var(--tracking-caption)">Cluster 1 of 3</span></div>
+        <p class="body guide-block-note">One family — Inter — used at eight weights/sizes rather than mixing typefaces. A single, well-executed type system reads as more disciplined than a decorative pairing would.</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Spacing (4px base) &amp; Radius</h3>
+        <div class="spacing-row"><span class="tag">4</span><div class="bar" style="width:4px"></div></div>
+        <div class="spacing-row"><span class="tag">8</span><div class="bar" style="width:8px"></div></div>
+        <div class="spacing-row"><span class="tag">12</span><div class="bar" style="width:12px"></div></div>
+        <div class="spacing-row"><span class="tag">16</span><div class="bar" style="width:16px"></div></div>
+        <div class="spacing-row"><span class="tag">24</span><div class="bar" style="width:24px"></div></div>
+        <div class="spacing-row"><span class="tag">32</span><div class="bar" style="width:32px"></div></div>
+        <div class="spacing-row"><span class="tag">48</span><div class="bar" style="width:48px"></div></div>
+        <div class="spacing-row"><span class="tag">64</span><div class="bar" style="width:64px"></div></div>
+        <div class="spacing-row"><span class="tag">96</span><div class="bar" style="width:96px"></div></div>
+        <div class="demo-row" style="margin-top:var(--space-6)">
+          <div style="width:56px;height:56px;background:var(--color-teal-100);border-radius:var(--radius-sm);display:grid;place-items:center;font:var(--text-caption)">sm</div>
+          <div style="width:56px;height:56px;background:var(--color-teal-100);border-radius:var(--radius-md);display:grid;place-items:center;font:var(--text-caption)">md</div>
+          <div style="width:56px;height:56px;background:var(--color-teal-100);border-radius:var(--radius-lg);display:grid;place-items:center;font:var(--text-caption)">lg</div>
+          <div style="width:56px;height:56px;background:var(--color-teal-100);border-radius:var(--radius-card);display:grid;place-items:center;font:var(--text-caption)">card</div>
+          <div style="width:56px;height:56px;background:var(--color-teal-100);border-radius:var(--radius-pill);display:grid;place-items:center;font:var(--text-caption)">pill</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 COMPONENTS ================================================ -->
+    <section class="guide-section" id="components">
+      <div class="guide-section-head">
+        <span class="eyebrow">02</span>
+        <h2 class="h1">Components</h2>
+        <p class="body-lg">The card is the core interaction unit of the whole build — everything else supports it.</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Cards</h3>
+        <div class="demo-shell">
+          <div class="demo-grid-3" id="card-demo"></div>
+        </div>
+        <p class="body guide-block-note">Hover the card above — it lifts with a spring bounce (the one deliberate bounce in the system; see Motion). On click in the real module, this exact element is what GSAP Flip expands into the section.</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Buttons</h3>
+        <div class="demo-shell">
+          <div class="demo-row">
+            <button class="btn btn-primary">Primary action</button>
+            <button class="btn btn-secondary">Secondary action</button>
+            <button class="btn btn-ghost">Ghost / tertiary</button>
+            <button class="btn btn-primary" disabled>Disabled</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">MCQ option states</h3>
+        <div class="demo-shell">
+          <div class="option-list">
+            <button class="option" type="button" disabled><span class="option-marker"></span><span class="option-text">Default — not yet chosen</span></button>
+            <button class="option is-selected" type="button" disabled><span class="option-marker"></span><span class="option-text">Selected, unconfirmed — a held beat before it resolves</span></button>
+            <button class="option is-correct" type="button" disabled><span class="option-marker"></span><span class="option-text">Confirmed correct</span></button>
+            <button class="option is-wrong" type="button" disabled><span class="option-marker"></span><span class="option-text">Confirmed wrong</span></button>
+          </div>
+        </div>
+        <p class="body guide-block-note">These four states are never skipped over: every answer passes through "selected" before it resolves, so the moment reads as a real, weighed choice rather than an instant hit/miss.</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Navigation</h3>
+        <div class="demo-shell" style="display:flex; flex-direction:column; gap:var(--space-6)">
+          <div>
+            <span class="demo-label">App header</span>
+            <div style="background:var(--color-white); border-radius:var(--radius-md); box-shadow:var(--shadow-resting)">
+              <div class="app-header" style="max-width:none; padding:var(--space-4) var(--space-6)">
+                <div class="brand"><span class="brand-mark">Ai</span> AI Do's &amp; Don'ts at Work</div>
+                <a class="btn btn-ghost" href="#">Style Guide →</a>
+              </div>
+            </div>
+          </div>
+          <div>
+            <span class="demo-label">Section topbar (inside an expanded card)</span>
+            <div style="background:var(--color-white); border-radius:var(--radius-md); box-shadow:var(--shadow-resting); padding:var(--space-4) var(--space-6); display:flex; align-items:center; justify-content:space-between">
+              <button class="btn btn-ghost">← Overview</button>
+              <div class="section-progress-track"><span class="tick is-done"></span><span class="tick"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 INTERACTION STATES ======================================== -->
+    <section class="guide-section" id="interaction-states">
+      <div class="guide-section-head">
+        <span class="eyebrow">03</span>
+        <h2 class="h1">Interaction States</h2>
+        <p class="body-lg">One documented feedback language, used identically across all six scenarios: attempt → corrective retry → success.</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">The three-state feedback loop</h3>
+        <div class="demo-shell">
+          <div class="demo-grid-3">
+            <div>
+              <span class="demo-label">1 · Initial attempt</span>
+              <div class="option-list"><button class="option" type="button" disabled><span class="option-marker"></span><span class="option-text">Learner has not answered yet</span></button></div>
+            </div>
+            <div>
+              <span class="demo-label">2 · Corrective (retry)</span>
+              <div class="option-list" style="margin-bottom:var(--space-4)"><button class="option is-wrong" type="button" disabled><span class="option-marker"></span><span class="option-text">Chosen answer, marked wrong</span></button></div>
+              <div class="feedback is-corrective is-visible" style="margin-top:0">
+                <span class="feedback-icon" aria-hidden="true"></span>
+                <div class="feedback-body"><span class="label">Not quite</span><p class="body">Explains why, then offers "Try again" — same question, not a new one.</p></div>
+              </div>
+            </div>
+            <div>
+              <span class="demo-label">3 · Success</span>
+              <div class="option-list" style="margin-bottom:var(--space-4)"><button class="option is-correct" type="button" disabled><span class="option-marker"></span><span class="option-text">Chosen answer, confirmed correct</span></button></div>
+              <div class="feedback is-success is-visible" style="margin-top:0">
+                <span class="feedback-icon" aria-hidden="true"></span>
+                <div class="feedback-body"><span class="label">Correct</span><p class="body">Brief affirmation, then advance to the next scenario.</p></div>
+              </div>
+            </div>
+          </div>
+          <p class="body guide-block-note">State 2 always loops back to state 1 on the same question — it never branches to a different follow-up question. That keeps the retry path predictable and the content scope finite.</p>
+        </div>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Callouts</h3>
+        <div class="demo-shell" style="display:flex; flex-direction:column; gap:var(--space-3)">
+          <div class="callout info"><span class="callout-icon">i</span><span class="body">Neutral, informational note.</span></div>
+          <div class="callout success"><span class="callout-icon">✓</span><span class="body">Positive confirmation, same green as confirmed-correct.</span></div>
+          <div class="callout warning"><span class="callout-icon">!</span><span class="body">Attention needed — same amber as "in progress."</span></div>
+          <div class="callout error"><span class="callout-icon">✕</span><span class="body">Problem or block — same red as confirmed-wrong.</span></div>
+        </div>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Hover / selected / completed, at a glance</h3>
+        <ul style="display:flex; flex-direction:column; gap:var(--space-2)">
+          <li class="body">• <strong>Hover</strong> — cards lift 8px with a spring bounce; buttons and options tighten their border and darken slightly.</li>
+          <li class="body">• <strong>Selected</strong> — an option gets a solid ink border and tint the instant it's clicked, before it's known to be right or wrong.</li>
+          <li class="body">• <strong>Completed</strong> — a cluster's progress badge switches from gray "Not started" to amber "In progress" to green "Complete," and its section's two progress ticks fill in as each scenario is solved.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 04 MOTION ==================================================== -->
+    <section class="guide-section" id="motion">
+      <div class="guide-section-head">
+        <span class="eyebrow">04</span>
+        <h2 class="h1">Motion</h2>
+        <p class="body-lg">Two easing conventions and two moments — used with enough restraint that the one signature moment still reads as signature.</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Easing conventions</h3>
+        <div class="demo-shell demo-grid-3">
+          <div>
+            <span class="demo-label">Standard — everything else</span>
+            <div class="ease-curve">
+              <svg width="120" height="80" viewBox="0 0 120 80"><rect width="120" height="80" fill="var(--color-cloud)" rx="8"/><path d="M14 66 C 45 66, 40 14, 106 14" fill="none" stroke="var(--color-ink-900)" stroke-width="3"/></svg>
+              <code>cubic-bezier(.65,0,.35,1)</code>
+            </div>
+          </div>
+          <div>
+            <span class="demo-label">Out — reveals &amp; fades</span>
+            <div class="ease-curve">
+              <svg width="120" height="80" viewBox="0 0 120 80"><rect width="120" height="80" fill="var(--color-cloud)" rx="8"/><path d="M14 66 C 20 20, 50 14, 106 14" fill="none" stroke="var(--color-teal-600)" stroke-width="3"/></svg>
+              <code>cubic-bezier(.16,1,.3,1)</code>
+            </div>
+          </div>
+          <div>
+            <span class="demo-label">Bounce — hover only, the one exception</span>
+            <div class="ease-curve">
+              <svg width="120" height="80" viewBox="0 0 120 80"><rect width="120" height="80" fill="var(--color-cloud)" rx="8"/><path d="M14 66 C 40 66, 40 -6, 70 14 C 86 24, 92 8, 106 14" fill="none" stroke="var(--color-warning-700)" stroke-width="3"/></svg>
+              <code>back.out(2.2)</code>
+            </div>
+          </div>
+        </div>
+        <p class="body guide-block-note">The standard and "out" curves are both decelerating with no overshoot — they're what make the transition and feedback reveals feel engineered rather than playful. Overshoot is reserved for exactly one place: the card hover. Try it on the card in Components above.</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">What triggers what</h3>
+        <table class="motion-spec-table">
+          <thead><tr><th>Moment</th><th>Trigger</th><th>Duration</th><th>Easing</th></tr></thead>
+          <tbody>
+            <tr><td>Card hover lift</td><td>mouseenter / mouseleave</td><td>0.4s</td><td><code>back.out(2.2)</code></td></tr>
+            <tr><td>Button / option hover</td><td>mouseenter, focus</td><td>0.2s</td><td><code>ease-standard</code></td></tr>
+            <tr><td>Option → selected</td><td>click</td><td>instant + 0.55s hold</td><td>—</td></tr>
+            <tr><td>Feedback panel reveal</td><td>answer confirmed</td><td>0.5s</td><td><code>ease-out</code></td></tr>
+            <tr><td><strong>Card → section (signature)</strong></td><td>card click</td><td>0.65s</td><td><code>power2.inOut</code></td></tr>
+            <tr><td>Siblings recede</td><td>card click (parallel)</td><td>0.35s</td><td><code>power2.out</code></td></tr>
+            <tr><td>Section → card (reverse)</td><td>"Overview" click</td><td>0.65s</td><td><code>power2.inOut</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">The signature transition, in the actual code</h3>
+        <p class="body">The card-to-section move uses GSAP's <strong>Flip</strong> plugin rather than a hand-rolled position tween, because Flip tracks the real First/Last rects for us instead of hard-coding coordinates:</p>
+        <ol style="padding-left: 1.25em; margin: var(--space-4) 0; display:flex; flex-direction:column; gap: var(--space-2)" class="body">
+          <li><strong>First</strong> — <code>Flip.getState(card)</code> captures the clicked card's exact position and size while it still sits in the grid.</li>
+          <li><strong>Last</strong> — the section element is already laid out full-screen (<code>position:fixed; inset:0</code>) in the DOM, just invisible.</li>
+          <li><strong>Invert &amp; Play</strong> — <code>Flip.from(state, &#123;targets: section&#125;)</code> applies the captured card rect to the section, then animates it to the section's natural full-screen layout — so the section appears to grow out of the card. Sibling cards fade and scale down 6% in parallel so attention stays on the one expanding.</li>
+          <li><strong>Reverse</strong> — on exit, <code>Flip.getState(section)</code> captures the full-screen rect, <code>Flip.fit(section, card)</code> instantly re-parents its geometry onto the card's position, then <code>Flip.from()</code> animates the shrink back — the same technique, run backwards.</li>
+        </ol>
+        <p class="body guide-block-note">Corner radius is cross-faded from 20px (card) to 0 (full-bleed section) across the same duration, which is what sells the "one object changing size," not two objects cutting between each other.</p>
+      </div>
+    </section>
+
+    <!-- 05 IMAGERY =================================================== -->
+    <section class="guide-section" id="imagery">
+      <div class="guide-section-head">
+        <span class="eyebrow">05</span>
+        <h2 class="h1">Imagery &amp; Illustration</h2>
+        <p class="body-lg">One card mark per cluster, drawn to a shared formula rather than commissioned as three unrelated pieces.</p>
+      </div>
+
+      <div class="guide-block">
+        <div class="demo-grid-3" id="illo-demo"></div>
+        <p class="body guide-block-note" style="margin-top:var(--space-6)">
+          <strong>Treatment:</strong> duotone line art on a 240×240 grid — a 4px ink-navy outline plus one flat cluster-accent fill, no gradients, no photography, no character work.<br>
+          <strong>Production:</strong> hand-coded inline SVG, not AI-generated raster art. That was a deliberate call: at this restrained a visual register, coded shapes stay crisp at any size, recolor instantly through the same CSS variables as everything else, and cost nothing in file weight — a better production asset here than a generated image would have been.<br>
+          <strong>Direction given</strong> (the brief these would follow if handed to an illustrator or an image model instead): abstract the concept into one clear motif — an inbound document for Bring, an inspected shield for Verify, a human figure kept larger and in front of a small AI node for Stay Present — render each in the same duotone treatment, same stroke weight, same panel proportions, no literal photography or mascot-style characters.
+        </p>
+      </div>
+    </section>
+
+    <!-- 06 APPLIED EXAMPLES ========================================== -->
+    <section class="guide-section" id="applied-examples">
+      <div class="guide-section-head">
+        <span class="eyebrow">06</span>
+        <h2 class="h1">Applied Examples</h2>
+        <p class="body-lg">Real screens from the build, in sequence, followed by two direct comparisons.</p>
+      </div>
+
+      <div class="guide-block">
+        <div class="screen-grid">
+          <figure class="screen-figure">
+            <img src="assets/screens/landing.png" alt="Landing page with three cluster cards and mixed progress badges" loading="lazy">
+            <figcaption>Landing<span class="caption-note">Three clusters, each with an independent not-started / in-progress / complete badge.</span></figcaption>
+          </figure>
+          <figure class="screen-figure">
+            <img src="assets/screens/info-beat.png" alt="Expanded section showing the info beat for the Bring cluster" loading="lazy">
+            <figcaption>Info beat<span class="caption-note">The card has expanded to fill the screen — this is the Flip transition mid-result, not a new page.</span></figcaption>
+          </figure>
+          <figure class="screen-figure">
+            <img src="assets/screens/scenario.png" alt="An MCQ scenario screen before an answer is chosen" loading="lazy">
+            <figcaption>Scenario / MCQ<span class="caption-note">Four options in their default state, above the section's progress ticks.</span></figcaption>
+          </figure>
+          <figure class="screen-figure">
+            <img src="assets/screens/feedback-retry.png" alt="A wrong answer selected, showing the corrective feedback panel and Try again button" loading="lazy">
+            <figcaption>Corrective / retry<span class="caption-note">Explains why, then loops back to the same question.</span></figcaption>
+          </figure>
+          <figure class="screen-figure">
+            <img src="assets/screens/feedback-success.png" alt="A correct answer confirmed, showing the success feedback panel" loading="lazy">
+            <figcaption>Success<span class="caption-note">Brief affirmation, then advance.</span></figcaption>
+          </figure>
+          <figure class="screen-figure">
+            <img src="assets/screens/section-complete.png" alt="Section-complete state after both scenarios are answered" loading="lazy">
+            <figcaption>Section complete<span class="caption-note">Feeds the badge back on the landing card.</span></figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Do this, not that</h3>
+
+        <div class="compare-grid">
+          <div class="compare-card is-dont">
+            <span class="tag">✕ Don't</span>
+            <div class="mock" style="background:linear-gradient(135deg,#ffd166,#ef476f,#06d6a0); text-align:center; padding:var(--space-8) var(--space-4)">
+              <div style="font-size:2.5rem">🤖✨🧠</div>
+              <div style="font:700 1rem var(--font-base); color:#fff; margin-top:8px; text-shadow:0 1px 2px rgba(0,0,0,.3)">AI Is Here To Help!</div>
+            </div>
+            <p class="body">A busy, saturated mascot treatment reads as a consumer app, not a workplace module — and it competes with the content instead of introducing it.</p>
+          </div>
+          <div class="compare-card is-do">
+            <span class="tag">✓ Do</span>
+            <div class="mock" style="padding:0; overflow:hidden">
+              <div id="do-example-illo" style="aspect-ratio:16/10; background:var(--cluster-bring-tint)"></div>
+            </div>
+            <p class="body">One duotone mark, one accent color, drawn to the same formula as its two siblings — it identifies the cluster and gets out of the way.</p>
+          </div>
+        </div>
+
+        <div class="compare-grid">
+          <div class="compare-card is-dont">
+            <span class="tag">✕ Don't</span>
+            <div class="mock">
+              <div class="option-list"><button class="option is-wrong" type="button" disabled><span class="option-marker"></span><span class="option-text">Selected answer</span></button></div>
+            </div>
+            <p class="body">A bare red state tells the learner they were wrong and nothing else — no reason, no path back in.</p>
+          </div>
+          <div class="compare-card is-do">
+            <span class="tag">✓ Do</span>
+            <div class="mock">
+              <div class="option-list" style="margin-bottom:var(--space-4)"><button class="option is-wrong" type="button" disabled><span class="option-marker"></span><span class="option-text">Selected answer</span></button></div>
+              <div class="feedback is-corrective is-visible" style="margin-top:0">
+                <span class="feedback-icon" aria-hidden="true"></span>
+                <div class="feedback-body"><span class="label">Not quite</span><p class="body">One sentence on why, then a way to try the same question again.</p></div>
+              </div>
+            </div>
+            <p class="body">Same red marker, plus the explanation and the retry action — the state does the teaching, not just the scoring.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="js/vendor/gsap.min.js"></script>
+<script src="js/illustrations.js"></script>
+<script src="js/content.js"></script>
+<script src="js/style-guide.js"></script>
+</body>
+</html>
