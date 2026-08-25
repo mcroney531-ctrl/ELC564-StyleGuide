@@ -43,13 +43,16 @@
   --color-info-500:  #5B6B7C;
   --color-info-100:  #EAEDF1;
 
-  /* ---- Cluster accents (mapped to the three card themes) ---- */
-  --cluster-bring:        var(--color-teal-600);
-  --cluster-bring-tint:   var(--color-teal-100);
-  --cluster-verify:       var(--color-warning-700);
-  --cluster-verify-tint:  #FBF1D9;
-  --cluster-present:      var(--color-ink-700);
-  --cluster-present-tint: var(--color-ink-100);
+  /* ---- Cluster accents ----
+     Sampled directly from the three supplied illustrations so the badge,
+     underline, and arrow button read as part of the same artwork rather
+     than an approximation of it. */
+  --cluster-bring:        #005FF7;
+  --cluster-bring-tint:   #DCEBFC;
+  --cluster-verify:       #009E9F;
+  --cluster-verify-tint:  #DFF2F2;
+  --cluster-present:      #FC7812;
+  --cluster-present-tint: #FDF3EA;
 
   /* ---- Typography ---- */
   --font-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;

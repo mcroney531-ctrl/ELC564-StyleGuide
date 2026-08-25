@@ -75,17 +75,20 @@
 
     card.innerHTML = `
       <div class="card-preview">
-        <div class="card-art">${ILLUSTRATIONS[cluster.id]}</div>
+        <div class="card-art">
+          <img src="assets/illustrations/${cluster.id}.webp" alt="" loading="lazy">
+        </div>
         <div class="card-body">
-          <span class="card-index">Cluster ${cluster.order} of 3</span>
+          <span class="card-badge-num">${String(cluster.order).padStart(2, "0")}</span>
           <h2 class="card-title">${cluster.title}</h2>
+          <span class="card-underline"></span>
           <p class="card-dek">${cluster.dek}</p>
         </div>
         <div class="card-footer">
           <span class="progress-badge" data-badge="${cluster.id}">
             <span class="dot"></span><span class="label-text">Not started</span>
           </span>
-          <span class="card-cta">Start</span>
+          <span class="card-arrow-btn" aria-hidden="true">→</span>
         </div>
       </div>
 

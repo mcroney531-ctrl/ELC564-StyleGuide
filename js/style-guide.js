@@ -1,8 +1,8 @@
 /**
  * Small live demos for the style guide page: the card component (with its
  * real hover bounce), the three cluster illustrations, and a scrollspy nav.
- * Reuses the same CONTENT / ILLUSTRATIONS data as the module — no separate
- * copies of copy or artwork to keep in sync.
+ * Reuses the same CONTENT data and illustration assets as the module — no
+ * separate copies of copy or artwork to keep in sync.
  */
 
 (function () {
@@ -16,17 +16,18 @@
       card.className = "card mini-card";
       card.dataset.accent = cluster.accent;
       card.innerHTML = `
-        <div class="card-art">${ILLUSTRATIONS[cluster.id]}</div>
+        <div class="card-art"><img src="assets/illustrations/${cluster.id}.webp" alt=""></div>
         <div class="card-body">
-          <span class="card-index">Cluster ${cluster.order} of 3</span>
+          <span class="card-badge-num">${String(cluster.order).padStart(2, "0")}</span>
           <h2 class="card-title">${cluster.title}</h2>
+          <span class="card-underline"></span>
           <p class="card-dek">${cluster.dek}</p>
         </div>
         <div class="card-footer">
           <span class="progress-badge" data-state="${["not-started", "in-progress", "complete"][cluster.order - 1]}">
             <span class="dot"></span><span class="label-text">${["Not started", "In progress", "Complete"][cluster.order - 1]}</span>
           </span>
-          <span class="card-cta">Start</span>
+          <span class="card-arrow-btn" aria-hidden="true">→</span>
         </div>
       `;
       cardDemo.appendChild(card);
@@ -42,9 +43,8 @@
       const wrap = document.createElement("div");
       wrap.innerHTML = `
         <span class="demo-label">${cluster.title}</span>
-        <div class="card-art" data-accent="${cluster.accent}" style="border-radius:var(--radius-lg); overflow:hidden;
-          --illo-ink:var(--color-ink-900); --illo-tint:var(--cluster-${cluster.accent}-tint); --illo-accent:var(--cluster-${cluster.accent})">
-          ${ILLUSTRATIONS[cluster.id]}
+        <div class="card-art" style="border-radius:var(--radius-lg); overflow:hidden; background:var(--cluster-${cluster.accent}-tint)">
+          <img src="assets/illustrations/${cluster.id}.webp" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 12%">
         </div>
       `;
       illoDemo.appendChild(wrap);
@@ -54,10 +54,7 @@
   // ---- "do" example reuses the real Bring illustration ----
   const doExample = document.getElementById("do-example-illo");
   if (doExample) {
-    doExample.style.setProperty("--illo-ink", "var(--color-ink-900)");
-    doExample.style.setProperty("--illo-tint", "var(--cluster-bring-tint)");
-    doExample.style.setProperty("--illo-accent", "var(--cluster-bring)");
-    doExample.innerHTML = ILLUSTRATIONS.bring;
+    doExample.innerHTML = `<img src="assets/illustrations/bring.webp" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 12%">`;
   }
 
   // ---- scrollspy ----

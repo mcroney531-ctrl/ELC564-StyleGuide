@@ -59,7 +59,20 @@
           <div class="swatch"><div class="swatch-color" style="background:var(--color-teal-300)"></div><div class="swatch-meta"><span class="name">Teal 300</span><span class="hex">#8FB8BB</span></div></div>
           <div class="swatch"><div class="swatch-color" style="background:var(--color-teal-100)"></div><div class="swatch-meta"><span class="name">Teal 100</span><span class="hex">#E3EFEF</span></div></div>
         </div>
-        <p class="body guide-block-note">Ink navy carries authority and text; teal is reserved for interactive accents and the "Bring" cluster. Neither reads as playful — both sit close to conventional enterprise-software blues, deliberately.</p>
+        <p class="body guide-block-note">Ink navy carries authority and text; teal is the default interactive/secondary accent everywhere outside the three cluster cards, which carry their own accent instead (below).</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Color — Cluster Accents</h3>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="swatch-color" style="background:var(--cluster-bring)"></div><div class="swatch-meta"><span class="name">Bring</span><span class="hex">#005FF7</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--cluster-bring-tint)"></div><div class="swatch-meta"><span class="name">Bring tint</span><span class="hex">#DCEBFC</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--cluster-verify)"></div><div class="swatch-meta"><span class="name">Verify</span><span class="hex">#009E9F</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--cluster-verify-tint)"></div><div class="swatch-meta"><span class="name">Verify tint</span><span class="hex">#DFF2F2</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--cluster-present)"></div><div class="swatch-meta"><span class="name">Stay Present</span><span class="hex">#FC7812</span></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:var(--cluster-present-tint)"></div><div class="swatch-meta"><span class="name">Stay Present tint</span><span class="hex">#FDF3EA</span></div></div>
+        </div>
+        <p class="body guide-block-note">Sampled directly from the three supplied illustrations rather than chosen independently, so the numbered badge, underline, and arrow button on each card read as part of the same artwork instead of a palette applied on top of it.</p>
       </div>
 
       <div class="guide-block">
@@ -310,15 +323,15 @@
       <div class="guide-section-head">
         <span class="eyebrow">05</span>
         <h2 class="h1">Imagery &amp; Illustration</h2>
-        <p class="body-lg">One card mark per cluster, drawn to a shared formula rather than commissioned as three unrelated pieces.</p>
+        <p class="body-lg">One character illustration per cluster, commissioned to a shared formula rather than three unrelated pieces.</p>
       </div>
 
       <div class="guide-block">
         <div class="demo-grid-3" id="illo-demo"></div>
         <p class="body guide-block-note" style="margin-top:var(--space-6)">
-          <strong>Treatment:</strong> duotone line art on a 240×240 grid — a 4px ink-navy outline plus one flat cluster-accent fill, no gradients, no photography, no character work.<br>
-          <strong>Production:</strong> hand-coded inline SVG, not AI-generated raster art. That was a deliberate call: at this restrained a visual register, coded shapes stay crisp at any size, recolor instantly through the same CSS variables as everything else, and cost nothing in file weight — a better production asset here than a generated image would have been.<br>
-          <strong>Direction given</strong> (the brief these would follow if handed to an illustrator or an image model instead): abstract the concept into one clear motif — an inbound document for Bring, an inspected shield for Verify, a human figure kept larger and in front of a small AI node for Stay Present — render each in the same duotone treatment, same stroke weight, same panel proportions, no literal photography or mascot-style characters.
+          <strong>Treatment:</strong> a person at a laptop, one per cluster, each paired with a small floating UI callout that visualizes that cluster's behavior — a document mid-transfer for Bring, a source-comparison checklist for Verify, an approved-edit card for Stay Present. Soft gradient backgrounds in each cluster's own hue keep the set feeling like one family instead of three stock photos.<br>
+          <strong>Production:</strong> AI-generated illustrations, supplied as finished source art and cropped for use as card and section imagery. The originals were composed as complete mockups with their own title/body copy baked into the pixels; that text was cropped away and rebuilt as real HTML (see Components) so the copy stays editable and matches the module's actual content rather than the placeholder wording in the source render. Exported to WebP for weight.<br>
+          <strong>Direction given:</strong> a single professional at a desk, mid-task, styled consistently across all three (same rendering style, same desk/laptop setup, same soft-gradient backdrop), with one small floating UI card per illustration that makes that cluster's concept literal rather than abstract — source-checking for Verify, an approved edit for Stay Present, a file being handed off for Bring.
         </p>
       </div>
     </section>
@@ -377,7 +390,7 @@
             <div class="mock" style="padding:0; overflow:hidden">
               <div id="do-example-illo" style="aspect-ratio:16/10; background:var(--cluster-bring-tint)"></div>
             </div>
-            <p class="body">One duotone mark, one accent color, drawn to the same formula as its two siblings — it identifies the cluster and gets out of the way.</p>
+            <p class="body">One consistent illustration style, one accent color, the same desk-and-laptop formula as its two siblings — it reads as a set, not a grab-bag of stock art.</p>
           </div>
         </div>
 
@@ -408,7 +421,6 @@
 </div>
 
 <script src="js/vendor/gsap.min.js"></script>
-<script src="js/illustrations.js"></script>
 <script src="js/content.js"></script>
 <script src="js/style-guide.js"></script>
 </body>

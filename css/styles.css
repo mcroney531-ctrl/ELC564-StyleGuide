@@ -141,21 +141,34 @@ a { color: var(--color-teal-600); }
 .card[data-accent="verify"]  { --illo-tint: var(--cluster-verify-tint);  --illo-accent: var(--cluster-verify); }
 .card[data-accent="present"] { --illo-tint: var(--cluster-present-tint); --illo-accent: var(--cluster-present); }
 
-.card-art { aspect-ratio: 16 / 10; background: var(--illo-tint); }
-.card-art svg { width: 100%; height: 100%; }
+.card-art { aspect-ratio: 16 / 10; background: var(--illo-tint); overflow: hidden; }
+.card-art img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; display: block; }
 
-.card-body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-2); }
-.card-index { font: var(--text-caption); letter-spacing: var(--tracking-caption); color: var(--illo-accent); text-transform: uppercase; }
+.card-body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-1); }
+.card-badge-num {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--illo-accent);
+  color: var(--color-white);
+  display: flex; align-items: center; justify-content: center;
+  font: 700 0.85rem var(--font-base);
+  margin-bottom: var(--space-2);
+}
 .card-title { font: var(--text-h2); color: var(--color-ink-900); }
+.card-underline { display: block; width: 40px; height: 3px; border-radius: var(--radius-pill); background: var(--illo-accent); margin: var(--space-2) 0 var(--space-1); }
 .card-dek { color: var(--color-gray-500); font: var(--text-body); }
 
 .card-footer {
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 var(--space-6) var(--space-6);
 }
-.card-cta { font: var(--text-label); color: var(--color-ink-900); display: flex; align-items: center; gap: var(--space-1); }
-.card-cta::after { content: "→"; transition: transform var(--duration-micro) var(--ease-standard); }
-.card:hover .card-cta::after { transform: translateX(3px); }
+.card-arrow-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--illo-accent); color: var(--color-white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; line-height: 1;
+  transition: transform var(--duration-micro) var(--ease-standard);
+}
+.card:hover .card-arrow-btn { transform: translateX(3px); }
 
 /* Progress badge: three explicit states, no partial-credit gradient between them */
 .progress-badge {
