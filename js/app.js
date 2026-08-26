@@ -105,6 +105,7 @@
           <div class="section-content info-beat" data-view="info">
             <span class="eyebrow">${cluster.info.eyebrow}</span>
             <h1 class="h1">${cluster.info.heading}</h1>
+            <img class="content-banner" src="assets/illustrations/scenes/${cluster.info.image}" alt="">
             ${cluster.info.body.map((p) => `<p class="body-lg">${p}</p>`).join("")}
             <ul class="point-list">
               ${cluster.info.points.map((pt) => `<li class="body">${pt}</li>`).join("")}
@@ -120,6 +121,7 @@
                 <span class="scenario-number">${qi + 1}</span>
                 <span class="label" style="color:var(--color-gray-500)">Scenario ${qi + 1} of ${cluster.questions.length}</span>
               </div>
+              <img class="content-banner" src="assets/illustrations/scenes/${q.image}" alt="">
               <h2 class="scenario-prompt">${q.prompt}</h2>
               <div class="option-list" role="group" aria-label="Answer options">
                 ${q.options
@@ -162,6 +164,7 @@
             <div class="badge-check" aria-hidden="true">✓</div>
             <h1 class="h1">${cluster.title} — complete</h1>
             <p class="body-lg">Both scenarios answered. That badge is now checked off on the overview.</p>
+            <img class="content-banner" src="assets/illustrations/scenes/${cluster.completeImage}" alt="">
             <div class="actions">
               <button class="btn btn-primary" data-action="exit">Back to overview</button>
             </div>

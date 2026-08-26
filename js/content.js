@@ -11,7 +11,9 @@ const CONTENT = {
       title: "Bring",
       dek: "Bring real material — and yourself — to the interaction.",
       accent: "bring",
+      completeImage: "bring-complete.webp",
       info: {
+        image: "bring-info.webp",
         eyebrow: "Cluster 1 of 3",
         heading: "Bring more than a question",
         body: [
@@ -26,6 +28,7 @@ const CONTENT = {
       },
       questions: [
         {
+          image: "bring-q1.webp",
           prompt:
             "You need a client email about a delayed project. You type: “Write an email telling the client we're delayed.” What's missing from this request?",
           options: [
@@ -41,6 +44,7 @@ const CONTENT = {
             "Right. The tool can only work with what it's handed — the real specifics are what turn a generic draft into a usable one.",
         },
         {
+          image: "bring-q2.webp",
           prompt:
             "An AI tool hands you a polished-looking first draft of a proposal. What should you do next?",
           options: [
@@ -63,7 +67,9 @@ const CONTENT = {
       title: "Verify",
       dek: "Don't extend automatic trust — to the output or your own reaction to it.",
       accent: "verify",
+      completeImage: "verify-complete.webp",
       info: {
+        image: "verify-info.webp",
         eyebrow: "Cluster 2 of 3",
         heading: "Trust, but check",
         body: [
@@ -79,6 +85,7 @@ const CONTENT = {
       },
       questions: [
         {
+          image: "verify-q1.webp",
           prompt:
             "You ask an AI tool to check your reasoning on a decision. It responds: “This is an excellent approach!” What should that tell you?",
           options: [
@@ -94,6 +101,7 @@ const CONTENT = {
             "Right. A confident, agreeable answer still needs the same scrutiny as a flat, hedged one.",
         },
         {
+          image: "verify-q2.webp",
           prompt:
             "An AI-drafted report cites a statistic you're about to put in a client presentation. What should you do before it goes in the deck?",
           options: [
@@ -116,7 +124,9 @@ const CONTENT = {
       title: "Stay Present",
       dek: "Stay the visible, accountable human in the work.",
       accent: "present",
+      completeImage: "present-complete.webp",
       info: {
+        image: "present-info.webp",
         eyebrow: "Cluster 3 of 3",
         heading: "Don't disappear behind the tool",
         body: [
@@ -131,6 +141,7 @@ const CONTENT = {
       },
       questions: [
         {
+          image: "present-q1.webp",
           prompt:
             "An AI tool recommends a course of action based on the data you gave it. A trusted colleague raises a concern from experience the data doesn't capture. What should you do?",
           options: [
@@ -146,6 +157,7 @@ const CONTENT = {
             "Right. AI input is one input among others — the call is still yours to weigh, not the model's to settle.",
         },
         {
+          image: "present-q2.webp",
           prompt:
             "You use AI to draft a difficult, personal message to a direct report about a performance issue. What's the right way to handle sending it?",
           options: [

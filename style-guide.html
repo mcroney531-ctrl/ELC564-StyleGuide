@@ -307,14 +307,14 @@
 
       <div class="guide-block">
         <h3 class="h3 guide-block-title">The signature transition, in the actual code</h3>
-        <p class="body">The card-to-section move uses GSAP's <strong>Flip</strong> plugin rather than a hand-rolled position tween, because Flip tracks the real First/Last rects for us instead of hard-coding coordinates:</p>
+        <p class="body">The card-to-section move uses GSAP's <strong>Flip</strong> plugin rather than a hand-rolled position tween, and it animates the exact same DOM element the whole way — no hand-off between a card and a separate section overlay, which is what keeps it looking like one object changing size rather than two objects cutting between each other:</p>
         <ol style="padding-left: 1.25em; margin: var(--space-4) 0; display:flex; flex-direction:column; gap: var(--space-2)" class="body">
-          <li><strong>First</strong> — <code>Flip.getState(card)</code> captures the clicked card's exact position and size while it still sits in the grid.</li>
-          <li><strong>Last</strong> — the section element is already laid out full-screen (<code>position:fixed; inset:0</code>) in the DOM, just invisible.</li>
-          <li><strong>Invert &amp; Play</strong> — <code>Flip.from(state, &#123;targets: section&#125;)</code> applies the captured card rect to the section, then animates it to the section's natural full-screen layout — so the section appears to grow out of the card. Sibling cards fade and scale down 6% in parallel so attention stays on the one expanding.</li>
-          <li><strong>Reverse</strong> — on exit, <code>Flip.getState(section)</code> captures the full-screen rect, <code>Flip.fit(section, card)</code> instantly re-parents its geometry onto the card's position, then <code>Flip.from()</code> animates the shrink back — the same technique, run backwards.</li>
+          <li><strong>First</strong> — <code>Flip.getState(card)</code> captures the clicked card's exact grid position and size before anything changes.</li>
+          <li><strong>Last</strong> — adding the <code>is-expanded</code> class switches that same card from a normal grid item to <code>position:fixed; inset:0</code> (full viewport). Its <code>.card-slot</code> wrapper stays behind holding the grid cell open, so the other two cards never reflow.</li>
+          <li><strong>Play</strong> — <code>Flip.from(state)</code> animates the card from the captured grid rect to its new full-screen layout. Sibling cards fade and scale down 6% in a parallel tween so attention stays on the one expanding.</li>
+          <li><strong>Reverse</strong> — on exit, <code>Flip.getState(card)</code> captures the full-screen rect, removing <code>is-expanded</code> snaps it back to its grid layout, and <code>Flip.from(state)</code> animates the shrink — same element, same technique, run backwards.</li>
         </ol>
-        <p class="body guide-block-note">Corner radius is cross-faded from 20px (card) to 0 (full-bleed section) across the same duration, which is what sells the "one object changing size," not two objects cutting between each other.</p>
+        <p class="body guide-block-note">Corner radius is cross-faded from 20px (card) to 0 (full-bleed section) across the same duration, reinforcing the same idea.</p>
       </div>
     </section>
 
@@ -332,6 +332,35 @@
           <strong>Treatment:</strong> a person at a laptop, one per cluster, each paired with a small floating UI callout that visualizes that cluster's behavior — a document mid-transfer for Bring, a source-comparison checklist for Verify, an approved-edit card for Stay Present. Soft gradient backgrounds in each cluster's own hue keep the set feeling like one family instead of three stock photos.<br>
           <strong>Production:</strong> AI-generated illustrations, supplied as finished source art and cropped for use as card and section imagery. The originals were composed as complete mockups with their own title/body copy baked into the pixels; that text was cropped away and rebuilt as real HTML (see Components) so the copy stays editable and matches the module's actual content rather than the placeholder wording in the source render. Exported to WebP for weight.<br>
           <strong>Direction given:</strong> a single professional at a desk, mid-task, styled consistently across all three (same rendering style, same desk/laptop setup, same soft-gradient backdrop), with one small floating UI card per illustration that makes that cluster's concept literal rather than abstract — source-checking for Verify, an approved edit for Stay Present, a file being handed off for Bring.
+        </p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Supporting scene illustrations</h3>
+        <div class="demo-grid-3">
+          <div>
+            <span class="demo-label">Bring — Scenario 1</span>
+            <div class="card-art" style="border-radius:var(--radius-lg); aspect-ratio:4/3">
+              <img src="assets/illustrations/scenes/bring-q1.webp" alt="" style="object-position:50% 20%">
+            </div>
+          </div>
+          <div>
+            <span class="demo-label">Verify — Info beat</span>
+            <div class="card-art" style="border-radius:var(--radius-lg); aspect-ratio:4/3">
+              <img src="assets/illustrations/scenes/verify-info.webp" alt="" style="object-position:50% 20%">
+            </div>
+          </div>
+          <div>
+            <span class="demo-label">Stay Present — Scenario 1</span>
+            <div class="card-art" style="border-radius:var(--radius-lg); aspect-ratio:4/3">
+              <img src="assets/illustrations/scenes/present-q1.webp" alt="" style="object-position:50% 20%">
+            </div>
+          </div>
+        </div>
+        <p class="body guide-block-note" style="margin-top:var(--space-6)">
+          A second, separate illustration set — a broader library of everyday workplace moments (presenting, reviewing a printout, a hallway phone call, a video call) rather than the three cluster-branded hero pieces above. One image is placed on every info beat, every scenario, and every completion screen: twelve in total, one per screen, hand-picked from a sixteen-image supplied library rather than generated to spec.<br>
+          <strong>Selection rule:</strong> each image was matched to what that specific screen's copy is actually about, not assigned round-robin — the "delayed client project" scenario gets a person thinking with a phone in front of a project wall; the "polished first draft" scenario gets someone reviewing a printout, pen in hand; "weigh both the AI and your colleague" gets two colleagues actually collaborating at a laptop. The pairing is meant to be legible on its own, before reading a word of the copy.<br>
+          <strong>Treatment:</strong> same slot everywhere — a single <code>.content-banner</code> component, max-width 420px, centered, rounded corners, one shadow. Screens vary in content but never in how the image is framed.
         </p>
       </div>
     </section>
