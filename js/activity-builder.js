@@ -1,10 +1,11 @@
 /**
- * "Build an Activity" — pick components, reorder them, see them assemble
- * live using the real site CSS, then export a self-contained starter file.
- * This is a component picker, not a builder tool: the pieces themselves are
- * fixed, well-formed blocks lifted straight from the module; a viewer can
- * only choose which ones to include and what order they run in, then swap
- * the placeholder copy afterward.
+ * Activity Builder (activity.html) — add real components from the module,
+ * reorder or remove them, see them assemble live, then copy a
+ * self-contained starter file. This is a component picker, not a builder
+ * tool: the pieces themselves are fixed, well-formed blocks lifted straight
+ * from the module — a viewer can add any of them (more than once if they
+ * want two scenarios, say), reorder, remove, and swap the placeholder copy
+ * afterward.
  */
 
 (function () {
@@ -12,9 +13,19 @@
 
   const preview = document.getElementById("builder-preview");
   const checkList = document.getElementById("builder-check-list");
+  const addBtn = document.getElementById("builder-add-btn");
+  const addPanel = document.getElementById("builder-add-panel");
   const copyBtn = document.getElementById("builder-copy");
   const copyStatus = document.getElementById("builder-copy-status");
-  if (!preview || !checkList || !copyBtn) return;
+  if (!preview || !checkList || !addBtn || !addPanel || !copyBtn) return;
+
+  const TYPE_LABELS = {
+    heading: "Heading + intro text",
+    illustration: "Supporting illustration slot",
+    takeaways: "Key takeaways list",
+    scenario: "Scenario / MCQ question",
+    button: "Standalone CTA button",
+  };
 
   const PIECES = {
     heading: () => `
@@ -37,69 +48,88 @@
       </ul>
     `,
     scenario: () => `
-      <div class="scenario-meta">
-        <span class="scenario-number">1</span>
-        <span class="label" style="color:var(--color-gray-500)">Scenario 1 of 1</span>
-      </div>
-      <h2 class="scenario-prompt">Replace this with your own scenario question.</h2>
-      <div class="option-list" role="group" aria-label="Answer options" data-activity-group>
-        <button class="option" type="button" data-correct="false"><span class="option-marker" aria-hidden="true"></span><span class="option-text">First option — a wrong answer.</span></button>
-        <button class="option" type="button" data-correct="true"><span class="option-marker" aria-hidden="true"></span><span class="option-text">Second option — the correct answer.</span></button>
-        <button class="option" type="button" data-correct="false"><span class="option-marker" aria-hidden="true"></span><span class="option-text">Third option — a wrong answer.</span></button>
-        <button class="option" type="button" data-correct="false"><span class="option-marker" aria-hidden="true"></span><span class="option-text">Fourth option — a wrong answer.</span></button>
-      </div>
-      <div class="feedback is-corrective" data-feedback="corrective">
-        <span class="feedback-icon" aria-hidden="true"></span>
-        <div class="feedback-body">
-          <span class="label">Not quite</span>
-          <p class="body">Explain why this answer misses the point, then let them try the same question again.</p>
-          <div class="feedback-actions"><button class="btn btn-secondary" type="button" data-action="retry">Try again</button></div>
+      <div class="activity-scenario-block" data-activity-scenario>
+        <div class="scenario-meta">
+          <span class="scenario-number">1</span>
+          <span class="label" style="color:var(--color-gray-500)">Scenario 1 of 1</span>
         </div>
-      </div>
-      <div class="feedback is-success" data-feedback="success">
-        <span class="feedback-icon" aria-hidden="true"></span>
-        <div class="feedback-body">
-          <span class="label">Correct</span>
-          <p class="body">A brief, affirming sentence on why this is right.</p>
+        <h2 class="scenario-prompt">Replace this with your own scenario question.</h2>
+        <div class="option-list" role="group" aria-label="Answer options" data-activity-group>
+          <button class="option" type="button" data-correct="false"><span class="option-marker" aria-hidden="true"></span><span class="option-text">First option — a wrong answer.</span></button>
+          <button class="option" type="button" data-correct="true"><span class="option-marker" aria-hidden="true"></span><span class="option-text">Second option — the correct answer.</span></button>
+          <button class="option" type="button" data-correct="false"><span class="option-marker" aria-hidden="true"></span><span class="option-text">Third option — a wrong answer.</span></button>
+          <button class="option" type="button" data-correct="false"><span class="option-marker" aria-hidden="true"></span><span class="option-text">Fourth option — a wrong answer.</span></button>
+        </div>
+        <div class="feedback is-corrective" data-feedback="corrective">
+          <span class="feedback-icon" aria-hidden="true"></span>
+          <div class="feedback-body">
+            <span class="label">Not quite</span>
+            <p class="body">Explain why this answer misses the point, then let them try the same question again.</p>
+            <div class="feedback-actions"><button class="btn btn-secondary" type="button" data-action="retry">Try again</button></div>
+          </div>
+        </div>
+        <div class="feedback is-success" data-feedback="success">
+          <span class="feedback-icon" aria-hidden="true"></span>
+          <div class="feedback-body">
+            <span class="label">Correct</span>
+            <p class="body">A brief, affirming sentence on why this is right.</p>
+          </div>
         </div>
       </div>
     `,
     button: () => `<button class="btn btn-primary" type="button">Your call to action</button>`,
   };
 
-  // Single source of truth: order of this array is the assembly order.
-  // Reordering just moves entries around in place.
-  const pieces = [
-    { key: "heading", label: "Heading + intro text", checked: true },
-    { key: "illustration", label: "Supporting illustration slot", checked: true },
-    { key: "takeaways", label: "Key takeaways list", checked: true },
-    { key: "scenario", label: "Scenario / MCQ question", checked: true },
-    { key: "button", label: "Standalone CTA button", checked: false },
-  ];
+  // Single source of truth: an ordered list of instances. Each has its own
+  // id so duplicates (two Scenario blocks, say) can be reordered/removed
+  // independently — the type alone isn't enough to identify one.
+  let nextId = 1;
+  const pieces = [];
+
+  function addPiece(type) {
+    pieces.push({ id: nextId++, type });
+    renderAll();
+  }
+
+  function removePiece(id) {
+    const i = pieces.findIndex((p) => p.id === id);
+    if (i !== -1) pieces.splice(i, 1);
+    renderAll();
+  }
+
+  function movePiece(id, dir) {
+    const i = pieces.findIndex((p) => p.id === id);
+    const j = dir === "up" ? i - 1 : i + 1;
+    if (i === -1 || j < 0 || j >= pieces.length) return;
+    [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+    renderAll();
+  }
 
   function renderChecklist() {
+    // number duplicate types ("Scenario / MCQ question #2") for clarity
+    const seen = {};
     checkList.innerHTML = pieces
-      .map(
-        (p, i) => `
-      <div class="builder-check" data-key="${p.key}">
-        <label>
-          <input type="checkbox" data-piece="${p.key}" ${p.checked ? "checked" : ""}>
-          <span>${p.label}</span>
-        </label>
-        <div class="builder-reorder">
-          <button type="button" class="builder-move" data-dir="up" data-key="${p.key}" ${i === 0 ? "disabled" : ""} aria-label="Move ${p.label} up">↑</button>
-          <button type="button" class="builder-move" data-dir="down" data-key="${p.key}" ${i === pieces.length - 1 ? "disabled" : ""} aria-label="Move ${p.label} down">↓</button>
+      .map((p, i) => {
+        seen[p.type] = (seen[p.type] || 0) + 1;
+        const countOfType = pieces.filter((x) => x.type === p.type).length;
+        const label = TYPE_LABELS[p.type] + (countOfType > 1 ? ` #${seen[p.type]}` : "");
+        return `
+      <div class="builder-check" data-id="${p.id}">
+        <span class="builder-check-label">${label}</span>
+        <div class="builder-check-actions">
+          <div class="builder-reorder">
+            <button type="button" class="builder-move" data-dir="up" data-id="${p.id}" ${i === 0 ? "disabled" : ""} aria-label="Move ${label} up">↑</button>
+            <button type="button" class="builder-move" data-dir="down" data-id="${p.id}" ${i === pieces.length - 1 ? "disabled" : ""} aria-label="Move ${label} down">↓</button>
+          </div>
+          <button type="button" class="builder-remove" data-id="${p.id}" aria-label="Remove ${label}">✕</button>
         </div>
-      </div>`
-      )
+      </div>`;
+      })
       .join("");
   }
 
   function renderPreview() {
-    const body = pieces
-      .filter((p) => p.checked)
-      .map((p) => PIECES[p.key]())
-      .join("\n");
+    const body = pieces.map((p) => PIECES[p.type]()).join("\n");
     // .info-beat is what activates the point-list/heading/CTA spacing rules
     // in styles.css — every piece here is designed to live inside it.
     preview.innerHTML = body ? `<div class="info-beat">${body}</div>` : "";
@@ -113,42 +143,62 @@
   checkList.addEventListener("click", (e) => {
     const moveBtn = e.target.closest(".builder-move");
     if (moveBtn) {
-      const key = moveBtn.dataset.key;
-      const dir = moveBtn.dataset.dir;
-      const i = pieces.findIndex((p) => p.key === key);
-      const j = dir === "up" ? i - 1 : i + 1;
-      if (j < 0 || j >= pieces.length) return;
-      [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
-      renderAll();
+      movePiece(Number(moveBtn.dataset.id), moveBtn.dataset.dir);
+      return;
+    }
+    const removeBtn = e.target.closest(".builder-remove");
+    if (removeBtn) {
+      removePiece(Number(removeBtn.dataset.id));
     }
   });
 
-  checkList.addEventListener("change", (e) => {
-    const input = e.target.closest("[data-piece]");
-    if (!input) return;
-    const piece = pieces.find((p) => p.key === input.dataset.piece);
-    if (piece) piece.checked = input.checked;
-    renderPreview();
+  // ---- "+ Add a piece" trigger + panel ----
+  function closeAddPanel() {
+    addPanel.hidden = true;
+    addBtn.setAttribute("aria-expanded", "false");
+  }
+  function openAddPanel() {
+    addPanel.hidden = false;
+    addBtn.setAttribute("aria-expanded", "true");
+  }
+  addBtn.addEventListener("click", () => {
+    if (addPanel.hidden) openAddPanel();
+    else closeAddPanel();
+  });
+  addPanel.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-add]");
+    if (!btn) return;
+    addPiece(btn.dataset.add);
+    closeAddPanel();
+  });
+  document.addEventListener("click", (e) => {
+    if (!addPanel.hidden && !e.target.closest(".builder-add-wrap")) closeAddPanel();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !addPanel.hidden) closeAddPanel();
   });
 
-  // ---- live preview interactivity (delegated so it survives re-renders) ----
+  // ---- live preview interactivity (delegated so it survives re-renders;
+  // scoped to the nearest scenario block so multiple scenarios don't
+  // cross-talk) ----
   const SELECT_HOLD_MS = 550;
 
   preview.addEventListener("click", (e) => {
     const retryBtn = e.target.closest('[data-action="retry"]');
     if (retryBtn) {
-      // Only one scenario block can exist per generated activity, so reset
-      // is scoped to the whole preview rather than a non-existent ancestor.
-      preview.querySelectorAll(".option").forEach((b) => {
+      const scenario = retryBtn.closest("[data-activity-scenario]");
+      if (!scenario) return;
+      scenario.querySelectorAll(".option").forEach((b) => {
         b.disabled = false;
         b.classList.remove("is-selected", "is-correct", "is-wrong");
       });
-      preview.querySelectorAll(".feedback").forEach((f) => f.classList.remove("is-visible"));
+      scenario.querySelectorAll(".feedback").forEach((f) => f.classList.remove("is-visible"));
       return;
     }
 
     const optionBtn = e.target.closest(".option");
     if (optionBtn && !optionBtn.disabled) {
+      const scenario = optionBtn.closest("[data-activity-scenario]");
       const group = optionBtn.closest("[data-activity-group]");
       group.querySelectorAll(".option").forEach((b) => (b.disabled = true));
       optionBtn.classList.add("is-selected");
@@ -156,7 +206,7 @@
         const correct = optionBtn.dataset.correct === "true";
         optionBtn.classList.remove("is-selected");
         optionBtn.classList.add(correct ? "is-correct" : "is-wrong");
-        const panel = preview.querySelector(`[data-feedback="${correct ? "success" : "corrective"}"]`);
+        const panel = scenario.querySelector(`[data-feedback="${correct ? "success" : "corrective"}"]`);
         if (panel) panel.classList.add("is-visible");
         if (!correct) {
           group.querySelectorAll(".option").forEach((b) => {
@@ -174,15 +224,18 @@
 document.addEventListener('click', function (e) {
   var retryBtn = e.target.closest('[data-action="retry"]');
   if (retryBtn) {
-    document.querySelectorAll('.option').forEach(function (b) {
+    var scenario = retryBtn.closest('[data-activity-scenario]');
+    if (!scenario) return;
+    scenario.querySelectorAll('.option').forEach(function (b) {
       b.disabled = false;
       b.classList.remove('is-selected', 'is-correct', 'is-wrong');
     });
-    document.querySelectorAll('.feedback').forEach(function (f) { f.classList.remove('is-visible'); });
+    scenario.querySelectorAll('.feedback').forEach(function (f) { f.classList.remove('is-visible'); });
     return;
   }
   var optionBtn = e.target.closest('.option');
   if (optionBtn && !optionBtn.disabled) {
+    var scenario = optionBtn.closest('[data-activity-scenario]');
     var group = optionBtn.closest('[data-activity-group]');
     group.querySelectorAll('.option').forEach(function (b) { b.disabled = true; });
     optionBtn.classList.add('is-selected');
@@ -190,7 +243,7 @@ document.addEventListener('click', function (e) {
       var correct = optionBtn.dataset.correct === 'true';
       optionBtn.classList.remove('is-selected');
       optionBtn.classList.add(correct ? 'is-correct' : 'is-wrong');
-      var panel = document.querySelector('[data-feedback="' + (correct ? 'success' : 'corrective') + '"]');
+      var panel = scenario.querySelector('[data-feedback="' + (correct ? 'success' : 'corrective') + '"]');
       if (panel) panel.classList.add('is-visible');
       if (!correct) {
         group.querySelectorAll('.option').forEach(function (b) {
@@ -206,9 +259,8 @@ document.addEventListener('click', function (e) {
       fetch("css/tokens.css").then((r) => r.text()),
       fetch("css/styles.css").then((r) => r.text()),
     ]);
-    const checkedPieces = pieces.filter((p) => p.checked);
-    const body = checkedPieces.map((p) => PIECES[p.key]()).join("\n");
-    const needsScript = checkedPieces.some((p) => p.key === "scenario");
+    const body = pieces.map((p) => PIECES[p.type]()).join("\n");
+    const needsScript = pieces.some((p) => p.type === "scenario");
 
     return `<!doctype html>
 <html lang="en">
@@ -237,6 +289,11 @@ ${needsScript ? `<script>\n${EXPORT_JS}\n</script>` : ""}
 
   copyBtn.addEventListener("click", async () => {
     copyStatus.textContent = "";
+    if (!pieces.length) {
+      copyStatus.textContent = "Add at least one piece first.";
+      setTimeout(() => (copyStatus.textContent = ""), 3000);
+      return;
+    }
     try {
       const html = await buildExport();
       await navigator.clipboard.writeText(html);

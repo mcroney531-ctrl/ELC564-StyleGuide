@@ -25,6 +25,7 @@
   <span class="eyebrow">Style Guide</span>
   <h1 class="h-display">The system behind the module</h1>
   <p class="body-lg">This documents the actual decisions made building "AI Do's &amp; Don'ts at Work" — not a hypothetical brand exercise. Every color, component, and motion spec below is pulled from the same CSS the module runs on.</p>
+  <a class="btn btn-secondary guide-hero-cta" href="activity.html">+ Start a new Activity</a>
 </div>
 
 <div class="guide-shell">
@@ -35,7 +36,6 @@
     <a href="#motion">04 · Motion</a>
     <a href="#imagery">05 · Imagery / Illustration</a>
     <a href="#applied-examples">06 · Applied Examples</a>
-    <a href="#build-activity">07 · Build an Activity</a>
   </nav>
 
   <main class="guide-content">
@@ -502,39 +502,11 @@
 
     </section>
 
-    <!-- 07 BUILD AN ACTIVITY ========================================= -->
-    <section class="guide-section" id="build-activity">
-      <details class="guide-accordion">
-        <summary class="guide-section-head">
-          <span class="eyebrow">07</span>
-          <h2 class="h1">Build an Activity</h2>
-          <p class="body-lg">Pick the pieces you want, watch the preview assemble itself from the real components above, then copy a self-contained starter file — no dependency on this site, just the same look and the same interaction wiring.</p>
-        </summary>
-
-        <div class="guide-accordion-body">
-          <div class="builder-shell">
-            <div class="builder-picker">
-              <span class="demo-label">Pick your pieces, reorder with the arrows</span>
-              <div class="builder-check-list" id="builder-check-list"></div>
-              <button class="btn btn-primary" id="builder-copy" type="button">Copy code</button>
-              <p class="body guide-block-note" id="builder-copy-status" aria-live="polite"></p>
-              <p class="body guide-block-note">The exported file inlines the same tokens/components CSS used here, plus a small vanilla-JS retry handler for the MCQ piece — no build step, no dependency on this repo. Swap the placeholder copy and illustration for your own.</p>
-            </div>
-            <div class="builder-preview-wrap">
-              <span class="demo-label">Live preview — try it</span>
-              <div class="builder-preview" id="builder-preview"></div>
-            </div>
-          </div>
-        </div>
-      </details>
-    </section>
-
   </main>
 </div>
 
 <script src="js/vendor/gsap.min.js"></script>
 <script src="js/content.js"></script>
 <script src="js/style-guide.js"></script>
-<script src="js/activity-builder.js"></script>
 </body>
 </html>

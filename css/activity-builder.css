@@ -1,0 +1,96 @@
+/* Activity Builder — standalone page, reuses tokens.css + styles.css components. */
+
+.guide-header .app-header { padding-top: var(--space-4); padding-bottom: var(--space-4); }
+
+.activity-hero {
+  max-width: 1180px; margin: 0 auto;
+  padding: var(--space-16) var(--space-8) var(--space-12);
+}
+.activity-hero .h-display { color: var(--color-ink-900); margin-top: var(--space-3); max-width: 640px; }
+.activity-hero .body-lg { max-width: 640px; margin-top: var(--space-4); }
+
+.activity-shell {
+  max-width: 1180px; margin: 0 auto;
+  padding: 0 var(--space-8) var(--space-24);
+  display: grid; grid-template-columns: 300px 1fr; gap: var(--space-8); align-items: start;
+}
+@media (max-width: 760px) {
+  .activity-shell { grid-template-columns: 1fr; padding: 0 var(--space-6) var(--space-16); }
+  .activity-hero { padding: var(--space-8) var(--space-6) var(--space-8); }
+}
+
+.activity-picker {
+  background: var(--color-white); border-radius: var(--radius-lg); box-shadow: var(--shadow-resting);
+  padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3);
+  position: sticky; top: var(--space-8);
+}
+@media (max-width: 760px) { .activity-picker { position: static; } }
+
+.activity-picker .btn { align-self: flex-start; }
+.activity-picker .guide-block-note { margin-top: 0; }
+#builder-copy-status { color: var(--color-success-700); min-height: 1em; }
+
+.activity-preview-wrap { min-width: 0; }
+
+.demo-label { font: var(--text-caption); text-transform: uppercase; letter-spacing: var(--tracking-caption); color: var(--color-gray-500); margin-bottom: var(--space-1); display: block; }
+.guide-block-note { color: var(--color-gray-500); font: var(--text-body); }
+
+/* ---- piece list: added pieces, reorderable, removable ---- */
+.builder-check-list { display: flex; flex-direction: column; min-height: 32px; }
+.builder-check-list:empty::before {
+  content: "Nothing added yet — start below.";
+  color: var(--color-gray-500); font: var(--text-body);
+  padding: var(--space-2) 0;
+}
+.builder-check {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-line);
+}
+.builder-check-list > .builder-check:last-child { border-bottom: none; }
+.builder-check-label { font: var(--text-body); color: var(--color-charcoal); }
+
+.builder-check-actions { display: flex; align-items: center; gap: 2px; flex: none; }
+.builder-reorder { display: flex; gap: 2px; }
+.builder-move, .builder-remove {
+  width: 24px; height: 24px; display: grid; place-items: center;
+  border-radius: var(--radius-sm); color: var(--color-gray-500);
+  transition: background-color var(--duration-micro) var(--ease-standard), color var(--duration-micro) var(--ease-standard);
+}
+.builder-move:hover:not(:disabled) { background: var(--color-cloud); color: var(--color-ink-900); }
+.builder-move:disabled { opacity: 0.25; cursor: default; }
+.builder-remove { margin-left: var(--space-2); font-size: 1.1rem; line-height: 1; }
+.builder-remove:hover { background: var(--color-error-100); color: var(--color-error-700); }
+
+/* ---- "+ Add a piece" trigger + panel ---- */
+.builder-add-wrap { position: relative; }
+.builder-add-btn { width: 100%; justify-content: center; }
+.builder-add-btn span { font: 700 1.1rem var(--font-base); }
+
+.builder-add-panel {
+  margin-top: var(--space-2);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 0 1.5px var(--color-line) inset;
+  overflow: hidden;
+}
+.builder-add-panel button {
+  display: block; width: 100%; text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font: var(--text-body); color: var(--color-charcoal);
+  border-bottom: 1px solid var(--color-line);
+  transition: background-color var(--duration-micro) var(--ease-standard);
+}
+.builder-add-panel button:last-child { border-bottom: none; }
+.builder-add-panel button:hover { background: var(--color-cloud); }
+
+/* ---- preview ---- */
+.builder-preview {
+  background: var(--color-paper); border-radius: var(--radius-lg); box-shadow: var(--shadow-resting);
+  padding: var(--space-8) var(--space-6); min-height: 240px;
+}
+.builder-preview:empty::before {
+  content: "Add a piece to see it here.";
+  color: var(--color-gray-500); font: var(--text-body);
+}
+.builder-preview .banner-wrap { max-width: 320px; }
+.activity-scenario-block { display: block; margin-bottom: var(--space-8); }

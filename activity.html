@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activity Builder — AI Do's &amp; Don'ts at Work</title>
+<meta name="description" content="Add and reorder real components from the module, then copy a self-contained starter file for your own activity.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/activity-builder.css">
+</head>
+<body>
+
+<header class="guide-header">
+  <div class="app-header">
+    <div class="brand"><span class="brand-mark">Ai</span> AI Do's &amp; Don'ts at Work</div>
+    <a class="btn btn-ghost" href="style-guide.html">← Back to style guide</a>
+  </div>
+</header>
+
+<div class="activity-hero">
+  <span class="eyebrow">Activity Builder</span>
+  <h1 class="h-display">Start a new activity</h1>
+  <p class="body-lg">Add pieces, reorder them, then copy a self-contained starter file — no dependency on this site, just the same components and interaction wiring as the module.</p>
+</div>
+
+<main class="activity-shell">
+  <div class="activity-picker">
+    <span class="demo-label">Your pieces</span>
+    <div class="builder-check-list" id="builder-check-list"></div>
+
+    <div class="builder-add-wrap">
+      <button class="btn btn-secondary builder-add-btn" id="builder-add-btn" type="button" aria-expanded="false" aria-controls="builder-add-panel">
+        <span aria-hidden="true">+</span> Add a piece
+      </button>
+      <div class="builder-add-panel" id="builder-add-panel" hidden>
+        <button type="button" data-add="heading">Heading + intro text</button>
+        <button type="button" data-add="illustration">Supporting illustration slot</button>
+        <button type="button" data-add="takeaways">Key takeaways list</button>
+        <button type="button" data-add="scenario">Scenario / MCQ question</button>
+        <button type="button" data-add="button">Standalone CTA button</button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="builder-copy" type="button">Copy code</button>
+    <p class="body guide-block-note" id="builder-copy-status" aria-live="polite"></p>
+    <p class="body guide-block-note">The exported file inlines the same tokens/components CSS as this page, plus a small vanilla-JS retry handler for any MCQ pieces — no build step, no dependency on this repo. Swap the placeholder copy and illustration for your own. Add a piece more than once (a second Scenario, say) if your activity needs it.</p>
+  </div>
+
+  <div class="activity-preview-wrap">
+    <span class="demo-label">Live preview — try it</span>
+    <div class="builder-preview" id="builder-preview"></div>
+  </div>
+</main>
+
+<script src="js/activity-builder.js"></script>
+</body>
+</html>
