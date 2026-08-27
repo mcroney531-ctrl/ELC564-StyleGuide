@@ -1,20 +1,20 @@
 /**
- * "Build an Activity" — pick components, see them assemble live using the
- * real site CSS, then export a self-contained starter file. This is a
- * component picker, not a builder tool: the pieces are fixed, well-formed
- * blocks lifted straight from the module; all a viewer can do is choose
- * which ones to include and swap the placeholder copy afterward.
+ * "Build an Activity" — pick components, reorder them, see them assemble
+ * live using the real site CSS, then export a self-contained starter file.
+ * This is a component picker, not a builder tool: the pieces themselves are
+ * fixed, well-formed blocks lifted straight from the module; a viewer can
+ * only choose which ones to include and what order they run in, then swap
+ * the placeholder copy afterward.
  */
 
 (function () {
   "use strict";
 
   const preview = document.getElementById("builder-preview");
+  const checkList = document.getElementById("builder-check-list");
   const copyBtn = document.getElementById("builder-copy");
   const copyStatus = document.getElementById("builder-copy-status");
-  if (!preview || !copyBtn) return;
-
-  const checkboxes = Array.from(document.querySelectorAll('[data-piece]'));
+  if (!preview || !checkList || !copyBtn) return;
 
   const PIECES = {
     heading: () => `
@@ -67,17 +67,69 @@
     button: () => `<button class="btn btn-primary" type="button">Your call to action</button>`,
   };
 
-  const ORDER = ["heading", "illustration", "takeaways", "scenario", "button"];
+  // Single source of truth: order of this array is the assembly order.
+  // Reordering just moves entries around in place.
+  const pieces = [
+    { key: "heading", label: "Heading + intro text", checked: true },
+    { key: "illustration", label: "Supporting illustration slot", checked: true },
+    { key: "takeaways", label: "Key takeaways list", checked: true },
+    { key: "scenario", label: "Scenario / MCQ question", checked: true },
+    { key: "button", label: "Standalone CTA button", checked: false },
+  ];
 
-  function render() {
-    const checked = checkboxes.filter((c) => c.checked).map((c) => c.dataset.piece);
-    const body = ORDER.filter((p) => checked.includes(p))
-      .map((p) => PIECES[p]())
+  function renderChecklist() {
+    checkList.innerHTML = pieces
+      .map(
+        (p, i) => `
+      <div class="builder-check" data-key="${p.key}">
+        <label>
+          <input type="checkbox" data-piece="${p.key}" ${p.checked ? "checked" : ""}>
+          <span>${p.label}</span>
+        </label>
+        <div class="builder-reorder">
+          <button type="button" class="builder-move" data-dir="up" data-key="${p.key}" ${i === 0 ? "disabled" : ""} aria-label="Move ${p.label} up">↑</button>
+          <button type="button" class="builder-move" data-dir="down" data-key="${p.key}" ${i === pieces.length - 1 ? "disabled" : ""} aria-label="Move ${p.label} down">↓</button>
+        </div>
+      </div>`
+      )
+      .join("");
+  }
+
+  function renderPreview() {
+    const body = pieces
+      .filter((p) => p.checked)
+      .map((p) => PIECES[p.key]())
       .join("\n");
     // .info-beat is what activates the point-list/heading/CTA spacing rules
     // in styles.css — every piece here is designed to live inside it.
     preview.innerHTML = body ? `<div class="info-beat">${body}</div>` : "";
   }
+
+  function renderAll() {
+    renderChecklist();
+    renderPreview();
+  }
+
+  checkList.addEventListener("click", (e) => {
+    const moveBtn = e.target.closest(".builder-move");
+    if (moveBtn) {
+      const key = moveBtn.dataset.key;
+      const dir = moveBtn.dataset.dir;
+      const i = pieces.findIndex((p) => p.key === key);
+      const j = dir === "up" ? i - 1 : i + 1;
+      if (j < 0 || j >= pieces.length) return;
+      [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
+      renderAll();
+    }
+  });
+
+  checkList.addEventListener("change", (e) => {
+    const input = e.target.closest("[data-piece]");
+    if (!input) return;
+    const piece = pieces.find((p) => p.key === input.dataset.piece);
+    if (piece) piece.checked = input.checked;
+    renderPreview();
+  });
 
   // ---- live preview interactivity (delegated so it survives re-renders) ----
   const SELECT_HOLD_MS = 550;
@@ -115,8 +167,7 @@
     }
   });
 
-  checkboxes.forEach((c) => c.addEventListener("change", render));
-  render();
+  renderAll();
 
   // ---- export ----
   const EXPORT_JS = `
@@ -155,11 +206,9 @@ document.addEventListener('click', function (e) {
       fetch("css/tokens.css").then((r) => r.text()),
       fetch("css/styles.css").then((r) => r.text()),
     ]);
-    const checked = checkboxes.filter((c) => c.checked).map((c) => c.dataset.piece);
-    const body = ORDER.filter((p) => checked.includes(p))
-      .map((p) => PIECES[p]())
-      .join("\n");
-    const needsScript = checked.includes("scenario");
+    const checkedPieces = pieces.filter((p) => p.checked);
+    const body = checkedPieces.map((p) => PIECES[p.key]()).join("\n");
+    const needsScript = checkedPieces.some((p) => p.key === "scenario");
 
     return `<!doctype html>
 <html lang="en">

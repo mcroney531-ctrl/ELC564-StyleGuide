@@ -514,12 +514,8 @@
         <div class="guide-accordion-body">
           <div class="builder-shell">
             <div class="builder-picker">
-              <span class="demo-label">Pick your pieces</span>
-              <label class="builder-check"><input type="checkbox" data-piece="heading" checked> Heading + intro text</label>
-              <label class="builder-check"><input type="checkbox" data-piece="illustration" checked> Supporting illustration slot</label>
-              <label class="builder-check"><input type="checkbox" data-piece="takeaways" checked> Key takeaways list</label>
-              <label class="builder-check"><input type="checkbox" data-piece="scenario" checked> Scenario / MCQ question</label>
-              <label class="builder-check"><input type="checkbox" data-piece="button"> Standalone CTA button</label>
+              <span class="demo-label">Pick your pieces, reorder with the arrows</span>
+              <div class="builder-check-list" id="builder-check-list"></div>
               <button class="btn btn-primary" id="builder-copy" type="button">Copy code</button>
               <p class="body guide-block-note" id="builder-copy-status" aria-live="polite"></p>
               <p class="body guide-block-note">The exported file inlines the same tokens/components CSS used here, plus a small vanilla-JS retry handler for the MCQ piece — no build step, no dependency on this repo. Swap the placeholder copy and illustration for your own.</p>
