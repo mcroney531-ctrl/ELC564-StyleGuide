@@ -99,3 +99,44 @@
 .compare-card.is-dont .tag { color: var(--color-error-700); }
 .compare-card.is-do .tag { color: var(--color-success-700); }
 .compare-card .mock { background: var(--color-white); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-4); box-shadow: var(--shadow-resting); }
+
+/* Wide tables scroll inside their own container instead of overflowing the page. */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table-scroll .motion-spec-table { min-width: 560px; }
+
+/* ---- Mobile: the sidebar nav is the real culprit — a fixed 220px column
+   left almost nothing for content on a phone, squeezing every table, swatch
+   grid, and text sample into a near-zero-width column. Below this width the
+   nav becomes a wrapping row of chips above the content instead. ---- */
+@media (max-width: 860px) {
+  /* align-items:flex-start (set for the row layout above) governs the
+     cross axis, which swaps to horizontal once direction flips to column —
+     left as flex-start it shrinks .guide-content to its widest child's
+     content instead of stretching to the viewport width. */
+  .guide-shell { flex-direction: column; align-items: stretch; }
+
+  .guide-nav {
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: auto;
+    padding: var(--space-4) var(--space-6) var(--space-4);
+    gap: var(--space-2);
+    border-bottom: 1px solid var(--color-line);
+  }
+  .guide-nav a {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-pill);
+    background: var(--color-cloud);
+    border-left: none;
+  }
+  .guide-nav a.is-active { background: var(--color-ink-100); }
+
+  .guide-content { padding: var(--space-8) var(--space-6) var(--space-16); }
+  .guide-hero { padding: var(--space-8) var(--space-6) var(--space-8); }
+
+  .type-row { flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+  .type-row .tag { width: auto; }
+
+  .spacing-row { flex-wrap: wrap; }
+}

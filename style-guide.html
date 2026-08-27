@@ -291,18 +291,20 @@
 
       <div class="guide-block">
         <h3 class="h3 guide-block-title">What triggers what</h3>
-        <table class="motion-spec-table">
-          <thead><tr><th>Moment</th><th>Trigger</th><th>Duration</th><th>Easing</th></tr></thead>
-          <tbody>
-            <tr><td>Card hover lift</td><td>mouseenter / mouseleave</td><td>0.4s</td><td><code>back.out(2.2)</code></td></tr>
-            <tr><td>Button / option hover</td><td>mouseenter, focus</td><td>0.2s</td><td><code>ease-standard</code></td></tr>
-            <tr><td>Option → selected</td><td>click</td><td>instant + 0.55s hold</td><td>—</td></tr>
-            <tr><td>Feedback panel reveal</td><td>answer confirmed</td><td>0.5s</td><td><code>ease-out</code></td></tr>
-            <tr><td><strong>Card → section (signature)</strong></td><td>card click</td><td>0.65s</td><td><code>power2.inOut</code></td></tr>
-            <tr><td>Siblings recede</td><td>card click (parallel)</td><td>0.35s</td><td><code>power2.out</code></td></tr>
-            <tr><td>Section → card (reverse)</td><td>"Overview" click</td><td>0.65s</td><td><code>power2.inOut</code></td></tr>
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table class="motion-spec-table">
+            <thead><tr><th>Moment</th><th>Trigger</th><th>Duration</th><th>Easing</th></tr></thead>
+            <tbody>
+              <tr><td>Card hover lift</td><td>mouseenter / mouseleave</td><td>0.4s</td><td><code>back.out(2.2)</code></td></tr>
+              <tr><td>Button / option hover</td><td>mouseenter, focus</td><td>0.2s</td><td><code>ease-standard</code></td></tr>
+              <tr><td>Option → selected</td><td>click</td><td>instant + 0.55s hold</td><td>—</td></tr>
+              <tr><td>Feedback panel reveal</td><td>answer confirmed</td><td>0.5s</td><td><code>ease-out</code></td></tr>
+              <tr><td><strong>Card → section (signature)</strong></td><td>card click</td><td>0.65s</td><td><code>power2.inOut</code></td></tr>
+              <tr><td>Siblings recede</td><td>card click (parallel)</td><td>0.35s</td><td><code>power2.out</code></td></tr>
+              <tr><td>Section → card (reverse)</td><td>"Overview" click</td><td>0.65s</td><td><code>power2.inOut</code></td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="guide-block">
