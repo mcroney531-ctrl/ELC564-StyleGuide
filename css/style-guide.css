@@ -33,10 +33,48 @@
 
 .guide-section { padding-top: var(--space-16); margin-top: calc(-1 * var(--space-16)); }
 .guide-section + .guide-section { border-top: 1px solid var(--color-line); margin-top: var(--space-16); }
-.guide-section-head { margin-bottom: var(--space-8); }
+
+/* Each section is a native <details> — expand/collapse needs no JS of its
+   own, keeps keyboard + screen-reader behavior for free, and the browser
+   already knows how to reveal a section that's linked to by #fragment. */
+.guide-accordion summary.guide-section-head {
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+  padding: var(--space-3) var(--space-12) var(--space-3) var(--space-3);
+  margin: calc(-1 * var(--space-3));
+  border-radius: var(--radius-md);
+  transition: background-color var(--duration-micro) var(--ease-standard);
+}
+.guide-accordion summary.guide-section-head::-webkit-details-marker { display: none; }
+.guide-accordion summary.guide-section-head:hover { background: var(--color-cloud); }
+.guide-accordion summary.guide-section-head:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+
+.guide-accordion summary.guide-section-head::after {
+  content: "";
+  position: absolute;
+  top: calc(var(--space-3) + 8px);
+  right: var(--space-4);
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--color-gray-500);
+  border-bottom: 2px solid var(--color-gray-500);
+  transform: rotate(45deg);
+  transition: transform var(--duration-micro) var(--ease-standard);
+}
+.guide-accordion[open] summary.guide-section-head::after {
+  top: calc(var(--space-3) + 12px);
+  transform: rotate(-135deg);
+}
+.guide-accordion summary.guide-section-head:hover::after { border-color: var(--color-ink-900); }
+
 .guide-section-head .eyebrow { display: block; margin-bottom: var(--space-2); }
 .guide-section-head .h1 { color: var(--color-ink-900); }
 .guide-section-head .body-lg { margin-top: var(--space-3); max-width: 640px; }
+
+.guide-accordion-body { margin-top: var(--space-8); }
+.guide-accordion[open] .guide-accordion-body { animation: guide-fade-in 0.25s var(--ease-out); }
+@keyframes guide-fade-in { from { opacity: 0; } to { opacity: 1; } }
 
 .guide-block { margin-bottom: var(--space-12); }
 .guide-block-title { color: var(--color-ink-900); margin-bottom: var(--space-4); }

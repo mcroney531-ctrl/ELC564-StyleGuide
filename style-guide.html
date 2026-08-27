@@ -41,12 +41,14 @@
 
     <!-- 01 FOUNDATIONS ============================================== -->
     <section class="guide-section" id="foundations">
-      <div class="guide-section-head">
+      <details class="guide-accordion">
+        <summary class="guide-section-head">
         <span class="eyebrow">01</span>
         <h2 class="h1">Foundations</h2>
         <p class="body-lg">A small, disciplined palette and a single type family, used consistently rather than several used sparingly.</p>
-      </div>
+      </summary>
 
+        <div class="guide-accordion-body">
       <div class="guide-block">
         <h3 class="h3 guide-block-title">Color — Primary &amp; Secondary</h3>
         <div class="swatch-grid">
@@ -129,17 +131,21 @@
           <div style="width:56px;height:56px;background:var(--color-teal-100);border-radius:var(--radius-card);display:grid;place-items:center;font:var(--text-caption)">card</div>
           <div style="width:56px;height:56px;background:var(--color-teal-100);border-radius:var(--radius-pill);display:grid;place-items:center;font:var(--text-caption)">pill</div>
         </div>
-      </div>
+      </div>        </div>
+      </details>
+
     </section>
 
     <!-- 02 COMPONENTS ================================================ -->
     <section class="guide-section" id="components">
-      <div class="guide-section-head">
+      <details class="guide-accordion">
+        <summary class="guide-section-head">
         <span class="eyebrow">02</span>
         <h2 class="h1">Components</h2>
         <p class="body-lg">The card is the core interaction unit of the whole build — everything else supports it.</p>
-      </div>
+      </summary>
 
+        <div class="guide-accordion-body">
       <div class="guide-block">
         <h3 class="h3 guide-block-title">Cards</h3>
         <div class="demo-shell">
@@ -193,17 +199,21 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>        </div>
+      </details>
+
     </section>
 
     <!-- 03 INTERACTION STATES ======================================== -->
     <section class="guide-section" id="interaction-states">
-      <div class="guide-section-head">
+      <details class="guide-accordion">
+        <summary class="guide-section-head">
         <span class="eyebrow">03</span>
         <h2 class="h1">Interaction States</h2>
         <p class="body-lg">One documented feedback language, used identically across all six scenarios: attempt → corrective retry → success.</p>
-      </div>
+      </summary>
 
+        <div class="guide-accordion-body">
       <div class="guide-block">
         <h3 class="h3 guide-block-title">The three-state feedback loop</h3>
         <div class="demo-shell">
@@ -250,17 +260,21 @@
           <li class="body">• <strong>Selected</strong> — an option gets a solid ink border and tint the instant it's clicked, before it's known to be right or wrong.</li>
           <li class="body">• <strong>Completed</strong> — a cluster's progress badge switches from gray "Not started" to amber "In progress" to green "Complete," and its section's two progress ticks fill in as each scenario is solved.</li>
         </ul>
-      </div>
+      </div>        </div>
+      </details>
+
     </section>
 
     <!-- 04 MOTION ==================================================== -->
     <section class="guide-section" id="motion">
-      <div class="guide-section-head">
+      <details class="guide-accordion">
+        <summary class="guide-section-head">
         <span class="eyebrow">04</span>
         <h2 class="h1">Motion</h2>
         <p class="body-lg">Two easing conventions and two moments — used with enough restraint that the one signature moment still reads as signature.</p>
-      </div>
+      </summary>
 
+        <div class="guide-accordion-body">
       <div class="guide-block">
         <h3 class="h3 guide-block-title">Easing conventions</h3>
         <div class="demo-shell demo-grid-3">
@@ -317,17 +331,21 @@
           <li><strong>Reverse</strong> — on exit, <code>Flip.getState(card)</code> captures the full-screen rect, removing <code>is-expanded</code> snaps it back to its grid layout, and <code>Flip.from(state)</code> animates the shrink — same element, same technique, run backwards.</li>
         </ol>
         <p class="body guide-block-note">Corner radius is cross-faded from 20px (card) to 0 (full-bleed section) across the same duration, reinforcing the same idea.</p>
-      </div>
+      </div>        </div>
+      </details>
+
     </section>
 
     <!-- 05 IMAGERY =================================================== -->
     <section class="guide-section" id="imagery">
-      <div class="guide-section-head">
+      <details class="guide-accordion">
+        <summary class="guide-section-head">
         <span class="eyebrow">05</span>
         <h2 class="h1">Imagery &amp; Illustration</h2>
         <p class="body-lg">One character illustration per cluster, commissioned to a shared formula rather than three unrelated pieces.</p>
-      </div>
+      </summary>
 
+        <div class="guide-accordion-body">
       <div class="guide-block">
         <div class="demo-grid-3" id="illo-demo"></div>
         <p class="body guide-block-note" style="margin-top:var(--space-6)">
@@ -393,17 +411,21 @@
           <strong>Rule, not random:</strong> patterns lean toward each cluster's own hue family — blue and lavender tones for Bring, mint and sage-green tones for Verify, peach and dusty-rose tones for Stay Present — so the accent quietly reinforces the cluster color rather than clashing with it.<br>
           <strong>Placement:</strong> absolutely positioned inside a <code>.banner-wrap</code>, anchored to the illustration's own corner rather than the surrounding text, so it lines up correctly regardless of how much copy precedes it. Always behind the illustration (<code>z-index: 0</code>), always decorative (<code>pointer-events: none</code>), never competing with the content for attention.
         </p>
-      </div>
+      </div>        </div>
+      </details>
+
     </section>
 
     <!-- 06 APPLIED EXAMPLES ========================================== -->
     <section class="guide-section" id="applied-examples">
-      <div class="guide-section-head">
+      <details class="guide-accordion">
+        <summary class="guide-section-head">
         <span class="eyebrow">06</span>
         <h2 class="h1">Applied Examples</h2>
         <p class="body-lg">Real screens from the build, in sequence, followed by two direct comparisons.</p>
-      </div>
+      </summary>
 
+        <div class="guide-accordion-body">
       <div class="guide-block">
         <div class="screen-grid">
           <figure class="screen-figure">
@@ -474,7 +496,9 @@
             <p class="body">Same red marker, plus the explanation and the retry action — the state does the teaching, not just the scoring.</p>
           </div>
         </div>
-      </div>
+      </div>        </div>
+      </details>
+
     </section>
 
   </main>

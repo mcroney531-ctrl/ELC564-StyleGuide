@@ -57,8 +57,21 @@
     doExample.innerHTML = `<img src="assets/illustrations/bring.webp" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 12%">`;
   }
 
-  // ---- scrollspy ----
+  // ---- nav click: open the target accordion, then scroll to it ----
   const navLinks = Array.from(document.querySelectorAll("#guide-nav a"));
+  navLinks.forEach((a) => {
+    a.addEventListener("click", (e) => {
+      const target = document.querySelector(a.getAttribute("href"));
+      const accordion = target && target.querySelector(".guide-accordion");
+      if (!accordion) return; // fall back to default anchor jump
+      e.preventDefault();
+      accordion.open = true;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      history.pushState(null, "", a.getAttribute("href"));
+    });
+  });
+
+  // ---- scrollspy ----
   const targets = navLinks
     .map((a) => document.querySelector(a.getAttribute("href")))
     .filter(Boolean);
