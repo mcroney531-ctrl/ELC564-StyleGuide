@@ -363,6 +363,35 @@
           <strong>Treatment:</strong> same slot everywhere — a single <code>.content-banner</code> component, max-width 420px, centered. These are transparent-background cutouts, not rectangular photos, so the "frame" is a <code>drop-shadow</code> filter that follows the actual silhouette rather than a box-shadow around empty corners. Screens vary in content but never in how the image is placed.
         </p>
       </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Corner pattern accents</h3>
+        <div class="demo-grid-3">
+          <div>
+            <span class="demo-label">Bring — Concentric Arcs</span>
+            <div style="aspect-ratio:4/3; background:var(--cluster-bring-tint); border-radius:var(--radius-lg); display:grid; place-items:center">
+              <img src="assets/illustrations/patterns/concentric-arcs-blue.webp" alt="" style="width:55%">
+            </div>
+          </div>
+          <div>
+            <span class="demo-label">Verify — Dot Matrix</span>
+            <div style="aspect-ratio:4/3; background:var(--cluster-verify-tint); border-radius:var(--radius-lg); display:grid; place-items:center">
+              <img src="assets/illustrations/patterns/dot-matrix-mint.webp" alt="" style="width:55%">
+            </div>
+          </div>
+          <div>
+            <span class="demo-label">Stay Present — Diamond Cluster</span>
+            <div style="aspect-ratio:4/3; background:var(--cluster-present-tint); border-radius:var(--radius-lg); display:grid; place-items:center">
+              <img src="assets/illustrations/patterns/diamond-cluster-dusty-rose.webp" alt="" style="width:55%">
+            </div>
+          </div>
+        </div>
+        <p class="body guide-block-note" style="margin-top:var(--space-6)">
+          A ten-pattern pastel set (dot grids, arcs, diamond clusters, scattered marks) sourced separately from the illustrations, one small accent peeking out from the top-right corner of every <code>.content-banner</code>. Twelve screens need one each; four unique patterns are assigned per cluster and two are reused once each in a different cluster, so no single cluster's four screens ever repeat.<br>
+          <strong>Rule, not random:</strong> patterns lean toward each cluster's own hue family — blue and lavender tones for Bring, mint and sage-green tones for Verify, peach and dusty-rose tones for Stay Present — so the accent quietly reinforces the cluster color rather than clashing with it.<br>
+          <strong>Placement:</strong> absolutely positioned inside a <code>.banner-wrap</code>, anchored to the illustration's own corner rather than the surrounding text, so it lines up correctly regardless of how much copy precedes it. Always behind the illustration (<code>z-index: 0</code>), always decorative (<code>pointer-events: none</code>), never competing with the content for attention.
+        </p>
+      </div>
     </section>
 
     <!-- 06 APPLIED EXAMPLES ========================================== -->

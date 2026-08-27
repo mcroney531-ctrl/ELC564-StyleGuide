@@ -204,12 +204,33 @@ a { color: var(--color-teal-600); }
    irregular, transparent-background cutouts, so the "frame" is a drop-shadow
    filter (which hugs the actual silhouette) rather than a box-shadow (which
    would draw a rectangle around mostly-empty space). */
-.content-banner {
-  display: block;
-  width: 100%;
+.banner-wrap {
+  position: relative;
   max-width: 420px;
   margin: 0 auto var(--space-8);
+}
+.content-banner {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  margin: 0;
   filter: drop-shadow(0 10px 16px rgba(20, 33, 58, 0.14));
+}
+
+/* Small pastel pattern accent, one per cluster set, peeking out from behind
+   the top-right corner of the illustration — a quiet, secondary flourish,
+   never the focal point. */
+.scene-pattern {
+  position: absolute;
+  top: -22px;
+  right: -22px;
+  width: 96px;
+  z-index: 0;
+  pointer-events: none;
+}
+@media (max-width: 480px) {
+  .scene-pattern { width: 72px; top: -14px; right: -14px; }
 }
 
 .info-beat .eyebrow { display: block; margin-bottom: var(--space-3); }
@@ -315,7 +336,7 @@ a { color: var(--color-teal-600); }
   display: grid; place-items: center; font-size: 1.75rem;
 }
 .section-complete .h1 { color: var(--color-ink-900); margin-bottom: var(--space-3); }
-.section-complete .content-banner { margin-top: var(--space-8); }
+.section-complete .banner-wrap { margin-top: var(--space-8); }
 .section-complete .actions { margin-top: var(--space-8); display: flex; justify-content: center; }
 
 /* ---- Callouts (used in style guide + reused as a component) ---- */

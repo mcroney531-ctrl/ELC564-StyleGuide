@@ -12,8 +12,10 @@ const CONTENT = {
       dek: "Bring real material — and yourself — to the interaction.",
       accent: "bring",
       completeImage: "bring-complete.webp",
+      completePattern: "dot-square-seafoam.webp",
       info: {
         image: "bring-info.webp",
+        pattern: "concentric-arcs-blue.webp",
         eyebrow: "Cluster 1 of 3",
         heading: "Bring more than a question",
         body: [
@@ -29,6 +31,7 @@ const CONTENT = {
       questions: [
         {
           image: "bring-q1.webp",
+          pattern: "geometric-marks-powder-blue.webp",
           prompt:
             "You need a client email about a delayed project. You type: “Write an email telling the client we're delayed.” What's missing from this request?",
           options: [
@@ -45,6 +48,7 @@ const CONTENT = {
         },
         {
           image: "bring-q2.webp",
+          pattern: "ring-cluster-lavender.webp",
           prompt:
             "An AI tool hands you a polished-looking first draft of a proposal. What should you do next?",
           options: [
@@ -68,8 +72,10 @@ const CONTENT = {
       dek: "Don't extend automatic trust — to the output or your own reaction to it.",
       accent: "verify",
       completeImage: "verify-complete.webp",
+      completePattern: "confetti-peach.webp",
       info: {
         image: "verify-info.webp",
+        pattern: "dot-matrix-mint.webp",
         eyebrow: "Cluster 2 of 3",
         heading: "Trust, but check",
         body: [
@@ -86,6 +92,7 @@ const CONTENT = {
       questions: [
         {
           image: "verify-q1.webp",
+          pattern: "corner-lines-sage.webp",
           prompt:
             "You ask an AI tool to check your reasoning on a decision. It responds: “This is an excellent approach!” What should that tell you?",
           options: [
@@ -102,6 +109,7 @@ const CONTENT = {
         },
         {
           image: "verify-q2.webp",
+          pattern: "offset-squares-sage-gray.webp",
           prompt:
             "An AI-drafted report cites a statistic you're about to put in a client presentation. What should you do before it goes in the deck?",
           options: [
@@ -125,8 +133,10 @@ const CONTENT = {
       dek: "Stay the visible, accountable human in the work.",
       accent: "present",
       completeImage: "present-complete.webp",
+      completePattern: "geometric-marks-powder-blue.webp",
       info: {
         image: "present-info.webp",
+        pattern: "mini-circles-peach.webp",
         eyebrow: "Cluster 3 of 3",
         heading: "Don't disappear behind the tool",
         body: [
@@ -142,6 +152,7 @@ const CONTENT = {
       questions: [
         {
           image: "present-q1.webp",
+          pattern: "diamond-cluster-dusty-rose.webp",
           prompt:
             "An AI tool recommends a course of action based on the data you gave it. A trusted colleague raises a concern from experience the data doesn't capture. What should you do?",
           options: [
@@ -158,6 +169,7 @@ const CONTENT = {
         },
         {
           image: "present-q2.webp",
+          pattern: "dot-matrix-mint.webp",
           prompt:
             "You use AI to draft a difficult, personal message to a direct report about a performance issue. What's the right way to handle sending it?",
           options: [
