@@ -360,7 +360,7 @@
         <p class="body guide-block-note" style="margin-top:var(--space-6)">
           A second, separate illustration set — a broader library of everyday workplace moments (presenting, reviewing a printout, a hallway phone call, a video call) rather than the three cluster-branded hero pieces above. One image is placed on every info beat, every scenario, and every completion screen: twelve in total, one per screen, hand-picked from a sixteen-image supplied library rather than generated to spec.<br>
           <strong>Selection rule:</strong> each image was matched to what that specific screen's copy is actually about, not assigned round-robin — the "delayed client project" scenario gets a person thinking with a phone in front of a project wall; the "polished first draft" scenario gets someone reviewing a printout, pen in hand; "weigh both the AI and your colleague" gets two colleagues actually collaborating at a laptop. The pairing is meant to be legible on its own, before reading a word of the copy.<br>
-          <strong>Treatment:</strong> same slot everywhere — a single <code>.content-banner</code> component, max-width 420px, centered, rounded corners, one shadow. Screens vary in content but never in how the image is framed.
+          <strong>Treatment:</strong> same slot everywhere — a single <code>.content-banner</code> component, max-width 420px, centered. These are transparent-background cutouts, not rectangular photos, so the "frame" is a <code>drop-shadow</code> filter that follows the actual silhouette rather than a box-shadow around empty corners. Screens vary in content but never in how the image is placed.
         </p>
       </div>
     </section>
