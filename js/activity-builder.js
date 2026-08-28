@@ -26,7 +26,8 @@
 
   const TYPE_LABELS = {
     heading: "Heading + intro text",
-    illustration: "Supporting illustration slot",
+    image: "Photo scene",
+    backdrop: "Decorative backdrop",
     takeaways: "Key takeaways list",
     scenario: "Scenario / MCQ question",
     button: "Standalone CTA button",
@@ -44,7 +45,7 @@
 
   // The module's own set of pastel corner-pattern accents — same assets used
   // behind the character illustrations in index.html. Picking one here just
-  // sets which file backs the .scene-pattern accent; no upload needed.
+  // sets which file backs the decorative Backdrop piece's accent image.
   const PATTERNS = [
     { key: "dot-matrix-mint", label: "Dot Matrix" },
     { key: "concentric-arcs-blue", label: "Concentric Arcs" },
@@ -58,6 +59,24 @@
     { key: "diamond-cluster-dusty-rose", label: "Diamond Cluster" },
   ];
 
+  // The module's own character-scene photos — the actual people-in-scenario
+  // illustrations used across the info beat, each scenario, and completion
+  // screens in index.html. Picking one here inserts the real photo.
+  const SCENES = [
+    { key: "bring-info", label: "Bring: Info screen" },
+    { key: "bring-q1", label: "Bring: Question 1" },
+    { key: "bring-q2", label: "Bring: Question 2" },
+    { key: "bring-complete", label: "Bring: Complete screen" },
+    { key: "verify-info", label: "Verify: Info screen" },
+    { key: "verify-q1", label: "Verify: Question 1" },
+    { key: "verify-q2", label: "Verify: Question 2" },
+    { key: "verify-complete", label: "Verify: Complete screen" },
+    { key: "present-info", label: "Present: Info screen" },
+    { key: "present-q1", label: "Present: Question 1" },
+    { key: "present-q2", label: "Present: Question 2" },
+    { key: "present-complete", label: "Present: Complete screen" },
+  ];
+
   // Fresh default data per instance — must be factory functions, not shared
   // objects/arrays, so two Scenario blocks don't end up editing the same array.
   const DEFAULTS = {
@@ -66,7 +85,8 @@
       title: "Your activity title goes here",
       body: 'One or two sentences setting up what this teaches — the "why," not the whole lesson. Keep it short enough to read in one breath.',
     }),
-    illustration: () => ({ pattern: null }),
+    image: () => ({ scene: null }),
+    backdrop: () => ({ pattern: null }),
     takeaways: () => ({
       items: ["First takeaway — state the behavior you want, plainly.", "Second takeaway.", "Third takeaway."],
     }),
@@ -93,20 +113,39 @@
       <p class="body-lg">${esc(d.body)}</p>
     `,
     // opts.interactive is false only for the exported file, which has no JS
-    // wiring behind the picker — the box there is a static instruction, not
-    // a live control, so it drops the clickable affordance and "change" copy.
-    illustration: (d, opts = {}) => {
+    // wiring behind the picker — these render as static instructions, not
+    // live controls, so they drop the clickable affordance and "change" copy.
+    image: (d, opts = {}) => {
       const interactive = opts.interactive !== false;
+      if (!d.scene) {
+        return `
+      <div class="banner-wrap">
+        <div class="content-banner activity-illustration-slot" ${interactive ? 'data-action="choose-asset" role="button" tabindex="0"' : ""}>
+          <span class="activity-illustration-cta">${interactive ? "+ Choose an image" : "No image selected"}</span>
+        </div>
+      </div>
+    `;
+      }
       return `
       <div class="banner-wrap">
-        <div class="content-banner activity-illustration-slot" ${interactive ? 'data-action="choose-backdrop" role="button" tabindex="0"' : ""}>
-          ${
-            d.pattern
-              ? `<span class="activity-illustration-hint">Your illustration or photo goes here</span>${interactive ? '<span class="activity-illustration-change">Change backdrop</span>' : ""}`
-              : `<span class="activity-illustration-cta">${interactive ? "+ Choose your backdrop" : "Swap this box for your own illustration or photo"}</span>`
-          }
+        <img class="content-banner" src="assets/illustrations/scenes/${esc(d.scene)}.webp" alt="">
+        ${interactive ? `<button type="button" class="activity-asset-change" data-action="choose-asset">Change image</button>` : ""}
+      </div>
+    `;
+    },
+    // A framed, empty card with a corner-pattern accent peeking from behind
+    // it — a bigger, standalone version of the .scene-pattern peek used in
+    // the real module, not tied to a photo the way it is there.
+    backdrop: (d, opts = {}) => {
+      const interactive = opts.interactive !== false;
+      const hasPattern = !!d.pattern;
+      return `
+      <div class="backdrop-piece">
+        <div class="backdrop-frame ${hasPattern ? "is-filled" : ""}" ${!hasPattern && interactive ? 'data-action="choose-asset" role="button" tabindex="0"' : ""}>
+          ${!hasPattern ? `<span class="activity-illustration-cta">${interactive ? "+ Choose a backdrop" : "No backdrop selected"}</span>` : ""}
         </div>
-        ${d.pattern ? `<img class="scene-pattern" src="assets/illustrations/patterns/${esc(d.pattern)}.webp" alt="" aria-hidden="true">` : ""}
+        ${hasPattern ? `<img class="backdrop-accent" src="assets/illustrations/patterns/${esc(d.pattern)}.webp" alt="" aria-hidden="true">` : ""}
+        ${hasPattern && interactive ? `<button type="button" class="activity-asset-change" data-action="choose-asset">Change backdrop</button>` : ""}
       </div>
     `;
     },
@@ -166,18 +205,32 @@
         <textarea id="f${id}-body" data-field="body" rows="3">${esc(d.body)}</textarea>
       </div>
     `,
-    illustration: (id, d) => `
+    image: (id, d) => `
+      <div class="activity-field">
+        <label>Choose a scene</label>
+        <div class="activity-pattern-grid activity-scene-grid">
+          ${SCENES.map(
+            (s) => `
+          <button type="button" class="activity-pattern-swatch ${d.scene === s.key ? "is-selected" : ""}" data-field="scene" data-value="${s.key}" aria-label="${s.label}" aria-pressed="${d.scene === s.key}">
+            <img src="assets/illustrations/scenes/${s.key}.webp" alt="">
+          </button>`
+          ).join("")}
+        </div>
+        <p class="activity-field-note">Real scene photos from the module — pick whichever fits your activity.</p>
+      </div>
+    `,
+    backdrop: (id, d) => `
       <div class="activity-field">
         <label>Backdrop pattern</label>
         <div class="activity-pattern-grid">
           ${PATTERNS.map(
             (p) => `
-          <button type="button" class="activity-pattern-swatch ${d.pattern === p.key ? "is-selected" : ""}" data-value="${p.key}" aria-label="${p.label}" aria-pressed="${d.pattern === p.key}">
+          <button type="button" class="activity-pattern-swatch ${d.pattern === p.key ? "is-selected" : ""}" data-field="pattern" data-value="${p.key}" aria-label="${p.label}" aria-pressed="${d.pattern === p.key}">
             <img src="assets/illustrations/patterns/${p.key}.webp" alt="">
           </button>`
           ).join("")}
         </div>
-        <p class="activity-field-note">Sits behind wherever you drop in your own illustration or photo. Pick one to continue.</p>
+        <p class="activity-field-note">A decorative corner accent, sized up into its own piece. Pick one to continue.</p>
       </div>
     `,
     takeaways: (id, d) =>
@@ -372,10 +425,10 @@
 
   preview.addEventListener("keydown", (e) => {
     if (e.key !== "Enter" && e.key !== " ") return;
-    const chooseBackdrop = e.target.closest('[data-action="choose-backdrop"]');
-    if (!chooseBackdrop) return;
+    const chooseAsset = e.target.closest('[data-action="choose-asset"]');
+    if (!chooseAsset) return;
     e.preventDefault();
-    const pieceEl = chooseBackdrop.closest("[data-piece-id]");
+    const pieceEl = chooseAsset.closest("[data-piece-id]");
     setEditing(Number(pieceEl.dataset.pieceId), true);
   });
 
@@ -397,22 +450,22 @@
       return;
     }
 
-    // Picking a backdrop is a single click, not a fill-in-and-Done form —
-    // select it and close the editor immediately, same as adding a piece.
+    // Picking an image/backdrop is a single click, not a fill-in-and-Done
+    // form — select it and close the editor immediately, same as adding a piece.
     const swatchBtn = e.target.closest(".activity-pattern-swatch");
     if (swatchBtn) {
       const pieceEl = swatchBtn.closest("[data-piece-id]");
       const piece = pieces.find((p) => p.id === Number(pieceEl.dataset.pieceId));
       if (piece) {
-        piece.data.pattern = swatchBtn.dataset.value;
+        piece.data[swatchBtn.dataset.field] = swatchBtn.dataset.value;
         setEditing(piece.id, false);
       }
       return;
     }
 
-    const chooseBackdrop = e.target.closest('[data-action="choose-backdrop"]');
-    if (chooseBackdrop) {
-      const pieceEl = chooseBackdrop.closest("[data-piece-id]");
+    const chooseAsset = e.target.closest('[data-action="choose-asset"]');
+    if (chooseAsset) {
+      const pieceEl = chooseAsset.closest("[data-piece-id]");
       setEditing(Number(pieceEl.dataset.pieceId), true);
       return;
     }

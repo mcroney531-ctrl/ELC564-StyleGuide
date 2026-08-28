@@ -201,7 +201,7 @@
   outline: none; border-color: var(--color-teal-500); box-shadow: var(--shadow-focus);
 }
 
-/* ---- illustration piece: placeholder slot + backdrop picker ---- */
+/* ---- image piece: empty slot + real scene-photo picker ---- */
 .activity-illustration-slot {
   aspect-ratio: 4 / 3;
   background: var(--color-cloud);
@@ -210,20 +210,27 @@
   text-align: center; padding: var(--space-4);
   color: var(--color-gray-500); font: var(--text-label);
 }
-.activity-illustration-slot[data-action="choose-backdrop"] {
+.activity-illustration-slot[data-action="choose-asset"] {
   cursor: pointer;
   transition: background-color var(--duration-micro) var(--ease-standard);
 }
-.activity-illustration-slot[data-action="choose-backdrop"]:hover { background: var(--color-ink-100); }
-.activity-illustration-slot[data-action="choose-backdrop"]:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.activity-illustration-slot[data-action="choose-asset"]:hover { background: var(--color-ink-100); }
+.activity-illustration-slot[data-action="choose-asset"]:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
 .activity-illustration-cta { color: var(--color-teal-600); font-weight: 600; }
-.activity-illustration-change { color: var(--color-teal-600); font: var(--text-caption); text-decoration: underline; }
+.activity-asset-change {
+  display: block; margin: var(--space-3) auto 0;
+  color: var(--color-teal-600); font: var(--text-caption); text-decoration: underline;
+}
 
 .activity-pattern-grid {
   display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-3);
   margin-top: var(--space-2);
 }
-@media (max-width: 480px) { .activity-pattern-grid { grid-template-columns: repeat(3, 1fr); } }
+.activity-scene-grid { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 480px) {
+  .activity-pattern-grid { grid-template-columns: repeat(3, 1fr); }
+  .activity-scene-grid { grid-template-columns: repeat(2, 1fr); }
+}
 .activity-pattern-swatch {
   aspect-ratio: 1; padding: var(--space-2);
   background: var(--color-paper); border-radius: var(--radius-md);
@@ -236,3 +243,29 @@
 .activity-pattern-swatch:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
 .activity-pattern-swatch.is-selected { background: var(--color-cloud); box-shadow: 0 0 0 2px var(--color-teal-600) inset; }
 .activity-field-note { color: var(--color-gray-500); font: var(--text-caption); margin-top: var(--space-2); }
+
+/* ---- backdrop piece: framed card + oversized corner-pattern accent ----
+   Same idea as the .scene-pattern peek used behind real photos in the
+   module, pulled out into its own addable piece and sized up so it reads
+   as intentional rather than a stray decoration. */
+.backdrop-piece { position: relative; max-width: 420px; margin: 0 auto; text-align: center; }
+.backdrop-frame {
+  position: relative; z-index: 1;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-lg);
+  background: var(--color-cloud);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--color-gray-500); font: var(--text-label);
+}
+.backdrop-frame[data-action="choose-asset"] {
+  cursor: pointer;
+  transition: background-color var(--duration-micro) var(--ease-standard);
+}
+.backdrop-frame[data-action="choose-asset"]:hover { background: var(--color-ink-100); }
+.backdrop-frame[data-action="choose-asset"]:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.backdrop-frame.is-filled { background: var(--color-white); box-shadow: var(--shadow-resting); }
+.backdrop-accent {
+  position: absolute; z-index: 0; top: -30px; right: -30px;
+  width: 148px; pointer-events: none;
+}
+@media (max-width: 480px) { .backdrop-accent { width: 108px; top: -20px; right: -20px; } }
