@@ -95,7 +95,10 @@
       <div class="card-section">
         <div class="section-inner">
           <div class="section-topbar">
-            <button class="btn btn-ghost" data-action="exit" aria-label="Back to overview">← Overview</button>
+            <div class="section-nav">
+              <button class="btn btn-ghost" data-action="exit" aria-label="Back to overview">← Overview</button>
+              <a class="btn btn-ghost" href="index.html">Home</a>
+            </div>
             <div class="section-progress-track" aria-hidden="true">
               <span class="tick" data-tick="0"></span>
               <span class="tick" data-tick="1"></span>

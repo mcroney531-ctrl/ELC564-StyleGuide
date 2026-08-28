@@ -77,7 +77,12 @@ a { color: var(--color-teal-600); }
   max-width: 1180px;
   margin: 0 auto;
 }
-.brand { display: flex; align-items: center; gap: var(--space-3); font: var(--text-label); color: var(--color-ink-900); }
+/* The brand is the way home from anywhere — a link on every real page (the
+   copy inside the style guide's header demo stays a plain div). */
+.brand { display: flex; align-items: center; gap: var(--space-3); font: var(--text-label); color: var(--color-ink-900); text-decoration: none; }
+a.brand { transition: opacity var(--duration-micro) var(--ease-standard); }
+a.brand:hover { opacity: 0.72; }
+a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-radius: var(--radius-sm); }
 .brand-mark {
   width: 32px; height: 32px; border-radius: var(--radius-sm);
   background: var(--color-ink-900);
@@ -288,7 +293,11 @@ a { color: var(--color-teal-600); }
     padding: var(--space-6) var(--space-5) var(--space-12);
   }
 }
-.section-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-12); }
+/* An expanded section is position:fixed over the whole viewport, so the
+   header (and its brand-as-home link) is unreachable from in here — hence a
+   Home control alongside Overview: back one level, or back to the start. */
+.section-topbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-12); }
+.section-nav { display: flex; align-items: center; gap: var(--space-1); }
 .section-progress-track { display: flex; gap: var(--space-2); }
 .section-progress-track .tick { width: 28px; height: 4px; border-radius: var(--radius-pill); background: var(--color-line); }
 .section-progress-track .tick.is-done { background: var(--illo-accent, var(--color-ink-900)); }
