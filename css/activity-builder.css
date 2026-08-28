@@ -1,5 +1,19 @@
 /* Activity Builder — standalone page, reuses tokens.css + styles.css components. */
 
+/* This page's own accent family, scoped here rather than in tokens.css so
+   it doesn't touch the main module or style guide's teal. One hue (~168°),
+   same lightness steps as the shared --color-teal-* scale, anchored on
+   #759E96 as the mid tone (500) — 600 is the AA-contrast-safe shade used
+   for text/icons/links, 300/100 are decorative-only (not contrast-checked). */
+:root {
+  --activity-accent-600: #50726B;
+  --activity-accent-500: #759E96;
+  --activity-accent-300: #A6BFBA;
+  --activity-accent-100: #E8EDEC;
+  --activity-shadow-focus: 0 0 0 3px rgba(117, 158, 150, 0.35);
+  --activity-shadow-card: 0 4px 8px rgba(20, 33, 58, 0.06), 0 24px 48px -16px rgba(20, 33, 58, 0.18);
+}
+
 .guide-header .app-header { padding-top: var(--space-4); padding-bottom: var(--space-4); }
 
 .activity-hero {
@@ -24,15 +38,15 @@
 
 .activity-hero-connectors {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  fill: none; stroke: var(--color-teal-300); stroke-width: 2; stroke-dasharray: 5 5;
+  fill: none; stroke: var(--activity-accent-300); stroke-width: 2; stroke-dasharray: 5 5;
   opacity: 0.55;
 }
-.activity-hero-connectors circle { fill: var(--color-paper); stroke: var(--color-teal-300); stroke-width: 1.6; stroke-dasharray: none; }
+.activity-hero-connectors circle { fill: var(--color-paper); stroke: var(--activity-accent-300); stroke-width: 1.6; stroke-dasharray: none; }
 
 .activity-hero-tile {
   position: absolute;
   width: 56px; height: 56px; border-radius: 18px;
-  background: linear-gradient(160deg, #ffffff 0%, #EAF3F2 100%);
+  background: linear-gradient(160deg, #ffffff 0%, var(--activity-accent-100) 100%);
   box-shadow:
     0 1px 1px rgba(20, 33, 58, 0.05),
     0 16px 28px -12px rgba(20, 33, 58, 0.22),
@@ -50,23 +64,23 @@
 .activity-hero-dots {
   position: absolute; top: -6%; right: -8%;
   width: 72px; height: 72px;
-  background-image: radial-gradient(var(--color-teal-300) 1.4px, transparent 1.4px);
+  background-image: radial-gradient(var(--activity-accent-300) 1.4px, transparent 1.4px);
   background-size: 12px 12px;
   opacity: 0.5;
 }
 .activity-hero-plus { position: absolute; color: var(--color-gray-500); font: 700 1rem var(--font-base); opacity: 0.4; }
-.activity-hero-sparkle { position: absolute; color: var(--color-teal-300); font-size: 0.95rem; opacity: 0.7; }
+.activity-hero-sparkle { position: absolute; color: var(--activity-accent-300); font-size: 0.95rem; opacity: 0.7; }
 
 /* ---- "About the exported file" ---- */
 .activity-about-wrap { max-width: 1180px; margin: 0 auto var(--space-12); padding: 0 var(--space-8); }
 .activity-about {
-  background: var(--color-white); border-radius: var(--radius-card); box-shadow: var(--shadow-resting);
+  background: var(--color-white); border-radius: var(--radius-card); box-shadow: var(--activity-shadow-card);
   padding: var(--space-8);
   display: flex; gap: var(--space-6); align-items: flex-start;
 }
 .activity-about-icon {
   flex: none; width: 56px; height: 56px; border-radius: 50%;
-  background: var(--color-teal-100); color: var(--color-teal-600);
+  background: var(--activity-accent-100); color: var(--activity-accent-600);
   display: flex; align-items: center; justify-content: center;
 }
 .activity-about-icon svg { width: 26px; height: 26px; }
@@ -132,7 +146,7 @@
 .builder-add-fab:hover { transform: translateY(-1px); background: var(--color-cloud); }
 .builder-add-fab:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-ink-900) inset, var(--shadow-raised), var(--shadow-focus);
+  box-shadow: 0 0 0 2px var(--color-ink-900) inset, var(--shadow-raised), var(--activity-shadow-focus);
 }
 
 .builder-add-toolbar {
@@ -198,7 +212,7 @@
 .activity-field textarea { resize: vertical; font-family: inherit; line-height: 1.5; }
 .activity-field input[type="text"]:focus,
 .activity-field textarea:focus {
-  outline: none; border-color: var(--color-teal-500); box-shadow: var(--shadow-focus);
+  outline: none; border-color: var(--activity-accent-500); box-shadow: var(--activity-shadow-focus);
 }
 .activity-field + .activity-field { margin-top: 0; }
 
@@ -206,14 +220,14 @@
   display: flex; align-items: center; gap: var(--space-3);
   padding: var(--space-1) 0;
 }
-.activity-option-field input[type="radio"] { flex: none; width: 18px; height: 18px; accent-color: var(--color-teal-600); }
+.activity-option-field input[type="radio"] { flex: none; width: 18px; height: 18px; accent-color: var(--activity-accent-600); }
 .activity-option-field input[type="text"] {
   flex: 1; font: var(--text-body); color: var(--color-charcoal);
   background: var(--color-paper); border: 1px solid var(--color-line); border-radius: var(--radius-sm);
   padding: var(--space-2) var(--space-3);
 }
 .activity-option-field input[type="text"]:focus {
-  outline: none; border-color: var(--color-teal-500); box-shadow: var(--shadow-focus);
+  outline: none; border-color: var(--activity-accent-500); box-shadow: var(--activity-shadow-focus);
 }
 
 /* ---- image piece: empty slot + real scene-photo picker ---- */
@@ -230,11 +244,11 @@
   transition: background-color var(--duration-micro) var(--ease-standard);
 }
 .activity-illustration-slot[data-action="choose-asset"]:hover { background: var(--color-ink-100); }
-.activity-illustration-slot[data-action="choose-asset"]:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
-.activity-illustration-cta { color: var(--color-teal-600); font-weight: 600; }
+.activity-illustration-slot[data-action="choose-asset"]:focus-visible { outline: none; box-shadow: var(--activity-shadow-focus); }
+.activity-illustration-cta { color: var(--activity-accent-600); font-weight: 600; }
 .activity-asset-change {
   display: block; margin: var(--space-3) auto 0;
-  color: var(--color-teal-600); font: var(--text-caption); text-decoration: underline;
+  color: var(--activity-accent-600); font: var(--text-caption); text-decoration: underline;
 }
 
 .activity-pattern-grid {
@@ -255,8 +269,8 @@
 }
 .activity-pattern-swatch img { width: 100%; height: 100%; object-fit: contain; }
 .activity-pattern-swatch:hover { background: var(--color-cloud); }
-.activity-pattern-swatch:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
-.activity-pattern-swatch.is-selected { background: var(--color-cloud); box-shadow: 0 0 0 2px var(--color-teal-600) inset; }
+.activity-pattern-swatch:focus-visible { outline: none; box-shadow: var(--activity-shadow-focus); }
+.activity-pattern-swatch.is-selected { background: var(--color-cloud); box-shadow: 0 0 0 2px var(--activity-accent-600) inset; }
 .activity-field-note { color: var(--color-gray-500); font: var(--text-caption); margin-top: var(--space-2); }
 
 /* ---- backdrop piece: framed card + oversized corner-pattern accent ----
@@ -277,7 +291,7 @@
   transition: background-color var(--duration-micro) var(--ease-standard);
 }
 .backdrop-frame[data-action="choose-asset"]:hover { background: var(--color-ink-100); }
-.backdrop-frame[data-action="choose-asset"]:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.backdrop-frame[data-action="choose-asset"]:focus-visible { outline: none; box-shadow: var(--activity-shadow-focus); }
 .backdrop-frame.is-filled { background: var(--color-white); box-shadow: var(--shadow-resting); }
 .backdrop-accent {
   position: absolute; z-index: 0; top: -30px; right: -30px;
