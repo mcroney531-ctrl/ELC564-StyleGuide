@@ -224,7 +224,13 @@ a { color: var(--color-teal-600); }
    inside it. Border + pattern together are what make the full backdrop.
    Background stays --color-paper (not white) so the white takeaway
    rectangles inside still read as raised against it. */
+/* The gutter comes from width, not from auto margins. Once the viewport is
+   narrower than max-width the column fills it and auto margins compute to 0,
+   which put the frame's side borders flush on the screen edge — visible on
+   any viewport between the mobile breakpoint and 780px. Subtracting the
+   gutter from the width instead guarantees one at every size. */
 .section-inner {
+  width: calc(100% - 2 * var(--space-6));
   max-width: 780px;
   margin: var(--space-6) auto;
   padding: var(--space-8) var(--space-8) var(--space-16);
@@ -233,11 +239,9 @@ a { color: var(--color-teal-600); }
   transition: box-shadow var(--duration-system) var(--ease-out);
 }
 @media (max-width: 720px) {
-  /* explicit horizontal margin, not auto — below 780px the column fills the
-     viewport, so auto computes to 0 and the frame's side borders and rounded
-     corners land flush on the screen edge */
   .section-inner {
-    margin: var(--space-3) var(--space-3);
+    width: calc(100% - 2 * var(--space-3));
+    margin: var(--space-3) auto;
     padding: var(--space-6) var(--space-5) var(--space-12);
   }
 }
