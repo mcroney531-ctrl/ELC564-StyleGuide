@@ -259,7 +259,11 @@ a { color: var(--color-teal-600); }
 .info-beat .point-list li {
   display: flex; gap: var(--space-3); align-items: flex-start;
   padding: var(--space-4); background: var(--color-white); border-radius: var(--radius-md); box-shadow: var(--shadow-resting);
+  transition: box-shadow var(--duration-micro) var(--ease-standard);
 }
+/* Elevation only — no lift or overshoot. These are read, not clicked, so the
+   hover acknowledges the row without implying it does something. */
+.info-beat .point-list li:hover { box-shadow: var(--shadow-lifted); }
 .info-beat .point-list li::before {
   content: ""; flex: none; width: 8px; height: 8px; margin-top: 8px; border-radius: 50%;
   background: var(--illo-accent, var(--color-ink-900));

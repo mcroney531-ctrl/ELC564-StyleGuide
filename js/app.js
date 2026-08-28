@@ -190,19 +190,33 @@
 
     renderBadge(cluster.id);
     wireCard(cluster, card, state);
-    wirePointBounce(card);
   }
 
-  // Same hover bounce as the home cards (see wireCard's mouseenter/mouseleave
-  // below), applied to each takeaway rectangle in a cluster's info beat.
-  function wirePointBounce(card) {
-    card.querySelectorAll(".point-list li").forEach((li) => {
-      li.addEventListener("mouseenter", () => {
-        gsap.to(li, { y: -8, duration: 0.4, ease: "back.out(2.2)" });
-      });
-      li.addEventListener("mouseleave", () => {
-        gsap.to(li, { y: 0, duration: 0.4, ease: "back.out(2.2)" });
-      });
+  // The takeaways are read, not clicked, so they get an arrival animation
+  // rather than a hover one: each rectangle fades up in sequence when the
+  // info beat appears. back.out is deliberately NOT used here — the motion
+  // spec reserves that overshoot for the clickable card lift, and reusing it
+  // on static content would read as a false affordance. Their hover state is
+  // a shadow lift in CSS, no movement.
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function revealPoints(target) {
+    const items = target.querySelectorAll(".point-list li");
+    if (!items.length) return;
+    if (prefersReducedMotion.matches) {
+      gsap.set(items, { clearProps: "all" });
+      return;
+    }
+    gsap.from(items, {
+      opacity: 0,
+      y: 12,
+      duration: 0.5,
+      ease: "power2.out",
+      stagger: 0.06,
+      // let the card finish most of its 0.65s expansion before the
+      // takeaways settle in, so the two moments read in sequence
+      delay: 0.3,
+      clearProps: "all",
     });
   }
 
@@ -277,7 +291,10 @@
         : sectionRoot.querySelector(`[data-view="${viewName}"]`);
 
     target.classList.add("is-active");
-    requestAnimationFrame(() => target.classList.add("is-visible"));
+    requestAnimationFrame(() => {
+      target.classList.add("is-visible");
+      revealPoints(target);
+    });
   }
 
   function updateTicks(sectionRoot, resolvedCount) {
