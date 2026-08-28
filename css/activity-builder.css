@@ -70,19 +70,11 @@
 .activity-shell {
   max-width: 1180px; margin: 0 auto;
   padding: 0 var(--space-8) var(--space-24);
-  display: grid; grid-template-columns: 300px 1fr; gap: var(--space-8); align-items: start;
 }
 @media (max-width: 760px) {
-  .activity-shell { grid-template-columns: 1fr; padding: 0 var(--space-6) var(--space-16); }
+  .activity-shell { padding: 0 var(--space-6) var(--space-16); }
   .activity-hero { padding: var(--space-8) var(--space-6) var(--space-8); }
 }
-
-.activity-picker {
-  background: var(--color-white); border-radius: var(--radius-lg); box-shadow: var(--shadow-resting);
-  padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3);
-  position: sticky; top: var(--space-8);
-}
-@media (max-width: 760px) { .activity-picker { position: static; } }
 
 #builder-copy-status { color: var(--color-success-700); min-height: 1em; margin: 0; }
 
@@ -91,37 +83,20 @@
 .demo-label { font: var(--text-caption); text-transform: uppercase; letter-spacing: var(--tracking-caption); color: var(--color-gray-500); margin-bottom: var(--space-1); display: block; }
 .guide-block-note { color: var(--color-gray-500); font: var(--text-body); }
 
-/* ---- piece list: added pieces, reorderable, removable ---- */
-.builder-check-list { display: flex; flex-direction: column; min-height: 32px; }
-.builder-check-list:empty::before {
-  content: "Nothing added yet — use the + in the preview.";
-  color: var(--color-gray-500); font: var(--text-body);
-  padding: var(--space-2) 0;
-}
-.builder-check {
-  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
-  padding: var(--space-2) 0;
-  border-bottom: 1px solid var(--color-line);
-}
-.builder-check-list > .builder-check:last-child { border-bottom: none; }
-.builder-check-label { font: var(--text-body); color: var(--color-charcoal); }
-
-.builder-check-actions { display: flex; align-items: center; gap: 2px; flex: none; }
-.builder-reorder { display: flex; gap: 2px; }
-.builder-move, .builder-remove {
-  width: 24px; height: 24px; display: grid; place-items: center;
+/* ---- per-piece reorder/edit/remove controls ----
+   There's no sidebar checklist any more — these live directly on the piece
+   they act on, as a slim row above its content. Only shown in view mode
+   (the edit form has its own Done button, so no redundant edit trigger). */
+.activity-piece-controls { display: flex; justify-content: flex-end; gap: 2px; margin-bottom: var(--space-2); }
+.piece-ctrl {
+  width: 26px; height: 26px; display: grid; place-items: center;
   border-radius: var(--radius-sm); color: var(--color-gray-500);
   transition: background-color var(--duration-micro) var(--ease-standard), color var(--duration-micro) var(--ease-standard);
 }
-.builder-move:hover:not(:disabled) { background: var(--color-cloud); color: var(--color-ink-900); }
-.builder-move:disabled { opacity: 0.25; cursor: default; }
-.builder-remove { margin-left: var(--space-2); font-size: 1.1rem; line-height: 1; }
-.builder-remove:hover { background: var(--color-error-100); color: var(--color-error-700); }
-.builder-edit { font-size: 0.95rem; }
-.builder-edit:hover { background: var(--color-cloud); color: var(--color-ink-900); }
-
-.builder-check.is-editing { border-radius: var(--radius-sm); background: var(--color-cloud); padding-left: var(--space-2); padding-right: var(--space-2); margin: 0 calc(-1 * var(--space-2)); }
-.builder-check.is-editing .builder-check-label { color: var(--color-ink-900); font-weight: 600; }
+.piece-ctrl svg { width: 15px; height: 15px; }
+.piece-ctrl:hover:not(:disabled) { background: var(--color-cloud); color: var(--color-ink-900); }
+.piece-ctrl:disabled { opacity: 0.25; cursor: default; }
+.piece-ctrl.is-remove:hover { background: var(--color-error-100); color: var(--color-error-700); }
 
 /* ---- "+ Add a piece" trigger + toolbar ----
    Lives inside #builder-preview itself, re-appended as the trailing child

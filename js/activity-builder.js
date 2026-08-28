@@ -13,13 +13,12 @@
   "use strict";
 
   const preview = document.getElementById("builder-preview");
-  const checkList = document.getElementById("builder-check-list");
   const addWrap = document.getElementById("builder-add-wrap");
   const addBtn = document.getElementById("builder-add-btn");
   const addPanel = document.getElementById("builder-add-panel");
   const copyBtn = document.getElementById("builder-copy");
   const copyStatus = document.getElementById("builder-copy-status");
-  if (!preview || !checkList || !addWrap || !addBtn || !addPanel || !copyBtn) return;
+  if (!preview || !addWrap || !addBtn || !addPanel || !copyBtn) return;
 
   function esc(str) {
     return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -31,6 +30,16 @@
     takeaways: "Key takeaways list",
     scenario: "Scenario / MCQ question",
     button: "Standalone CTA button",
+  };
+
+  // Per-piece reorder/edit/remove controls now live on the piece itself
+  // (there's no sidebar checklist any more), so every .activity-piece gets
+  // this small icon row rendered above it.
+  const CTRL_ICONS = {
+    edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 4.5l4 4L8 20H4v-4Z"/></svg>',
+    up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14l6-6 6 6"/></svg>',
+    down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10l6 6 6-6"/></svg>',
+    remove: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   };
 
   // The module's own set of pastel corner-pattern accents — same assets used
@@ -258,33 +267,22 @@
     }
   }
 
-  function renderChecklist() {
-    // number duplicate types ("Scenario / MCQ question #2") for clarity
+  function renderPreview() {
+    // number duplicate types ("Scenario / MCQ question #2") for clear aria-labels
     const seen = {};
-    checkList.innerHTML = pieces
+    const body = pieces
       .map((p, i) => {
         seen[p.type] = (seen[p.type] || 0) + 1;
         const countOfType = pieces.filter((x) => x.type === p.type).length;
         const label = TYPE_LABELS[p.type] + (countOfType > 1 ? ` #${seen[p.type]}` : "");
-        return `
-      <div class="builder-check ${p.editing ? "is-editing" : ""}" data-id="${p.id}">
-        <span class="builder-check-label">${label}</span>
-        <div class="builder-check-actions">
-          <button type="button" class="builder-edit" data-id="${p.id}" aria-label="Edit ${label}">✎</button>
-          <div class="builder-reorder">
-            <button type="button" class="builder-move" data-dir="up" data-id="${p.id}" ${i === 0 ? "disabled" : ""} aria-label="Move ${label} up">↑</button>
-            <button type="button" class="builder-move" data-dir="down" data-id="${p.id}" ${i === pieces.length - 1 ? "disabled" : ""} aria-label="Move ${label} down">↓</button>
-          </div>
-          <button type="button" class="builder-remove" data-id="${p.id}" aria-label="Remove ${label}">✕</button>
-        </div>
-      </div>`;
-      })
-      .join("");
-  }
-
-  function renderPreview() {
-    const body = pieces
-      .map((p) => {
+        const controls = p.editing
+          ? ""
+          : `<div class="activity-piece-controls">
+               <button type="button" class="piece-ctrl" data-action="edit" data-id="${p.id}" aria-label="Edit ${label}">${CTRL_ICONS.edit}</button>
+               <button type="button" class="piece-ctrl" data-action="move-up" data-id="${p.id}" ${i === 0 ? "disabled" : ""} aria-label="Move ${label} up">${CTRL_ICONS.up}</button>
+               <button type="button" class="piece-ctrl" data-action="move-down" data-id="${p.id}" ${i === pieces.length - 1 ? "disabled" : ""} aria-label="Move ${label} down">${CTRL_ICONS.down}</button>
+               <button type="button" class="piece-ctrl is-remove" data-action="remove" data-id="${p.id}" aria-label="Remove ${label}">${CTRL_ICONS.remove}</button>
+             </div>`;
         const inner = p.editing
           ? `<div class="activity-edit-form">
                <div class="activity-edit-header">
@@ -294,7 +292,7 @@
                ${FORMS[p.type](p.id, p.data)}
              </div>`
           : PIECES[p.type](p.data);
-        return `<div class="activity-piece" data-piece-id="${p.id}">${inner}</div>`;
+        return `<div class="activity-piece" data-piece-id="${p.id}">${controls}${inner}</div>`;
       })
       .join("\n");
     // .info-beat is what activates the point-list/heading/CTA spacing rules
@@ -308,26 +306,8 @@
   }
 
   function renderAll() {
-    renderChecklist();
     renderPreview();
   }
-
-  checkList.addEventListener("click", (e) => {
-    const moveBtn = e.target.closest(".builder-move");
-    if (moveBtn) {
-      movePiece(Number(moveBtn.dataset.id), moveBtn.dataset.dir);
-      return;
-    }
-    const removeBtn = e.target.closest(".builder-remove");
-    if (removeBtn) {
-      removePiece(Number(removeBtn.dataset.id));
-      return;
-    }
-    const editBtn = e.target.closest(".builder-edit");
-    if (editBtn) {
-      setEditing(Number(editBtn.dataset.id), true);
-    }
-  });
 
   // ---- "+ Add a piece" trigger + panel ----
   function closeAddPanel() {
@@ -403,6 +383,17 @@
     const doneBtn = e.target.closest('[data-action="done-edit"]');
     if (doneBtn) {
       setEditing(Number(doneBtn.dataset.id), false);
+      return;
+    }
+
+    const ctrlBtn = e.target.closest(".piece-ctrl");
+    if (ctrlBtn && !ctrlBtn.disabled) {
+      const id = Number(ctrlBtn.dataset.id);
+      const action = ctrlBtn.dataset.action;
+      if (action === "edit") setEditing(id, true);
+      else if (action === "move-up") movePiece(id, "up");
+      else if (action === "move-down") movePiece(id, "down");
+      else if (action === "remove") removePiece(id);
       return;
     }
 
