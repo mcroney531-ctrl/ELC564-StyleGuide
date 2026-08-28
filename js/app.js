@@ -446,4 +446,20 @@
   /* ---------------- init ---------------- */
 
   CONTENT.clusters.forEach(buildCard);
+
+  // "Start Activity" on the cover scrolls to the card grid. Handled here
+  // rather than left as a bare #hash jump so it eases instead of snapping,
+  // and so reduced-motion still gets the instant jump.
+  const startLink = document.querySelector('[data-action="start-module"]');
+  if (startLink) {
+    startLink.addEventListener("click", (e) => {
+      const landing = document.getElementById("landing");
+      if (!landing) return;
+      e.preventDefault();
+      landing.scrollIntoView({
+        behavior: prefersReducedMotion.matches ? "auto" : "smooth",
+        block: "start",
+      });
+    });
+  }
 })();

@@ -47,6 +47,9 @@ a { color: var(--color-teal-600); }
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-md);
   font: var(--text-label);
+  /* .btn is used on both <button> and <a>; without this the anchor ones
+     pick up the default underline and don't match the real buttons */
+  text-decoration: none;
   transition: transform var(--duration-micro) var(--ease-standard),
               background-color var(--duration-micro) var(--ease-standard),
               box-shadow var(--duration-micro) var(--ease-standard);
@@ -83,6 +86,44 @@ a { color: var(--color-teal-600); }
 }
 
 .app-main { position: relative; }
+
+/* ---- Cover ----
+   The entry screen: one scene illustration, the module's title, a short
+   description, and the two ways in. Sized to sit within the first viewport
+   (minus the header) so the card grid below reads as a deliberate next step
+   rather than something you missed. */
+.cover {
+  min-height: calc(100vh - 92px);
+  display: grid;
+  place-items: center;
+  padding: var(--space-8) var(--space-8) var(--space-16);
+}
+.cover-inner {
+  max-width: 620px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.cover-art { width: 100%; max-width: 340px; }
+.cover-art .banner-wrap { margin-bottom: var(--space-8); }
+.cover-inner .h-display { color: var(--color-ink-900); margin-top: var(--space-3); }
+.cover-inner .body-lg { margin-top: var(--space-4); color: var(--color-gray-700); }
+.cover-actions {
+  margin-top: var(--space-8);
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+@media (max-width: 720px) {
+  .cover { min-height: 0; padding: var(--space-4) var(--space-6) var(--space-12); }
+  .cover-art { max-width: 260px; }
+  .cover-art .banner-wrap { margin-bottom: var(--space-6); }
+  /* full-width stacked buttons rather than two cramped ones side by side */
+  .cover-actions { flex-direction: column; align-self: stretch; }
+  .cover-actions .btn { justify-content: center; }
+}
 
 /* ---- Landing ---- */
 .landing {
@@ -270,6 +311,11 @@ a { color: var(--color-teal-600); }
   z-index: 1;
   display: block;
   width: 100%;
+  /* required wherever the img carries width/height attributes (the cover
+     does, to reserve space and avoid layout shift): width:100% overrides the
+     width attribute but nothing overrides height, so without this the image
+     renders at its literal pixel height and stretches. */
+  height: auto;
   margin: 0;
   filter: drop-shadow(0 10px 16px rgba(20, 33, 58, 0.14));
 }
