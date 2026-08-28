@@ -61,6 +61,11 @@
 .builder-move:disabled { opacity: 0.25; cursor: default; }
 .builder-remove { margin-left: var(--space-2); font-size: 1.1rem; line-height: 1; }
 .builder-remove:hover { background: var(--color-error-100); color: var(--color-error-700); }
+.builder-edit { font-size: 0.95rem; }
+.builder-edit:hover { background: var(--color-cloud); color: var(--color-ink-900); }
+
+.builder-check.is-editing { border-radius: var(--radius-sm); background: var(--color-cloud); padding-left: var(--space-2); padding-right: var(--space-2); margin: 0 calc(-1 * var(--space-2)); }
+.builder-check.is-editing .builder-check-label { color: var(--color-ink-900); font-weight: 600; }
 
 /* ---- "+ Add a piece" trigger + panel ---- */
 .builder-add-wrap { position: relative; }
@@ -94,3 +99,48 @@
 }
 .builder-preview .banner-wrap { max-width: 320px; }
 .activity-scenario-block { display: block; margin-bottom: var(--space-8); }
+.activity-piece { margin-bottom: var(--space-8); }
+.activity-piece:last-child { margin-bottom: 0; }
+
+/* ---- edit form ---- */
+.activity-edit-form {
+  background: var(--color-white); border-radius: var(--radius-md);
+  box-shadow: 0 0 0 1.5px var(--color-line) inset;
+  padding: var(--space-6);
+  display: flex; flex-direction: column; gap: var(--space-4);
+}
+.activity-edit-header {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+  margin-bottom: var(--space-1);
+}
+.activity-edit-header .label { color: var(--color-gray-500); text-transform: uppercase; letter-spacing: var(--tracking-caption); }
+
+.activity-field { display: flex; flex-direction: column; gap: var(--space-2); }
+.activity-field label { font: var(--text-label); color: var(--color-gray-700); }
+.activity-field input[type="text"],
+.activity-field textarea {
+  width: 100%; font: var(--text-body); color: var(--color-charcoal);
+  background: var(--color-paper); border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  transition: box-shadow var(--duration-micro) var(--ease-standard), border-color var(--duration-micro) var(--ease-standard);
+}
+.activity-field textarea { resize: vertical; font-family: inherit; line-height: 1.5; }
+.activity-field input[type="text"]:focus,
+.activity-field textarea:focus {
+  outline: none; border-color: var(--color-teal-500); box-shadow: var(--shadow-focus);
+}
+.activity-field + .activity-field { margin-top: 0; }
+
+.activity-option-field {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-1) 0;
+}
+.activity-option-field input[type="radio"] { flex: none; width: 18px; height: 18px; accent-color: var(--color-teal-600); }
+.activity-option-field input[type="text"] {
+  flex: 1; font: var(--text-body); color: var(--color-charcoal);
+  background: var(--color-paper); border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+}
+.activity-option-field input[type="text"]:focus {
+  outline: none; border-color: var(--color-teal-500); box-shadow: var(--shadow-focus);
+}

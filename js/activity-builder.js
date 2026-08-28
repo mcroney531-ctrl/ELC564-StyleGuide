@@ -1,11 +1,12 @@
 /**
  * Activity Builder (activity.html) — add real components from the module,
- * reorder or remove them, see them assemble live, then copy a
- * self-contained starter file. This is a component picker, not a builder
- * tool: the pieces themselves are fixed, well-formed blocks lifted straight
- * from the module — a viewer can add any of them (more than once if they
- * want two scenarios, say), reorder, remove, and swap the placeholder copy
- * afterward.
+ * edit their copy, reorder or remove them, see them assemble live, then
+ * copy a self-contained starter file. This is a component picker, not a
+ * builder tool: the pieces themselves are fixed, well-formed blocks lifted
+ * straight from the module — a viewer can add any of them (more than once
+ * if they want two scenarios, say), fill in their own copy through a form
+ * (not free-form contenteditable, so "which option is correct" stays an
+ * explicit choice rather than a text edit), reorder, and remove.
  */
 
 (function () {
@@ -19,6 +20,10 @@
   const copyStatus = document.getElementById("builder-copy-status");
   if (!preview || !checkList || !addBtn || !addPanel || !copyBtn) return;
 
+  function esc(str) {
+    return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
   const TYPE_LABELS = {
     heading: "Heading + intro text",
     illustration: "Supporting illustration slot",
@@ -27,44 +32,72 @@
     button: "Standalone CTA button",
   };
 
+  // Fresh default data per instance — must be factory functions, not shared
+  // objects/arrays, so two Scenario blocks don't end up editing the same array.
+  const DEFAULTS = {
+    heading: () => ({
+      eyebrow: "Your Cluster Name",
+      title: "Your activity title goes here",
+      body: 'One or two sentences setting up what this teaches — the "why," not the whole lesson. Keep it short enough to read in one breath.',
+    }),
+    illustration: () => ({ altText: "Swap for your own illustration" }),
+    takeaways: () => ({
+      items: ["First takeaway — state the behavior you want, plainly.", "Second takeaway.", "Third takeaway."],
+    }),
+    scenario: () => ({
+      prompt: "Replace this with your own scenario question.",
+      options: [
+        { text: "First option — a wrong answer.", correct: false },
+        { text: "Second option — the correct answer.", correct: true },
+        { text: "Third option — a wrong answer.", correct: false },
+        { text: "Fourth option — a wrong answer.", correct: false },
+      ],
+      corrective: "Explain why this answer misses the point, then let them try the same question again.",
+      success: "A brief, affirming sentence on why this is right.",
+    }),
+    button: () => ({ label: "Your call to action" }),
+  };
+
+  // Render templates — pure functions of data, used identically by the live
+  // preview and the exported file.
   const PIECES = {
-    heading: () => `
-      <span class="eyebrow">Your Cluster Name</span>
-      <h1 class="h1">Your activity title goes here</h1>
-      <p class="body-lg">One or two sentences setting up what this teaches — the "why," not the whole lesson. Keep it short enough to read in one breath.</p>
+    heading: (d) => `
+      <span class="eyebrow">${esc(d.eyebrow)}</span>
+      <h1 class="h1">${esc(d.title)}</h1>
+      <p class="body-lg">${esc(d.body)}</p>
     `,
-    illustration: () => `
+    illustration: (d) => `
       <div class="banner-wrap">
         <div class="content-banner" style="aspect-ratio:4/3;background:var(--color-cloud);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;color:var(--color-gray-500);font:var(--text-label);text-align:center;padding:var(--space-4)">
-          Swap for your own illustration
+          ${esc(d.altText)}
         </div>
       </div>
     `,
-    takeaways: () => `
+    takeaways: (d) => `
       <ul class="point-list">
-        <li class="body">First takeaway — state the behavior you want, plainly.</li>
-        <li class="body">Second takeaway.</li>
-        <li class="body">Third takeaway.</li>
+        ${d.items.map((item) => `<li class="body">${esc(item)}</li>`).join("")}
       </ul>
     `,
-    scenario: () => `
+    scenario: (d) => `
       <div class="activity-scenario-block" data-activity-scenario>
         <div class="scenario-meta">
           <span class="scenario-number">1</span>
           <span class="label" style="color:var(--color-gray-500)">Scenario 1 of 1</span>
         </div>
-        <h2 class="scenario-prompt">Replace this with your own scenario question.</h2>
+        <h2 class="scenario-prompt">${esc(d.prompt)}</h2>
         <div class="option-list" role="group" aria-label="Answer options" data-activity-group>
-          <button class="option" type="button" data-correct="false"><span class="option-marker" aria-hidden="true"></span><span class="option-text">First option — a wrong answer.</span></button>
-          <button class="option" type="button" data-correct="true"><span class="option-marker" aria-hidden="true"></span><span class="option-text">Second option — the correct answer.</span></button>
-          <button class="option" type="button" data-correct="false"><span class="option-marker" aria-hidden="true"></span><span class="option-text">Third option — a wrong answer.</span></button>
-          <button class="option" type="button" data-correct="false"><span class="option-marker" aria-hidden="true"></span><span class="option-text">Fourth option — a wrong answer.</span></button>
+          ${d.options
+            .map(
+              (o) => `
+          <button class="option" type="button" data-correct="${o.correct}"><span class="option-marker" aria-hidden="true"></span><span class="option-text">${esc(o.text)}</span></button>`
+            )
+            .join("")}
         </div>
         <div class="feedback is-corrective" data-feedback="corrective">
           <span class="feedback-icon" aria-hidden="true"></span>
           <div class="feedback-body">
             <span class="label">Not quite</span>
-            <p class="body">Explain why this answer misses the point, then let them try the same question again.</p>
+            <p class="body">${esc(d.corrective)}</p>
             <div class="feedback-actions"><button class="btn btn-secondary" type="button" data-action="retry">Try again</button></div>
           </div>
         </div>
@@ -72,23 +105,96 @@
           <span class="feedback-icon" aria-hidden="true"></span>
           <div class="feedback-body">
             <span class="label">Correct</span>
-            <p class="body">A brief, affirming sentence on why this is right.</p>
+            <p class="body">${esc(d.success)}</p>
           </div>
         </div>
       </div>
     `,
-    button: () => `<button class="btn btn-primary" type="button">Your call to action</button>`,
+    button: (d) => `<button class="btn btn-primary" type="button">${esc(d.label)}</button>`,
+  };
+
+  // Edit forms — one per type, driving the same data the templates above read.
+  const FORMS = {
+    heading: (id, d) => `
+      <div class="activity-field">
+        <label for="f${id}-eyebrow">Eyebrow</label>
+        <input type="text" id="f${id}-eyebrow" data-field="eyebrow" value="${esc(d.eyebrow)}">
+      </div>
+      <div class="activity-field">
+        <label for="f${id}-title">Title</label>
+        <input type="text" id="f${id}-title" data-field="title" value="${esc(d.title)}">
+      </div>
+      <div class="activity-field">
+        <label for="f${id}-body">Intro text</label>
+        <textarea id="f${id}-body" data-field="body" rows="3">${esc(d.body)}</textarea>
+      </div>
+    `,
+    illustration: (id, d) => `
+      <div class="activity-field">
+        <label for="f${id}-alt">Placeholder label</label>
+        <input type="text" id="f${id}-alt" data-field="altText" value="${esc(d.altText)}">
+      </div>
+    `,
+    takeaways: (id, d) =>
+      d.items
+        .map(
+          (item, i) => `
+      <div class="activity-field">
+        <label for="f${id}-item${i}">Takeaway ${i + 1}</label>
+        <input type="text" id="f${id}-item${i}" data-field="items" data-index="${i}" value="${esc(item)}">
+      </div>`
+        )
+        .join(""),
+    scenario: (id, d) => `
+      <div class="activity-field">
+        <label for="f${id}-prompt">Question</label>
+        <textarea id="f${id}-prompt" data-field="prompt" rows="2">${esc(d.prompt)}</textarea>
+      </div>
+      <div class="activity-field">
+        <label>Options — pick the correct one</label>
+        ${d.options
+          .map(
+            (o, i) => `
+        <div class="activity-option-field">
+          <input type="radio" name="correct-${id}" data-field="optionCorrect" data-index="${i}" ${o.correct ? "checked" : ""} aria-label="Mark option ${i + 1} correct">
+          <input type="text" data-field="optionText" data-index="${i}" value="${esc(o.text)}" aria-label="Option ${i + 1} text">
+        </div>`
+          )
+          .join("")}
+      </div>
+      <div class="activity-field">
+        <label for="f${id}-corrective">Corrective feedback (wrong answer)</label>
+        <textarea id="f${id}-corrective" data-field="corrective" rows="2">${esc(d.corrective)}</textarea>
+      </div>
+      <div class="activity-field">
+        <label for="f${id}-success">Success feedback (right answer)</label>
+        <textarea id="f${id}-success" data-field="success" rows="2">${esc(d.success)}</textarea>
+      </div>
+    `,
+    button: (id, d) => `
+      <div class="activity-field">
+        <label for="f${id}-label">Button label</label>
+        <input type="text" id="f${id}-label" data-field="label" value="${esc(d.label)}">
+      </div>
+    `,
   };
 
   // Single source of truth: an ordered list of instances. Each has its own
-  // id so duplicates (two Scenario blocks, say) can be reordered/removed
-  // independently — the type alone isn't enough to identify one.
+  // id (duplicates need independent identity) and its own data object (what
+  // makes it editable rather than a fixed placeholder), plus whether its
+  // edit form is currently open.
   let nextId = 1;
   const pieces = [];
 
   function addPiece(type) {
-    pieces.push({ id: nextId++, type });
+    pieces.forEach((p) => (p.editing = false));
+    const piece = { id: nextId++, type, data: DEFAULTS[type](), editing: true };
+    pieces.push(piece);
     renderAll();
+    requestAnimationFrame(() => {
+      const el = preview.querySelector(`[data-piece-id="${piece.id}"]`);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
   }
 
   function removePiece(id) {
@@ -105,6 +211,17 @@
     renderAll();
   }
 
+  function setEditing(id, editing) {
+    pieces.forEach((p) => (p.editing = p.id === id ? editing : false));
+    renderAll();
+    if (editing) {
+      requestAnimationFrame(() => {
+        const el = preview.querySelector(`[data-piece-id="${id}"]`);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }
+  }
+
   function renderChecklist() {
     // number duplicate types ("Scenario / MCQ question #2") for clarity
     const seen = {};
@@ -114,9 +231,10 @@
         const countOfType = pieces.filter((x) => x.type === p.type).length;
         const label = TYPE_LABELS[p.type] + (countOfType > 1 ? ` #${seen[p.type]}` : "");
         return `
-      <div class="builder-check" data-id="${p.id}">
+      <div class="builder-check ${p.editing ? "is-editing" : ""}" data-id="${p.id}">
         <span class="builder-check-label">${label}</span>
         <div class="builder-check-actions">
+          <button type="button" class="builder-edit" data-id="${p.id}" aria-label="Edit ${label}">✎</button>
           <div class="builder-reorder">
             <button type="button" class="builder-move" data-dir="up" data-id="${p.id}" ${i === 0 ? "disabled" : ""} aria-label="Move ${label} up">↑</button>
             <button type="button" class="builder-move" data-dir="down" data-id="${p.id}" ${i === pieces.length - 1 ? "disabled" : ""} aria-label="Move ${label} down">↓</button>
@@ -129,7 +247,20 @@
   }
 
   function renderPreview() {
-    const body = pieces.map((p) => PIECES[p.type]()).join("\n");
+    const body = pieces
+      .map((p) => {
+        const inner = p.editing
+          ? `<div class="activity-edit-form">
+               <div class="activity-edit-header">
+                 <span class="label">Editing — ${TYPE_LABELS[p.type]}</span>
+                 <button type="button" class="btn btn-primary" data-action="done-edit" data-id="${p.id}">Done</button>
+               </div>
+               ${FORMS[p.type](p.id, p.data)}
+             </div>`
+          : PIECES[p.type](p.data);
+        return `<div class="activity-piece" data-piece-id="${p.id}">${inner}</div>`;
+      })
+      .join("\n");
     // .info-beat is what activates the point-list/heading/CTA spacing rules
     // in styles.css — every piece here is designed to live inside it.
     preview.innerHTML = body ? `<div class="info-beat">${body}</div>` : "";
@@ -149,6 +280,11 @@
     const removeBtn = e.target.closest(".builder-remove");
     if (removeBtn) {
       removePiece(Number(removeBtn.dataset.id));
+      return;
+    }
+    const editBtn = e.target.closest(".builder-edit");
+    if (editBtn) {
+      setEditing(Number(editBtn.dataset.id), true);
     }
   });
 
@@ -178,12 +314,48 @@
     if (e.key === "Escape" && !addPanel.hidden) closeAddPanel();
   });
 
-  // ---- live preview interactivity (delegated so it survives re-renders;
-  // scoped to the nearest scenario block so multiple scenarios don't
-  // cross-talk) ----
-  const SELECT_HOLD_MS = 550;
+  // ---- edit form input handling ----
+  // Data updates on every keystroke, but the preview is NOT re-rendered
+  // until "Done" is clicked — re-rendering the form on every keystroke
+  // would rebuild the focused input out from under the user's cursor.
+  preview.addEventListener("input", (e) => {
+    const field = e.target.closest("[data-field]");
+    if (!field) return;
+    const pieceEl = field.closest("[data-piece-id]");
+    const piece = pieces.find((p) => p.id === Number(pieceEl.dataset.pieceId));
+    if (!piece) return;
+
+    const key = field.dataset.field;
+    const index = field.dataset.index !== undefined ? Number(field.dataset.index) : null;
+
+    if (key === "items") {
+      piece.data.items[index] = field.value;
+    } else if (key === "optionText") {
+      piece.data.options[index].text = field.value;
+    } else if (key === "optionCorrect") {
+      piece.data.options.forEach((o, i) => (o.correct = i === index));
+    } else {
+      piece.data[key] = field.value;
+    }
+  });
+  // Radios fire "change", not "input" — same field-update logic as above.
+  preview.addEventListener("change", (e) => {
+    const field = e.target.closest('[data-field="optionCorrect"]');
+    if (!field) return;
+    const pieceEl = field.closest("[data-piece-id]");
+    const piece = pieces.find((p) => p.id === Number(pieceEl.dataset.pieceId));
+    if (!piece) return;
+    const index = Number(field.dataset.index);
+    piece.data.options.forEach((o, i) => (o.correct = i === index));
+  });
 
   preview.addEventListener("click", (e) => {
+    const doneBtn = e.target.closest('[data-action="done-edit"]');
+    if (doneBtn) {
+      setEditing(Number(doneBtn.dataset.id), false);
+      return;
+    }
+
     const retryBtn = e.target.closest('[data-action="retry"]');
     if (retryBtn) {
       const scenario = retryBtn.closest("[data-activity-scenario]");
@@ -213,7 +385,7 @@
             if (!b.classList.contains("is-wrong")) b.disabled = false;
           });
         }
-      }, SELECT_HOLD_MS);
+      }, 550);
     }
   });
 
@@ -250,7 +422,7 @@ document.addEventListener('click', function (e) {
           if (!b.classList.contains('is-wrong')) b.disabled = false;
         });
       }
-    }, ${SELECT_HOLD_MS});
+    }, 550);
   }
 });`.trim();
 
@@ -259,7 +431,8 @@ document.addEventListener('click', function (e) {
       fetch("css/tokens.css").then((r) => r.text()),
       fetch("css/styles.css").then((r) => r.text()),
     ]);
-    const body = pieces.map((p) => PIECES[p.type]()).join("\n");
+    // Always rendered in view mode, regardless of live-preview edit state.
+    const body = pieces.map((p) => PIECES[p.type](p.data)).join("\n");
     const needsScript = pieces.some((p) => p.type === "scenario");
 
     return `<!doctype html>
