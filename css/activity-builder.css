@@ -11,19 +11,33 @@
 .activity-hero .h-display { color: var(--color-ink-900); margin-top: var(--space-3); max-width: 640px; }
 .activity-hero .body-lg { max-width: 640px; margin-top: var(--space-4); }
 
-/* Decorative only (aria-hidden) — a scattered cluster of the same piece
-   icons used in the add-toolbar, so it reads as "these are the building
-   blocks" rather than generic hero art. Dropped below the width where the
-   hero itself stacks, since there's no room for it once copy goes full-width. */
+/* Decorative only (aria-hidden) — a scattered, glossy cluster of the same
+   piece icons used in the add-toolbar, connected by dashed lines, so it
+   reads as "these are the building blocks" rather than generic hero art.
+   Shown at every width — the tile/container size just scales down together
+   (percentage tile positions + a viewBox-scaled connector overlay keep
+   everything aligned at any size, as long as the aspect ratio matches). */
 .activity-hero-art { position: relative; width: 260px; height: 220px; flex: none; }
-@media (max-width: 900px) { .activity-hero-art { display: none; } }
+@media (max-width: 760px) {
+  .activity-hero-art { width: 213px; height: 180px; align-self: center; margin-top: var(--space-8); }
+}
+
+.activity-hero-connectors {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  fill: none; stroke: var(--color-teal-300); stroke-width: 2; stroke-dasharray: 5 5;
+  opacity: 0.55;
+}
+.activity-hero-connectors circle { fill: var(--color-paper); stroke: var(--color-teal-300); stroke-width: 1.6; stroke-dasharray: none; }
 
 .activity-hero-tile {
   position: absolute;
-  width: 56px; height: 56px; border-radius: var(--radius-md);
-  background: var(--color-white); box-shadow: var(--shadow-resting);
+  width: 56px; height: 56px; border-radius: 18px;
+  background: linear-gradient(160deg, #ffffff 0%, #EAF3F2 100%);
+  box-shadow:
+    0 1px 1px rgba(20, 33, 58, 0.05),
+    0 16px 28px -12px rgba(20, 33, 58, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   display: flex; align-items: center; justify-content: center;
-  color: var(--color-teal-600);
 }
 .activity-hero-tile svg { width: 26px; height: 26px; }
 .activity-hero-tile.is-t1 { top: 8%; left: 2%; }
@@ -41,6 +55,7 @@
   opacity: 0.5;
 }
 .activity-hero-plus { position: absolute; color: var(--color-gray-500); font: 700 1rem var(--font-base); opacity: 0.4; }
+.activity-hero-sparkle { position: absolute; color: var(--color-teal-300); font-size: 0.95rem; opacity: 0.7; }
 
 /* ---- "About the exported file" ---- */
 .activity-about-wrap { max-width: 1180px; margin: 0 auto var(--space-12); padding: 0 var(--space-8); }
