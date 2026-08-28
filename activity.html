@@ -22,19 +22,56 @@
 </header>
 
 <div class="activity-hero">
-  <span class="eyebrow">Activity Builder</span>
-  <h1 class="h-display">Start a new activity</h1>
-  <p class="body-lg">Add pieces, reorder them, then copy a self-contained starter file — no dependency on this site, just the same components and interaction wiring as the module.</p>
+  <div class="activity-hero-copy">
+    <span class="eyebrow">Activity Builder</span>
+    <h1 class="h-display">Start a new activity</h1>
+    <p class="body-lg">Add pieces, reorder them, then copy a self-contained starter file — no dependency on this site, just the same components and interaction wiring as the module.</p>
+  </div>
+  <div class="activity-hero-art" aria-hidden="true">
+    <span class="activity-hero-dots"></span>
+    <span class="activity-hero-plus" style="top:4%; left:0%;">+</span>
+    <span class="activity-hero-plus" style="bottom:10%; left:40%;">+</span>
+    <div class="activity-hero-tile is-t1">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 6h14M12 6v12"/></svg>
+    </div>
+    <div class="activity-hero-tile is-t2">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M4 16l4.5-4.5c.6-.6 1.4-.6 2 0L14 15l2-2c.6-.6 1.4-.6 2 0l2.5 2.5"/></svg>
+    </div>
+    <div class="activity-hero-tile is-t3">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="4.5" cy="6" r="1" fill="currentColor" stroke="none"/><path d="M9 6h11"/><circle cx="4.5" cy="12" r="1" fill="currentColor" stroke="none"/><path d="M9 12h11"/><circle cx="4.5" cy="18" r="1" fill="currentColor" stroke="none"/><path d="M9 18h11"/></svg>
+    </div>
+    <div class="activity-hero-tile is-t4">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.4 9.3a2.6 2.6 0 0 1 5 .8c0 1.7-2.4 2-2.4 3.4"/><circle cx="12" cy="16.6" r="0.9" fill="currentColor" stroke="none"/></svg>
+    </div>
+    <div class="activity-hero-tile is-t5">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3.5" y="8" width="17" height="8" rx="4"/><path d="M8 12h8"/></svg>
+    </div>
+  </div>
+</div>
+
+<div class="activity-about-wrap">
+  <div class="activity-about">
+    <div class="activity-about-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h6.5L18 8v11.5a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1Z"/><path d="M13.5 3.5V8H18"/><path d="M9.5 13.5 8 15l1.5 1.5M14.5 13.5 16 15l-1.5 1.5"/></svg>
+    </div>
+    <div class="activity-about-body">
+      <span class="eyebrow">About the exported file</span>
+      <p class="body">The exported file inlines the same tokens/components CSS as this page, plus a small vanilla-JS retry handler for any MCQ pieces — no build step, no dependency on this repo. Swap the placeholder copy and illustration for your own. Add a piece more than once (a second Scenario, say) if your activity needs it.</p>
+      <div class="activity-about-actions">
+        <button class="btn btn-primary" id="builder-copy" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+          Copy code
+        </button>
+        <p class="body guide-block-note" id="builder-copy-status" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <main class="activity-shell">
   <div class="activity-picker">
     <span class="demo-label">Your pieces</span>
     <div class="builder-check-list" id="builder-check-list"></div>
-
-    <button class="btn btn-primary" id="builder-copy" type="button">Copy code</button>
-    <p class="body guide-block-note" id="builder-copy-status" aria-live="polite"></p>
-    <p class="body guide-block-note">The exported file inlines the same tokens/components CSS as this page, plus a small vanilla-JS retry handler for any MCQ pieces — no build step, no dependency on this repo. Swap the placeholder copy and illustration for your own. Add a piece more than once (a second Scenario, say) if your activity needs it.</p>
   </div>
 
   <div class="activity-preview-wrap">

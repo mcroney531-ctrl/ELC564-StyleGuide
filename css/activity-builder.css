@@ -5,9 +5,67 @@
 .activity-hero {
   max-width: 1180px; margin: 0 auto;
   padding: var(--space-16) var(--space-8) var(--space-12);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-8);
 }
+.activity-hero-copy { max-width: 560px; }
 .activity-hero .h-display { color: var(--color-ink-900); margin-top: var(--space-3); max-width: 640px; }
 .activity-hero .body-lg { max-width: 640px; margin-top: var(--space-4); }
+
+/* Decorative only (aria-hidden) — a scattered cluster of the same piece
+   icons used in the add-toolbar, so it reads as "these are the building
+   blocks" rather than generic hero art. Dropped below the width where the
+   hero itself stacks, since there's no room for it once copy goes full-width. */
+.activity-hero-art { position: relative; width: 260px; height: 220px; flex: none; }
+@media (max-width: 900px) { .activity-hero-art { display: none; } }
+
+.activity-hero-tile {
+  position: absolute;
+  width: 56px; height: 56px; border-radius: var(--radius-md);
+  background: var(--color-white); box-shadow: var(--shadow-resting);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--color-teal-600);
+}
+.activity-hero-tile svg { width: 26px; height: 26px; }
+.activity-hero-tile.is-t1 { top: 8%; left: 2%; }
+.activity-hero-tile.is-t2 { top: 0%; left: 50%; width: 66px; height: 66px; }
+.activity-hero-tile.is-t2 svg { width: 30px; height: 30px; }
+.activity-hero-tile.is-t3 { top: 48%; left: 0%; }
+.activity-hero-tile.is-t4 { top: 52%; left: 44%; width: 62px; height: 62px; }
+.activity-hero-tile.is-t5 { top: 80%; left: 70%; }
+
+.activity-hero-dots {
+  position: absolute; top: -6%; right: -8%;
+  width: 72px; height: 72px;
+  background-image: radial-gradient(var(--color-teal-300) 1.4px, transparent 1.4px);
+  background-size: 12px 12px;
+  opacity: 0.5;
+}
+.activity-hero-plus { position: absolute; color: var(--color-gray-500); font: 700 1rem var(--font-base); opacity: 0.4; }
+
+/* ---- "About the exported file" ---- */
+.activity-about-wrap { max-width: 1180px; margin: 0 auto var(--space-12); padding: 0 var(--space-8); }
+.activity-about {
+  background: var(--color-white); border-radius: var(--radius-card); box-shadow: var(--shadow-resting);
+  padding: var(--space-8);
+  display: flex; gap: var(--space-6); align-items: flex-start;
+}
+.activity-about-icon {
+  flex: none; width: 56px; height: 56px; border-radius: 50%;
+  background: var(--color-teal-100); color: var(--color-teal-600);
+  display: flex; align-items: center; justify-content: center;
+}
+.activity-about-icon svg { width: 26px; height: 26px; }
+.activity-about-body { flex: 1; min-width: 0; }
+.activity-about-body .eyebrow { display: block; margin-bottom: var(--space-2); }
+.activity-about-body .body { color: var(--color-gray-700); max-width: 640px; }
+.activity-about-actions { margin-top: var(--space-5); display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+.activity-about-actions #builder-copy svg { width: 18px; height: 18px; }
+
+@media (max-width: 760px) {
+  .activity-hero { flex-direction: column; align-items: flex-start; }
+  .activity-about-wrap { padding: 0 var(--space-6); margin-bottom: var(--space-8); }
+  .activity-about { flex-direction: column; padding: var(--space-6); }
+}
 
 .activity-shell {
   max-width: 1180px; margin: 0 auto;
@@ -26,9 +84,7 @@
 }
 @media (max-width: 760px) { .activity-picker { position: static; } }
 
-.activity-picker .btn { align-self: flex-start; }
-.activity-picker .guide-block-note { margin-top: 0; }
-#builder-copy-status { color: var(--color-success-700); min-height: 1em; }
+#builder-copy-status { color: var(--color-success-700); min-height: 1em; margin: 0; }
 
 .activity-preview-wrap { min-width: 0; }
 
