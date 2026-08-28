@@ -273,28 +273,43 @@
 .activity-pattern-swatch.is-selected { background: var(--color-cloud); box-shadow: 0 0 0 2px var(--activity-accent-600) inset; }
 .activity-field-note { color: var(--color-gray-500); font: var(--text-caption); margin-top: var(--space-2); }
 
-/* ---- backdrop piece: framed card + oversized corner-pattern accent ----
-   Same idea as the .scene-pattern peek used behind real photos in the
-   module, pulled out into its own addable piece and sized up so it reads
-   as intentional rather than a stray decoration. */
+/* ---- backdrop piece: bordered card + corner pattern ----
+   One complete backdrop = the hairline-bordered panel PLUS its pattern,
+   matching the reference sheet: the pattern sits inside the border, inset
+   from the top-right corner, not peeking out from behind the panel. */
 .backdrop-piece { position: relative; max-width: 420px; margin: 0 auto; text-align: center; }
 .backdrop-frame {
   position: relative; z-index: 1;
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-lg);
-  background: var(--color-cloud);
+  background: var(--color-white);
+  box-shadow: 0 0 0 1px var(--color-line) inset;
+  overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   color: var(--color-gray-500); font: var(--text-label);
 }
 .backdrop-frame[data-action="choose-asset"] {
   cursor: pointer;
+  background: var(--color-cloud);
   transition: background-color var(--duration-micro) var(--ease-standard);
 }
 .backdrop-frame[data-action="choose-asset"]:hover { background: var(--color-ink-100); }
-.backdrop-frame[data-action="choose-asset"]:focus-visible { outline: none; box-shadow: var(--activity-shadow-focus); }
-.backdrop-frame.is-filled { background: var(--color-white); box-shadow: var(--shadow-resting); }
-.backdrop-accent {
-  position: absolute; z-index: 0; top: -30px; right: -30px;
-  width: 148px; pointer-events: none;
+.backdrop-frame[data-action="choose-asset"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--color-line) inset, var(--activity-shadow-focus);
 }
-@media (max-width: 480px) { .backdrop-accent { width: 108px; top: -20px; right: -20px; } }
+
+/* The pattern sources are content-tight (no baked-in transparent padding)
+   but their aspect ratios run 0.78–1.41 and their intrinsic sizes 120–343px.
+   Capping BOTH axes constrains whichever one is larger, so every pattern
+   lands on the same corner footprint instead of a width-only cap making the
+   tall/narrow ones read small and the wide/flat ones read oversized. */
+.backdrop-accent {
+  position: absolute; z-index: 2; top: var(--space-4); right: var(--space-4);
+  width: auto; height: auto;
+  max-width: 92px; max-height: 92px;
+  pointer-events: none;
+}
+@media (max-width: 480px) {
+  .backdrop-accent { top: var(--space-3); right: var(--space-3); max-width: 68px; max-height: 68px; }
+}

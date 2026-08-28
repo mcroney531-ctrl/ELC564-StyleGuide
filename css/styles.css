@@ -234,17 +234,22 @@ a { color: var(--color-teal-600); }
 
 /* Small pastel pattern accent, one per cluster set, peeking out from behind
    the top-right corner of the illustration — a quiet, secondary flourish,
-   never the focal point. */
+   never the focal point. Capping both axes (rather than width alone) keeps
+   every pattern on the same footprint despite their 0.78–1.41 aspect range;
+   see the .backdrop-accent note in activity-builder.css. */
 .scene-pattern {
   position: absolute;
   top: -22px;
   right: -22px;
-  width: 96px;
+  width: auto;
+  height: auto;
+  max-width: 96px;
+  max-height: 96px;
   z-index: 0;
   pointer-events: none;
 }
 @media (max-width: 480px) {
-  .scene-pattern { width: 72px; top: -14px; right: -14px; }
+  .scene-pattern { max-width: 72px; max-height: 72px; top: -14px; right: -14px; }
 }
 
 .info-beat .eyebrow { display: block; margin-bottom: var(--space-3); }
