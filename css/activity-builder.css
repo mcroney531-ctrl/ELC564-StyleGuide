@@ -38,7 +38,7 @@
 /* ---- piece list: added pieces, reorderable, removable ---- */
 .builder-check-list { display: flex; flex-direction: column; min-height: 32px; }
 .builder-check-list:empty::before {
-  content: "Nothing added yet — start below.";
+  content: "Nothing added yet — use the + in the preview.";
   color: var(--color-gray-500); font: var(--text-body);
   padding: var(--space-2) 0;
 }
@@ -67,8 +67,12 @@
 .builder-check.is-editing { border-radius: var(--radius-sm); background: var(--color-cloud); padding-left: var(--space-2); padding-right: var(--space-2); margin: 0 calc(-1 * var(--space-2)); }
 .builder-check.is-editing .builder-check-label { color: var(--color-ink-900); font-weight: 600; }
 
-/* ---- "+ Add a piece" trigger + toolbar ---- */
+/* ---- "+ Add a piece" trigger + toolbar ----
+   Lives inside #builder-preview itself, re-appended as the trailing child
+   after every render — so it always sits right below the last piece added,
+   ready to add the next one, instead of a fixed control off in the sidebar. */
 .builder-add-wrap { position: relative; display: flex; justify-content: center; }
+.info-beat + .builder-add-wrap { margin-top: var(--space-8); }
 
 .builder-add-fab {
   display: inline-flex; align-items: center; gap: var(--space-2);
@@ -115,11 +119,11 @@
 .builder-preview {
   background: var(--color-paper); border-radius: var(--radius-lg); box-shadow: var(--shadow-resting);
   padding: var(--space-8) var(--space-6); min-height: 240px;
+  display: flex; flex-direction: column; justify-content: center;
 }
-.builder-preview:empty::before {
-  content: "Add a piece to see it here.";
-  color: var(--color-gray-500); font: var(--text-body);
-}
+/* Once real pieces exist, top-align the stack instead of centering the
+   whole thing — only the empty state (just the add control) gets centered. */
+.builder-preview:has(.info-beat) { justify-content: flex-start; }
 .builder-preview .banner-wrap { max-width: 320px; }
 .activity-scenario-block { display: block; margin-bottom: var(--space-8); }
 .activity-piece { margin-bottom: var(--space-8); }

@@ -14,11 +14,12 @@
 
   const preview = document.getElementById("builder-preview");
   const checkList = document.getElementById("builder-check-list");
+  const addWrap = document.getElementById("builder-add-wrap");
   const addBtn = document.getElementById("builder-add-btn");
   const addPanel = document.getElementById("builder-add-panel");
   const copyBtn = document.getElementById("builder-copy");
   const copyStatus = document.getElementById("builder-copy-status");
-  if (!preview || !checkList || !addBtn || !addPanel || !copyBtn) return;
+  if (!preview || !checkList || !addWrap || !addBtn || !addPanel || !copyBtn) return;
 
   function esc(str) {
     return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -299,6 +300,11 @@
     // .info-beat is what activates the point-list/heading/CTA spacing rules
     // in styles.css — every piece here is designed to live inside it.
     preview.innerHTML = body ? `<div class="info-beat">${body}</div>` : "";
+    // innerHTML above detaches addWrap (it was a previous child) without
+    // destroying it — re-attach the same node as the trailing element so
+    // "+ Add a piece" always sits right after the last piece, and its
+    // listeners/open-state carry over instead of needing to be rebuilt.
+    preview.appendChild(addWrap);
   }
 
   function renderAll() {
