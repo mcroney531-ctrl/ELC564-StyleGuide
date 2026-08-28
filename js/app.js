@@ -447,18 +447,48 @@
 
   CONTENT.clusters.forEach(buildCard);
 
-  // "Start Activity" on the cover scrolls to the card grid. Handled here
-  // rather than left as a bare #hash jump so it eases instead of snapping,
-  // and so reduced-motion still gets the instant jump.
-  const startLink = document.querySelector('[data-action="start-module"]');
-  if (startLink) {
-    startLink.addEventListener("click", (e) => {
+  // The cover stands alone — the clusters aren't on the page behind it.
+  // "Start Activity" swaps the cover out and brings the cards in, staggered,
+  // so arriving at the grid reads as a step rather than a jump cut.
+  const startBtn = document.querySelector('[data-action="start-module"]');
+  if (startBtn) {
+    startBtn.addEventListener("click", () => {
+      const cover = document.getElementById("cover");
       const landing = document.getElementById("landing");
-      if (!landing) return;
-      e.preventDefault();
-      landing.scrollIntoView({
-        behavior: prefersReducedMotion.matches ? "auto" : "smooth",
-        block: "start",
+      if (!cover || !landing || !landing.hidden) return;
+
+      const show = () => {
+        cover.hidden = true;
+        landing.hidden = false;
+        // move focus to the grid's heading so keyboard and screen-reader
+        // users land on the new content instead of a removed button
+        const heading = landing.querySelector(".landing-intro .h1");
+        if (heading) {
+          heading.setAttribute("tabindex", "-1");
+          heading.focus({ preventScroll: true });
+        }
+      };
+
+      if (prefersReducedMotion.matches) {
+        show();
+        return;
+      }
+
+      gsap.to(cover, {
+        opacity: 0,
+        y: -16,
+        duration: 0.35,
+        ease: "power2.in",
+        onComplete: () => {
+          show();
+          gsap.from(landing.querySelector(".landing-intro"), {
+            opacity: 0, y: 16, duration: 0.5, ease: "power2.out", clearProps: "all",
+          });
+          gsap.from(landing.querySelectorAll(".card-slot"), {
+            opacity: 0, y: 24, duration: 0.55, ease: "power2.out",
+            stagger: 0.08, delay: 0.1, clearProps: "all",
+          });
+        },
       });
     });
   }

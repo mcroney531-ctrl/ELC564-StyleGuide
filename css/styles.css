@@ -88,16 +88,18 @@ a { color: var(--color-teal-600); }
 .app-main { position: relative; }
 
 /* ---- Cover ----
-   The entry screen: one scene illustration, the module's title, a short
-   description, and the two ways in. Sized to sit within the first viewport
-   (minus the header) so the card grid below reads as a deliberate next step
-   rather than something you missed. */
+   A standalone entry screen: one scene illustration, the module's title, a
+   short description, and the two ways in. The card grid isn't on the page
+   behind it — "Start Activity" swaps this out and brings the clusters in. */
 .cover {
   min-height: calc(100vh - 92px);
   display: grid;
   place-items: center;
   padding: var(--space-8) var(--space-8) var(--space-16);
 }
+/* display:grid above would otherwise beat [hidden]'s display:none — same
+   specificity, and this rule comes later. */
+.cover[hidden] { display: none; }
 .cover-inner {
   max-width: 620px;
   text-align: center;
