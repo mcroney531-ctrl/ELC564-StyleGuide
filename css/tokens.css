@@ -17,6 +17,16 @@
   --color-teal-300: #8FB8BB;
   --color-teal-100: #E3EFEF;
 
+  /* Buttons' accent — one hue anchored on #759E96 (given as the mid/500
+     tone), same lightness steps as the teal scale above. Kept separate from
+     --color-teal-* rather than replacing it, since teal is still doing
+     decorative work elsewhere (illustration accents, the style guide's own
+     documented swatch) that wasn't part of this ask. */
+  --color-sage-600: #50726B;
+  --color-sage-500: #759E96;
+  --color-sage-300: #A6BFBA;
+  --color-sage-100: #E8EDEC;
+
   /* ---- Color: neutrals ---- */
   --color-white:     #FFFFFF;
   --color-paper:     #F7F8FA;  /* app background */

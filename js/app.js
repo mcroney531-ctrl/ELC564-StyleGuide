@@ -190,6 +190,20 @@
 
     renderBadge(cluster.id);
     wireCard(cluster, card, state);
+    wirePointBounce(card);
+  }
+
+  // Same hover bounce as the home cards (see wireCard's mouseenter/mouseleave
+  // below), applied to each takeaway rectangle in a cluster's info beat.
+  function wirePointBounce(card) {
+    card.querySelectorAll(".point-list li").forEach((li) => {
+      li.addEventListener("mouseenter", () => {
+        gsap.to(li, { y: -8, duration: 0.4, ease: "back.out(2.2)" });
+      });
+      li.addEventListener("mouseleave", () => {
+        gsap.to(li, { y: 0, duration: 0.4, ease: "back.out(2.2)" });
+      });
+    });
   }
 
   function wireCard(cluster, card, state) {

@@ -54,11 +54,11 @@ a { color: var(--color-teal-600); }
 .btn:active { transform: scale(0.97); }
 .btn:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
 
-.btn-primary { background: var(--color-ink-900); color: var(--color-white); }
-.btn-primary:hover { background: var(--color-ink-700); }
+.btn-primary { background: var(--color-sage-600); color: var(--color-white); }
+.btn-primary:hover { background: var(--color-sage-500); }
 
 .btn-secondary { background: var(--color-white); color: var(--color-ink-900); box-shadow: 0 0 0 1.5px var(--color-line) inset; }
-.btn-secondary:hover { box-shadow: 0 0 0 1.5px var(--color-ink-500) inset; }
+.btn-secondary:hover { box-shadow: 0 0 0 1.5px var(--color-sage-600) inset; }
 
 .btn-ghost { background: transparent; color: var(--color-gray-700); padding: var(--space-2) var(--space-3); }
 .btn-ghost:hover { color: var(--color-ink-900); }
