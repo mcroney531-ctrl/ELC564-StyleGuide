@@ -75,20 +75,18 @@
 .info-beat + .builder-add-wrap { margin-top: var(--space-8); }
 
 .builder-add-fab {
-  display: inline-flex; align-items: center; gap: var(--space-2);
-  background: var(--color-white); border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-raised);
-  padding: var(--space-3) var(--space-5);
-  font: var(--text-label); font-weight: 600; color: var(--color-teal-600);
-  transition: transform var(--duration-micro) var(--ease-standard), box-shadow var(--duration-micro) var(--ease-standard);
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: 0 0 0 2px var(--color-ink-900) inset, var(--shadow-raised);
+  color: var(--color-ink-900);
+  transition: transform var(--duration-micro) var(--ease-standard), background-color var(--duration-micro) var(--ease-standard);
 }
-.builder-add-fab:hover { transform: translateY(-1px); }
-.builder-add-fab:focus-visible { outline: none; box-shadow: var(--shadow-raised), var(--shadow-focus); }
-.builder-add-fab-icon {
-  display: inline-grid; place-items: center;
-  width: 20px; height: 20px; border-radius: 50%;
-  background: var(--color-teal-600); color: var(--color-white);
-  font-size: 0.9rem; line-height: 1;
+.builder-add-fab svg { width: 20px; height: 20px; }
+.builder-add-fab:hover { transform: translateY(-1px); background: var(--color-cloud); }
+.builder-add-fab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-ink-900) inset, var(--shadow-raised), var(--shadow-focus);
 }
 
 .builder-add-toolbar {
