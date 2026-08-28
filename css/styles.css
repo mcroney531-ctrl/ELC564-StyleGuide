@@ -202,7 +202,27 @@ a { color: var(--color-teal-600); }
 .progress-badge[data-state="complete"] .dot { background: var(--color-success-500); }
 
 /* ---- Section content (lives inside .card-section once a card expands) ---- */
-.section-inner { max-width: 780px; margin: 0 auto; padding: var(--space-8) var(--space-6) var(--space-24); }
+/* Each cluster page is framed like one of the backdrop cards: a hairline
+   border around the content column, with the cluster's own corner pattern
+   inside it. Border + pattern together are what make the full backdrop.
+   Background stays --color-paper (not white) so the white takeaway
+   rectangles inside still read as raised against it. */
+.section-inner {
+  max-width: 780px;
+  margin: var(--space-6) auto;
+  padding: var(--space-8) var(--space-8) var(--space-16);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 0 1px var(--color-line) inset;
+}
+@media (max-width: 720px) {
+  /* explicit horizontal margin, not auto — below 780px the column fills the
+     viewport, so auto computes to 0 and the frame's side borders and rounded
+     corners land flush on the screen edge */
+  .section-inner {
+    margin: var(--space-3) var(--space-3);
+    padding: var(--space-6) var(--space-5) var(--space-12);
+  }
+}
 .section-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-12); }
 .section-progress-track { display: flex; gap: var(--space-2); }
 .section-progress-track .tick { width: 28px; height: 4px; border-radius: var(--radius-pill); background: var(--color-line); }
