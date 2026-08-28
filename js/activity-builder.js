@@ -32,6 +32,22 @@
     button: "Standalone CTA button",
   };
 
+  // The module's own set of pastel corner-pattern accents — same assets used
+  // behind the character illustrations in index.html. Picking one here just
+  // sets which file backs the .scene-pattern accent; no upload needed.
+  const PATTERNS = [
+    { key: "dot-matrix-mint", label: "Dot Matrix" },
+    { key: "concentric-arcs-blue", label: "Concentric Arcs" },
+    { key: "corner-lines-sage", label: "Corner Lines" },
+    { key: "ring-cluster-lavender", label: "Ring Cluster" },
+    { key: "mini-circles-peach", label: "Mini Circles" },
+    { key: "confetti-peach", label: "Confetti" },
+    { key: "dot-square-seafoam", label: "Dot & Square" },
+    { key: "offset-squares-sage-gray", label: "Offset Squares" },
+    { key: "geometric-marks-powder-blue", label: "Geometric Marks" },
+    { key: "diamond-cluster-dusty-rose", label: "Diamond Cluster" },
+  ];
+
   // Fresh default data per instance — must be factory functions, not shared
   // objects/arrays, so two Scenario blocks don't end up editing the same array.
   const DEFAULTS = {
@@ -40,7 +56,7 @@
       title: "Your activity title goes here",
       body: 'One or two sentences setting up what this teaches — the "why," not the whole lesson. Keep it short enough to read in one breath.',
     }),
-    illustration: () => ({ altText: "Swap for your own illustration" }),
+    illustration: () => ({ pattern: null }),
     takeaways: () => ({
       items: ["First takeaway — state the behavior you want, plainly.", "Second takeaway.", "Third takeaway."],
     }),
@@ -66,13 +82,24 @@
       <h1 class="h1">${esc(d.title)}</h1>
       <p class="body-lg">${esc(d.body)}</p>
     `,
-    illustration: (d) => `
+    // opts.interactive is false only for the exported file, which has no JS
+    // wiring behind the picker — the box there is a static instruction, not
+    // a live control, so it drops the clickable affordance and "change" copy.
+    illustration: (d, opts = {}) => {
+      const interactive = opts.interactive !== false;
+      return `
       <div class="banner-wrap">
-        <div class="content-banner" style="aspect-ratio:4/3;background:var(--color-cloud);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;color:var(--color-gray-500);font:var(--text-label);text-align:center;padding:var(--space-4)">
-          ${esc(d.altText)}
+        <div class="content-banner activity-illustration-slot" ${interactive ? 'data-action="choose-backdrop" role="button" tabindex="0"' : ""}>
+          ${
+            d.pattern
+              ? `<span class="activity-illustration-hint">Your illustration or photo goes here</span>${interactive ? '<span class="activity-illustration-change">Change backdrop</span>' : ""}`
+              : `<span class="activity-illustration-cta">${interactive ? "+ Choose your backdrop" : "Swap this box for your own illustration or photo"}</span>`
+          }
         </div>
+        ${d.pattern ? `<img class="scene-pattern" src="assets/illustrations/patterns/${esc(d.pattern)}.webp" alt="" aria-hidden="true">` : ""}
       </div>
-    `,
+    `;
+    },
     takeaways: (d) => `
       <ul class="point-list">
         ${d.items.map((item) => `<li class="body">${esc(item)}</li>`).join("")}
@@ -131,8 +158,16 @@
     `,
     illustration: (id, d) => `
       <div class="activity-field">
-        <label for="f${id}-alt">Placeholder label</label>
-        <input type="text" id="f${id}-alt" data-field="altText" value="${esc(d.altText)}">
+        <label>Backdrop pattern</label>
+        <div class="activity-pattern-grid">
+          ${PATTERNS.map(
+            (p) => `
+          <button type="button" class="activity-pattern-swatch ${d.pattern === p.key ? "is-selected" : ""}" data-value="${p.key}" aria-label="${p.label}" aria-pressed="${d.pattern === p.key}">
+            <img src="assets/illustrations/patterns/${p.key}.webp" alt="">
+          </button>`
+          ).join("")}
+        </div>
+        <p class="activity-field-note">Sits behind wherever you drop in your own illustration or photo. Pick one to continue.</p>
       </div>
     `,
     takeaways: (id, d) =>
@@ -349,10 +384,39 @@
     piece.data.options.forEach((o, i) => (o.correct = i === index));
   });
 
+  preview.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const chooseBackdrop = e.target.closest('[data-action="choose-backdrop"]');
+    if (!chooseBackdrop) return;
+    e.preventDefault();
+    const pieceEl = chooseBackdrop.closest("[data-piece-id]");
+    setEditing(Number(pieceEl.dataset.pieceId), true);
+  });
+
   preview.addEventListener("click", (e) => {
     const doneBtn = e.target.closest('[data-action="done-edit"]');
     if (doneBtn) {
       setEditing(Number(doneBtn.dataset.id), false);
+      return;
+    }
+
+    // Picking a backdrop is a single click, not a fill-in-and-Done form —
+    // select it and close the editor immediately, same as adding a piece.
+    const swatchBtn = e.target.closest(".activity-pattern-swatch");
+    if (swatchBtn) {
+      const pieceEl = swatchBtn.closest("[data-piece-id]");
+      const piece = pieces.find((p) => p.id === Number(pieceEl.dataset.pieceId));
+      if (piece) {
+        piece.data.pattern = swatchBtn.dataset.value;
+        setEditing(piece.id, false);
+      }
+      return;
+    }
+
+    const chooseBackdrop = e.target.closest('[data-action="choose-backdrop"]');
+    if (chooseBackdrop) {
+      const pieceEl = chooseBackdrop.closest("[data-piece-id]");
+      setEditing(Number(pieceEl.dataset.pieceId), true);
       return;
     }
 
@@ -427,12 +491,13 @@ document.addEventListener('click', function (e) {
 });`.trim();
 
   async function buildExport() {
-    const [tokensCss, stylesCss] = await Promise.all([
+    const [tokensCss, stylesCss, builderCss] = await Promise.all([
       fetch("css/tokens.css").then((r) => r.text()),
       fetch("css/styles.css").then((r) => r.text()),
+      fetch("css/activity-builder.css").then((r) => r.text()),
     ]);
     // Always rendered in view mode, regardless of live-preview edit state.
-    const body = pieces.map((p) => PIECES[p.type](p.data)).join("\n");
+    const body = pieces.map((p) => PIECES[p.type](p.data, { interactive: false })).join("\n");
     const needsScript = pieces.some((p) => p.type === "scenario");
 
     return `<!doctype html>
@@ -447,6 +512,7 @@ document.addEventListener('click', function (e) {
 <style>
 ${tokensCss}
 ${stylesCss}
+${builderCss}
 body { max-width: 640px; margin: 0 auto; padding: var(--space-8) var(--space-6) var(--space-16); }
 </style>
 </head>

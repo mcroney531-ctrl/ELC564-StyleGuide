@@ -144,3 +144,39 @@
 .activity-option-field input[type="text"]:focus {
   outline: none; border-color: var(--color-teal-500); box-shadow: var(--shadow-focus);
 }
+
+/* ---- illustration piece: placeholder slot + backdrop picker ---- */
+.activity-illustration-slot {
+  aspect-ratio: 4 / 3;
+  background: var(--color-cloud);
+  border-radius: var(--radius-lg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2);
+  text-align: center; padding: var(--space-4);
+  color: var(--color-gray-500); font: var(--text-label);
+}
+.activity-illustration-slot[data-action="choose-backdrop"] {
+  cursor: pointer;
+  transition: background-color var(--duration-micro) var(--ease-standard);
+}
+.activity-illustration-slot[data-action="choose-backdrop"]:hover { background: var(--color-ink-100); }
+.activity-illustration-slot[data-action="choose-backdrop"]:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.activity-illustration-cta { color: var(--color-teal-600); font-weight: 600; }
+.activity-illustration-change { color: var(--color-teal-600); font: var(--text-caption); text-decoration: underline; }
+
+.activity-pattern-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+@media (max-width: 480px) { .activity-pattern-grid { grid-template-columns: repeat(3, 1fr); } }
+.activity-pattern-swatch {
+  aspect-ratio: 1; padding: var(--space-2);
+  background: var(--color-paper); border-radius: var(--radius-md);
+  box-shadow: 0 0 0 1.5px var(--color-line) inset;
+  display: flex; align-items: center; justify-content: center;
+  transition: box-shadow var(--duration-micro) var(--ease-standard), background-color var(--duration-micro) var(--ease-standard);
+}
+.activity-pattern-swatch img { width: 100%; height: 100%; object-fit: contain; }
+.activity-pattern-swatch:hover { background: var(--color-cloud); }
+.activity-pattern-swatch:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+.activity-pattern-swatch.is-selected { background: var(--color-cloud); box-shadow: 0 0 0 2px var(--color-teal-600) inset; }
+.activity-field-note { color: var(--color-gray-500); font: var(--text-caption); margin-top: var(--space-2); }
