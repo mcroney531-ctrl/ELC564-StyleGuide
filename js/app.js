@@ -291,10 +291,23 @@
         : sectionRoot.querySelector(`[data-view="${viewName}"]`);
 
     target.classList.add("is-active");
+    syncFrameToPattern(sectionRoot, target);
     requestAnimationFrame(() => {
       target.classList.add("is-visible");
       revealPoints(target);
     });
+  }
+
+  // Every view carries its own corner pattern, so the page frame retints to
+  // match whichever one is showing — border and pattern belong to the same
+  // backdrop. The colors live in styles.css keyed off this data-pattern.
+  function syncFrameToPattern(sectionRoot, target) {
+    const inner = sectionRoot.querySelector(".section-inner");
+    if (!inner) return;
+    const pattern = target.querySelector(".scene-pattern");
+    const key = pattern && pattern.getAttribute("src").split("/").pop().replace(".webp", "");
+    if (key) inner.dataset.pattern = key;
+    else delete inner.dataset.pattern;
   }
 
   function updateTicks(sectionRoot, resolvedCount) {

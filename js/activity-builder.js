@@ -141,7 +141,7 @@
       const hasPattern = !!d.pattern;
       return `
       <div class="backdrop-piece">
-        <div class="backdrop-frame ${hasPattern ? "is-filled" : ""}" ${!hasPattern && interactive ? 'data-action="choose-asset" role="button" tabindex="0"' : ""}>
+        <div class="backdrop-frame ${hasPattern ? "is-filled" : ""}"${hasPattern ? ` data-pattern="${esc(d.pattern)}"` : ""} ${!hasPattern && interactive ? 'data-action="choose-asset" role="button" tabindex="0"' : ""}>
           ${!hasPattern ? `<span class="activity-illustration-cta">${interactive ? "+ Choose a backdrop" : "No backdrop selected"}</span>` : ""}
         </div>
         ${hasPattern ? `<img class="backdrop-accent" src="assets/illustrations/patterns/${esc(d.pattern)}.webp" alt="" aria-hidden="true">` : ""}

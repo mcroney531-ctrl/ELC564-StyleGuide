@@ -283,7 +283,7 @@
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-lg);
   background: var(--color-white);
-  box-shadow: 0 0 0 1px var(--color-line) inset;
+  box-shadow: 0 0 0 1px var(--pattern-border, var(--color-line)) inset;
   overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   color: var(--color-gray-500); font: var(--text-label);
@@ -296,7 +296,7 @@
 .backdrop-frame[data-action="choose-asset"]:hover { background: var(--color-ink-100); }
 .backdrop-frame[data-action="choose-asset"]:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--color-line) inset, var(--activity-shadow-focus);
+  box-shadow: 0 0 0 1px var(--pattern-border, var(--color-line)) inset, var(--activity-shadow-focus);
 }
 
 /* The pattern sources are content-tight (no baked-in transparent padding)
