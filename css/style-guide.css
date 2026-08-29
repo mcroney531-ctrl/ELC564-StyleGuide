@@ -12,8 +12,9 @@
 }
 .guide-hero .h-display { color: var(--color-ink-900); margin-top: var(--space-3); max-width: 760px; }
 .guide-hero .body-lg { max-width: 640px; margin-top: var(--space-4); }
-.guide-hero-callout { max-width: 640px; }
-.guide-hero-callout .body-lg { margin-top: 0; max-width: none; }
+.guide-hero-callout { flex-direction: column; max-width: 760px; margin-top: var(--space-3); }
+.guide-hero-callout .h-display { margin-top: 0; max-width: none; }
+.guide-hero-callout .body-lg { margin-top: var(--space-4); max-width: 640px; }
 .guide-hero-cta { margin-top: var(--space-6); }
 
 .guide-shell { display: flex; max-width: 1180px; margin: 0 auto; align-items: flex-start; }
