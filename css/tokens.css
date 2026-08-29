@@ -150,6 +150,7 @@
   --answer-pad-x:          1.25rem;
   --answer-gap:            0.9rem;
   --answer-radio-size:      22px;
+  --feedback-icon-size:     26px;   /* the badge, and the offset its column creates */
 
   /* ---- Section canvas ----
      Ambient light behind an open section, not a flat fill: a soft pool in the

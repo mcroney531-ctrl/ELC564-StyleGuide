@@ -11,7 +11,7 @@
   "use strict";
 
   const STORAGE_KEY = "aidodont-progress";
-  const SELECT_HOLD_MS = 550; // "selected, unconfirmed" beat before it resolves
+  const SELECT_HOLD_MS = 420; // "selected, unconfirmed" beat before it resolves
 
   const grid = document.getElementById("card-grid");
 

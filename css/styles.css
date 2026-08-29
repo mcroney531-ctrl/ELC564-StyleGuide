@@ -533,23 +533,28 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 }
 
 /* State 1 — selected, unconfirmed: a holding state while the "answer" registers */
-/* The border is already the backdrop stroke on every answer, so selection is
-   carried by the wash and the filled radio rather than a second edge colour —
-   a lighter "selected" border would read as less chosen, not more. */
+/* Deliberately NEUTRAL, not the backdrop hue. This wash used to follow the
+   backdrop, which on the green pages rendered rgb(236,244,235) against a
+   correct state of rgb(231,244,231) — five units apart. Picking a wrong
+   answer flashed "correct" for half a second and then flipped to maroon.
+   The two verdict washes are only 11 apart from each other, so a pending
+   wash can't be a paler version of either; it has to sit off their axis
+   entirely. Ink reads as "recorded", which is all this state should say. */
 .option.is-selected {
-  background: hsl(var(--canvas-bg-h) 30% 94%);
+  background: var(--color-ink-100);
   box-shadow: var(--answer-shadow);
 }
 .option.is-selected:hover:not([disabled]) { box-shadow: var(--answer-hover-shadow); }
 .option.is-selected .option-marker {
-  box-shadow: 0 0 0 var(--border) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset;
+  box-shadow: 0 0 0 var(--border) var(--color-ink-900) inset;
   background: var(--color-white);
 }
 /* the filled centre — ::after is free in this state (only the resolved
-   states use it for their glyph) */
+   states use it for their glyph). Ink for the same reason as the wash: a
+   green dot on a green backdrop is one more thing reading as a verdict. */
 .option.is-selected .option-marker::after {
   content: ""; width: 10px; height: 10px; border-radius: 50%;
-  background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
+  background: var(--color-ink-900);
 }
 
 /* State 2 — confirmed correct */
@@ -582,18 +587,32 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .option[disabled]:hover { box-shadow: var(--answer-shadow); transform: none; }
 .option:not(.is-selected):not(.is-correct):not(.is-wrong)[disabled] { opacity: 0.5; }
 
-/* ---- Feedback panel: corrective (retry) vs success, as one documented system ---- */
+/* ---- Feedback panel: corrective (retry) vs success, as one documented system ----
+   Built off the same padding and radius tokens as the answer cards above it —
+   it's the same kind of surface, and a 10px panel under a 15px stack read as
+   a different component. */
 .feedback {
   margin-top: var(--space-6);
-  padding: var(--space-5) var(--space-6);
-  border-radius: var(--radius-md);
+  padding: var(--answer-pad-y) var(--answer-pad-x);
+  border-radius: var(--answer-radius);
   display: none;
-  gap: var(--space-3);
+  gap: var(--answer-gap);
   opacity: 0;
 }
 .feedback.is-visible { display: flex; opacity: 1; transition: opacity var(--duration-system) var(--ease-out); }
-.feedback-icon { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: var(--text-caption); color: var(--color-white); }
-.feedback-body .label { display: block; margin-bottom: var(--space-1); }
+/* Pulled up so the badge centres on the label's line rather than on the top of
+   the whole text block — a 26px badge beside a 19.6px line sits low otherwise. */
+.feedback-icon {
+  flex: none; width: var(--feedback-icon-size); height: var(--feedback-icon-size); margin-top: -3px;
+  border-radius: 50%; display: grid; place-items: center;
+  font: var(--text-caption); color: var(--color-white);
+}
+/* flex:1 so the body always fills the panel. Without it the body sizes to its
+   own text, and a panel with short copy left the full-width action stopping
+   well short of the right edge — invisible in the module, where the corrective
+   copy is long, but obvious in the builder's placeholder scenario. */
+.feedback-body { flex: 1; min-width: 0; }
+.feedback-body .label { display: block; margin-bottom: var(--space-2); }
 
 .feedback.is-corrective { background: var(--answer-wrong-bg); box-shadow: 0 0 0 var(--border) var(--answer-wrong) inset; }
 .feedback.is-corrective .feedback-icon { background: var(--answer-wrong); }
@@ -605,7 +624,25 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .feedback.is-success .feedback-icon::after { content: "✓"; }
 .feedback.is-success .label { color: var(--answer-correct-label); }
 
-.feedback-actions { margin-top: var(--space-5); }
+/* The action sat indented under the copy in a neutral grey pill, reading as
+   though it belonged to the page rather than to the panel. It now carries the
+   panel's own colour and spans its content width.
+   The negative margin backs it out of the icon column: the body is offset by
+   the badge plus the gap, so without it the button sat 60px from the panel's
+   left edge and 20px from its right — visibly lopsided. */
+.feedback-actions {
+  margin-top: var(--space-6);
+  margin-left: calc(-1 * (var(--feedback-icon-size) + var(--answer-gap)));
+}
+.feedback-actions .btn { width: 100%; justify-content: center; }
+.feedback.is-corrective .btn-secondary {
+  background: var(--color-white);
+  color: var(--answer-wrong-label);
+  box-shadow: 0 0 0 var(--border) var(--answer-wrong) inset;
+}
+.feedback.is-corrective .btn-secondary:hover { box-shadow: 0 0 0 var(--border-thick) var(--answer-wrong) inset; }
+.feedback.is-success .btn-primary { background: var(--answer-correct); }
+.feedback.is-success .btn-primary:hover { background: var(--answer-correct-label); }
 
 /* ---- Section complete state ---- */
 .section-complete { text-align: center; padding-top: var(--space-16); }
