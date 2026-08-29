@@ -514,47 +514,22 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 }
 
 /* ---- interactive states ----
-   The hover rule is scoped away from the state classes on purpose.
+   Hover is scoped away from the resolved classes on purpose.
    ".option:hover:not([disabled])" is specificity 0,3,0 and would otherwise
-   outrank ".option.is-selected" at 0,2,0 — hovering a chosen answer would
-   drop its sage edge back to plain grey. Today the flow disables options the
-   moment one is clicked so it never surfaces, but that leaves the CSS relying
-   on the JS to hide a bug. Selected keeps its own hover lift below. */
-.option:hover:not([disabled]):not(.is-selected):not(.is-correct):not(.is-wrong) {
+   outrank ".option.is-correct" at 0,2,0, so hovering a resolved answer would
+   drop its edge back to the plain backdrop tone. The flow disables options
+   once one is picked, but relying on that would leave the CSS depending on
+   the JS to hide a bug. */
+.option:hover:not([disabled]):not(.is-correct):not(.is-wrong) {
   box-shadow: var(--answer-hover-shadow);
 }
-.option:hover:not([disabled]):not(.is-selected):not(.is-correct):not(.is-wrong) .option-marker {
+.option:hover:not([disabled]):not(.is-correct):not(.is-wrong) .option-marker {
   box-shadow: 0 0 0 var(--border) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset;
 }
 .option:active:not([disabled]) { transform: scale(0.995); box-shadow: var(--answer-shadow); }
 .option:focus-visible {
   outline: none;
   box-shadow: var(--answer-shadow), var(--shadow-focus);
-}
-
-/* State 1 — selected, unconfirmed: a holding state while the "answer" registers */
-/* Deliberately NEUTRAL, not the backdrop hue. This wash used to follow the
-   backdrop, which on the green pages rendered rgb(236,244,235) against a
-   correct state of rgb(231,244,231) — five units apart. Picking a wrong
-   answer flashed "correct" for half a second and then flipped to maroon.
-   The two verdict washes are only 11 apart from each other, so a pending
-   wash can't be a paler version of either; it has to sit off their axis
-   entirely. Ink reads as "recorded", which is all this state should say. */
-.option.is-selected {
-  background: var(--color-ink-100);
-  box-shadow: var(--answer-shadow);
-}
-.option.is-selected:hover:not([disabled]) { box-shadow: var(--answer-hover-shadow); }
-.option.is-selected .option-marker {
-  box-shadow: 0 0 0 var(--border) var(--color-ink-900) inset;
-  background: var(--color-white);
-}
-/* the filled centre — ::after is free in this state (only the resolved
-   states use it for their glyph). Ink for the same reason as the wash: a
-   green dot on a green backdrop is one more thing reading as a verdict. */
-.option.is-selected .option-marker::after {
-  content: ""; width: 10px; height: 10px; border-radius: 50%;
-  background: var(--color-ink-900);
 }
 
 /* State 2 — confirmed correct */
@@ -585,7 +560,7 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .option[disabled] { cursor: default; }
 /* a locked-in answer keeps its state but stops behaving like a control */
 .option[disabled]:hover { box-shadow: var(--answer-shadow); transform: none; }
-.option:not(.is-selected):not(.is-correct):not(.is-wrong)[disabled] { opacity: 0.5; }
+.option:not(.is-correct):not(.is-wrong)[disabled] { opacity: 0.5; }
 
 /* ---- Feedback panel: corrective (retry) vs success, as one documented system ----
    Built off the same padding and radius tokens as the answer cards above it —

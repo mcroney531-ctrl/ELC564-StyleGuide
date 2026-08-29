@@ -3,7 +3,7 @@
  *   1. Render the landing cards (each wrapping its own hidden section content).
  *   2. Card <-> section transition — one view fades out and up, the next
  *      settles in behind it, the same two-step handoff the cover uses.
- *   3. MCQ flow: selected -> confirmed-correct/-wrong or corrective retry or advance.
+ *   3. MCQ flow: click -> confirmed-correct/-wrong, then corrective retry or advance.
  *   4. Progress persisted per cluster in localStorage.
  */
 
@@ -11,7 +11,6 @@
   "use strict";
 
   const STORAGE_KEY = "aidodont-progress";
-  const SELECT_HOLD_MS = 420; // "selected, unconfirmed" beat before it resolves
 
   const grid = document.getElementById("card-grid");
 
@@ -348,7 +347,7 @@
   function resetQuestion(scenarioEl) {
     scenarioEl.querySelectorAll(".option").forEach((btn) => {
       btn.disabled = false;
-      btn.classList.remove("is-selected", "is-correct", "is-wrong");
+      btn.classList.remove("is-correct", "is-wrong");
       delete btn.dataset.tried;
     });
     scenarioEl.querySelectorAll(".feedback").forEach((f) => f.classList.remove("is-visible"));
@@ -361,42 +360,40 @@
   // both panels stacked underneath.
   function clearAttempt(scenarioEl) {
     scenarioEl.querySelectorAll(".option").forEach((btn) => {
-      btn.classList.remove("is-selected", "is-correct", "is-wrong");
+      btn.classList.remove("is-correct", "is-wrong");
     });
     scenarioEl.querySelectorAll(".feedback").forEach((f) => f.classList.remove("is-visible"));
   }
 
+  // Resolves on the click, with no holding beat in between. There used to be a
+  // "selected, unconfirmed" state parked behind a setTimeout; it read as the
+  // tap not registering rather than as a considered pause, so the answer now
+  // goes straight to its result and the CSS transition carries the change.
   function handleOptionClick(cluster, sectionRoot, optionBtn) {
     const scenarioEl = optionBtn.closest(".scenario");
     const qIndex = Number(scenarioEl.dataset.question);
     const question = cluster.questions[qIndex];
-    const chosenIndex = Number(optionBtn.dataset.option);
+    const isCorrect = Number(optionBtn.dataset.option) === question.correct;
 
     clearAttempt(scenarioEl);
     scenarioEl.querySelectorAll(".option").forEach((btn) => (btn.disabled = true));
-    optionBtn.classList.add("is-selected");
+    optionBtn.classList.add(isCorrect ? "is-correct" : "is-wrong");
 
-    setTimeout(() => {
-      const isCorrect = chosenIndex === question.correct;
-      optionBtn.classList.remove("is-selected");
-      optionBtn.classList.add(isCorrect ? "is-correct" : "is-wrong");
+    const feedbackName = isCorrect ? "success" : "corrective";
+    scenarioEl.querySelector(`[data-feedback="${feedbackName}"]`).classList.add("is-visible");
 
-      const feedbackName = isCorrect ? "success" : "corrective";
-      scenarioEl.querySelector(`[data-feedback="${feedbackName}"]`).classList.add("is-visible");
-
-      if (!isCorrect) {
-        // An answer already ruled out stays locked, but the lock is tracked on
-        // the element rather than read back off .is-wrong — that class gets
-        // cleared on the next attempt, and reading it here would quietly hand
-        // a spent answer back to the reader.
-        optionBtn.dataset.tried = "1";
-        scenarioEl.querySelectorAll(".option").forEach((btn) => {
-          if (!btn.dataset.tried) btn.disabled = false;
-        });
-      } else {
-        updateTicks(sectionRoot, qIndex + 1);
-      }
-    }, SELECT_HOLD_MS);
+    if (!isCorrect) {
+      // An answer already ruled out stays locked, but the lock is tracked on
+      // the element rather than read back off .is-wrong — that class gets
+      // cleared on the next attempt, and reading it here would quietly hand
+      // a spent answer back to the reader.
+      optionBtn.dataset.tried = "1";
+      scenarioEl.querySelectorAll(".option").forEach((btn) => {
+        if (!btn.dataset.tried) btn.disabled = false;
+      });
+    } else {
+      updateTicks(sectionRoot, qIndex + 1);
+    }
   }
 
   /* ---------------- card <-> section transition ----------------

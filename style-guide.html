@@ -199,12 +199,11 @@
         <div class="demo-shell">
           <div class="option-list">
             <button class="option" type="button" disabled><span class="option-marker"></span><span class="option-text">Default — not yet chosen</span></button>
-            <button class="option is-selected" type="button" disabled><span class="option-marker"></span><span class="option-text">Selected, unconfirmed — a held beat before it resolves</span></button>
             <button class="option is-correct" type="button" disabled><span class="option-marker"></span><span class="option-text">Confirmed correct</span></button>
             <button class="option is-wrong" type="button" disabled><span class="option-marker"></span><span class="option-text">Confirmed wrong</span></button>
           </div>
         </div>
-        <p class="body guide-block-note">These four states are never skipped over: every answer passes through "selected" before it resolves, so the moment reads as a real, weighed choice rather than an instant hit/miss.</p>
+        <p class="body guide-block-note">An answer resolves on the click — there is no holding state in between. One used to sit here, a "selected, unconfirmed" beat meant to read as a considered pause; in practice it read as the tap not registering, so the result now lands immediately and the 0.2s colour transition carries it.</p>
       </div>
 
       <div class="guide-block">
@@ -288,7 +287,7 @@
         <h3 class="h3 guide-block-title">Hover / selected / completed, at a glance</h3>
         <ul style="display:flex; flex-direction:column; gap:var(--space-2)">
           <li class="body">• <strong>Hover</strong> — cards lift 8px with a spring bounce; buttons tighten their border, and answer cards darken their edge and raise their shadow.</li>
-          <li class="body">• <strong>Selected</strong> — an answer takes a sage edge, a pale sage wash and a filled radio the instant it's clicked, before it's known to be right or wrong. Sage rather than a semantic colour on purpose: this state has to say “recorded,” not “correct.”</li>
+          <li class="body">• <strong>Resolved</strong> — an answer goes straight to correct or wrong on the click, in warm forest or warm maroon, and its feedback panel fades in beneath the stack.</li>
           <li class="body">• <strong>Completed</strong> — a cluster's progress badge switches from gray "Not started" to amber "In progress" to green "Complete," and its section's two progress ticks fill in as each scenario is solved.</li>
         </ul>
       </div>        </div>
@@ -344,7 +343,7 @@
               <tr><td>Button / option hover</td><td>mouseenter, focus</td><td>0.2s</td><td><code>ease-standard</code></td></tr>
               <tr><td>Takeaway hover (elevation only)</td><td>mouseenter / mouseleave</td><td>0.2s</td><td><code>ease-standard</code></td></tr>
               <tr><td>Takeaways stagger in</td><td>info beat shown</td><td>0.5s, 0.06s stagger</td><td><code>power2.out</code></td></tr>
-              <tr><td>Option → selected</td><td>click</td><td>instant + 0.42s hold</td><td>—</td></tr>
+              <tr><td>Option → resolved</td><td>click</td><td>0.2s</td><td><code>ease-standard</code></td></tr>
               <tr><td>Feedback panel reveal</td><td>answer confirmed</td><td>0.5s</td><td><code>ease-out</code></td></tr>
               <tr><td><strong>Overview leaves (signature)</strong></td><td>card click</td><td>0.35s</td><td><code>power2.in</code></td></tr>
               <tr><td>Section arrives</td><td>card click (after)</td><td>0.5s / 0.55s, 0.1s stagger</td><td><code>power2.out</code></td></tr>

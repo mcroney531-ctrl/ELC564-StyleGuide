@@ -593,7 +593,7 @@
       if (!scenario) return;
       scenario.querySelectorAll(".option").forEach((b) => {
         b.disabled = false;
-        b.classList.remove("is-selected", "is-correct", "is-wrong");
+        b.classList.remove("is-correct", "is-wrong");
         delete b.dataset.tried;
       });
       scenario.querySelectorAll(".feedback").forEach((f) => f.classList.remove("is-visible"));
@@ -606,26 +606,23 @@
       const group = optionBtn.closest("[data-activity-group]");
       // clear the previous attempt first, or answering again straight from the
       // corrective panel leaves the old mark and feedback beside the new ones
-      group.querySelectorAll(".option").forEach((b) => b.classList.remove("is-selected", "is-correct", "is-wrong"));
+      group.querySelectorAll(".option").forEach((b) => b.classList.remove("is-correct", "is-wrong"));
       scenario.querySelectorAll(".feedback").forEach((f) => f.classList.remove("is-visible"));
 
+      // resolves on the click — no holding beat, the CSS transition carries it
       group.querySelectorAll(".option").forEach((b) => (b.disabled = true));
-      optionBtn.classList.add("is-selected");
-      setTimeout(() => {
-        const correct = optionBtn.dataset.correct === "true";
-        optionBtn.classList.remove("is-selected");
-        optionBtn.classList.add(correct ? "is-correct" : "is-wrong");
-        const panel = scenario.querySelector(`[data-feedback="${correct ? "success" : "corrective"}"]`);
-        if (panel) panel.classList.add("is-visible");
-        if (!correct) {
-          // tracked on the element, not read back off .is-wrong — that class is
-          // cleared on the next attempt and would unlock a spent answer
-          optionBtn.dataset.tried = "1";
-          group.querySelectorAll(".option").forEach((b) => {
-            if (!b.dataset.tried) b.disabled = false;
-          });
-        }
-      }, 550);
+      const correct = optionBtn.dataset.correct === "true";
+      optionBtn.classList.add(correct ? "is-correct" : "is-wrong");
+      const panel = scenario.querySelector(`[data-feedback="${correct ? "success" : "corrective"}"]`);
+      if (panel) panel.classList.add("is-visible");
+      if (!correct) {
+        // tracked on the element, not read back off .is-wrong — that class is
+        // cleared on the next attempt and would unlock a spent answer
+        optionBtn.dataset.tried = "1";
+        group.querySelectorAll(".option").forEach((b) => {
+          if (!b.dataset.tried) b.disabled = false;
+        });
+      }
     }
   });
 
@@ -640,7 +637,7 @@ document.addEventListener('click', function (e) {
     if (!scenario) return;
     scenario.querySelectorAll('.option').forEach(function (b) {
       b.disabled = false;
-      b.classList.remove('is-selected', 'is-correct', 'is-wrong');
+      b.classList.remove('is-correct', 'is-wrong');
       delete b.dataset.tried;
     });
     scenario.querySelectorAll('.feedback').forEach(function (f) { f.classList.remove('is-visible'); });
@@ -651,25 +648,21 @@ document.addEventListener('click', function (e) {
     var scenario = optionBtn.closest('[data-activity-scenario]');
     var group = optionBtn.closest('[data-activity-group]');
     group.querySelectorAll('.option').forEach(function (b) {
-      b.classList.remove('is-selected', 'is-correct', 'is-wrong');
+      b.classList.remove('is-correct', 'is-wrong');
     });
     scenario.querySelectorAll('.feedback').forEach(function (f) { f.classList.remove('is-visible'); });
 
     group.querySelectorAll('.option').forEach(function (b) { b.disabled = true; });
-    optionBtn.classList.add('is-selected');
-    setTimeout(function () {
-      var correct = optionBtn.dataset.correct === 'true';
-      optionBtn.classList.remove('is-selected');
-      optionBtn.classList.add(correct ? 'is-correct' : 'is-wrong');
-      var panel = scenario.querySelector('[data-feedback="' + (correct ? 'success' : 'corrective') + '"]');
-      if (panel) panel.classList.add('is-visible');
-      if (!correct) {
-        optionBtn.dataset.tried = '1';
-        group.querySelectorAll('.option').forEach(function (b) {
-          if (!b.dataset.tried) b.disabled = false;
-        });
-      }
-    }, 550);
+    var correct = optionBtn.dataset.correct === 'true';
+    optionBtn.classList.add(correct ? 'is-correct' : 'is-wrong');
+    var panel = scenario.querySelector('[data-feedback="' + (correct ? 'success' : 'corrective') + '"]');
+    if (panel) panel.classList.add('is-visible');
+    if (!correct) {
+      optionBtn.dataset.tried = '1';
+      group.querySelectorAll('.option').forEach(function (b) {
+        if (!b.dataset.tried) b.disabled = false;
+      });
+    }
   }
 });`.trim();
 
