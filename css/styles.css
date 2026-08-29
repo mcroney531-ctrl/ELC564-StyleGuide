@@ -405,7 +405,7 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 /* Small pastel pattern accent, one per cluster set, tucked into the top-right
    of the illustration — a quiet, secondary flourish, never the focal point.
    Capping both axes (rather than width alone) keeps every pattern on the same
-   footprint despite their 0.78-1.41 aspect range; see the .backdrop-accent
+   footprint despite their 0.78-1.41 aspect range; see the .stage-swatch-accent
    note in activity-builder.css.
 
    Everything here is in cqw — a share of the illustration's own width — and

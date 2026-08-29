@@ -16,9 +16,10 @@
   const addWrap = document.getElementById("builder-add-wrap");
   const addBtn = document.getElementById("builder-add-btn");
   const addPanel = document.getElementById("builder-add-panel");
+  const backdropPanel = document.getElementById("builder-backdrop-panel");
   const copyBtn = document.getElementById("builder-copy");
   const copyStatus = document.getElementById("builder-copy-status");
-  if (!preview || !addWrap || !addBtn || !addPanel || !copyBtn) return;
+  if (!preview || !addWrap || !addBtn || !addPanel || !backdropPanel || !copyBtn) return;
 
   function esc(str) {
     return String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -27,7 +28,6 @@
   const TYPE_LABELS = {
     heading: "Heading + intro text",
     image: "Photo scene",
-    backdrop: "Decorative backdrop",
     takeaways: "Key takeaways list",
     scenario: "Scenario / MCQ question",
     button: "Standalone CTA button",
@@ -43,10 +43,13 @@
     remove: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   };
 
-  // The module's own set of pastel corner-pattern accents — same assets used
-  // behind the character illustrations in index.html. Picking one here just
-  // sets which file backs the decorative Backdrop piece's accent image.
-  const PATTERNS = [
+  // The module's own backdrops. Picking one here does what data-pattern does
+  // in the module: it sets the hue the section frame, the ambient canvas, the
+  // answer and takeaway borders, the scenario chip and the CTA all read from,
+  // plus which corner accent sits on the illustration. Same ten backdrops the
+  // real screens use, so an activity built here is one of those slide styles
+  // with the copy taken out.
+  const BACKDROPS = [
     { key: "dot-matrix-mint", label: "Dot Matrix" },
     { key: "concentric-arcs-blue", label: "Concentric Arcs" },
     { key: "corner-lines-sage", label: "Corner Lines" },
@@ -86,7 +89,6 @@
       body: 'One or two sentences setting up what this teaches — the "why," not the whole lesson. Keep it short enough to read in one breath.',
     }),
     image: () => ({ scene: null }),
-    backdrop: () => ({ pattern: null }),
     takeaways: () => ({
       items: ["First takeaway — state the behavior you want, plainly.", "Second takeaway.", "Third takeaway."],
     }),
@@ -126,26 +128,18 @@
       </div>
     `;
       }
+      // The corner accent belongs to the illustration, exactly as it does in
+      // the module — it comes from the chosen backdrop rather than from this
+      // piece's own data, so an activity looks like one of the real screens
+      // rather than a photo with a decoration bolted on.
+      const accent = opts.pattern
+        ? `<img class="scene-pattern" src="assets/illustrations/patterns/${esc(opts.pattern)}.webp" alt="" aria-hidden="true">`
+        : "";
       return `
       <div class="banner-wrap">
         <img class="content-banner" src="assets/illustrations/scenes/${esc(d.scene)}.webp" alt="">
+        ${accent}
         ${interactive ? `<button type="button" class="activity-asset-change" data-action="choose-asset">Change image</button>` : ""}
-      </div>
-    `;
-    },
-    // A framed, empty card with a corner-pattern accent peeking from behind
-    // it — a bigger, standalone version of the .scene-pattern peek used in
-    // the real module, not tied to a photo the way it is there.
-    backdrop: (d, opts = {}) => {
-      const interactive = opts.interactive !== false;
-      const hasPattern = !!d.pattern;
-      return `
-      <div class="backdrop-piece">
-        <div class="backdrop-frame ${hasPattern ? "is-filled" : ""}"${hasPattern ? ` data-pattern="${esc(d.pattern)}"` : ""} ${!hasPattern && interactive ? 'data-action="choose-asset" role="button" tabindex="0"' : ""}>
-          ${!hasPattern ? `<span class="activity-illustration-cta">${interactive ? "+ Choose a backdrop" : "No backdrop selected"}</span>` : ""}
-        </div>
-        ${hasPattern ? `<img class="backdrop-accent" src="assets/illustrations/patterns/${esc(d.pattern)}.webp" alt="" aria-hidden="true">` : ""}
-        ${hasPattern && interactive ? `<button type="button" class="activity-asset-change" data-action="choose-asset">Change backdrop</button>` : ""}
       </div>
     `;
     },
@@ -186,7 +180,10 @@
         </div>
       </div>
     `,
-    button: (d) => `<button class="btn btn-primary" type="button">${esc(d.label)}</button>`,
+    // .start-cta is what ties the button to the backdrop in the module — it
+    // fills with the same colour the frame stroke is drawn in. Without it the
+    // CTA stayed sage on every backdrop while everything around it retinted.
+    button: (d) => `<button class="btn btn-primary start-cta" type="button">${esc(d.label)}</button>`,
   };
 
   // Edit forms — one per type, driving the same data the templates above read.
@@ -217,20 +214,6 @@
           ).join("")}
         </div>
         <p class="activity-field-note">Real scene photos from the module — pick whichever fits your activity.</p>
-      </div>
-    `,
-    backdrop: (id, d) => `
-      <div class="activity-field">
-        <label>Backdrop pattern</label>
-        <div class="activity-pattern-grid">
-          ${PATTERNS.map(
-            (p) => `
-          <button type="button" class="activity-pattern-swatch ${d.pattern === p.key ? "is-selected" : ""}" data-field="pattern" data-value="${p.key}" aria-label="${p.label}" aria-pressed="${d.pattern === p.key}">
-            <img src="assets/illustrations/patterns/${p.key}.webp" alt="">
-          </button>`
-          ).join("")}
-        </div>
-        <p class="activity-field-note">A decorative corner accent, sized up into its own piece. Pick one to continue.</p>
       </div>
     `,
     takeaways: (id, d) =>
@@ -283,6 +266,16 @@
   // edit form is currently open.
   let nextId = 1;
   const pieces = [];
+
+  // The backdrop is not a piece — it's the surface every piece sits on, the
+  // same way data-pattern works on .section-inner in the module. null means
+  // nothing has been chosen yet, which is the state the builder opens in:
+  // the first "+" asks for a backdrop before it will offer any content.
+  // "blank" is a deliberate choice of no backdrop, not the absence of one.
+  let backdrop = null;
+  const isPatterned = () => !!backdrop && backdrop !== "blank";
+  const backdropLabel = () =>
+    backdrop === "blank" ? "Blank" : (BACKDROPS.find((b) => b.key === backdrop) || {}).label || "";
 
   // Where the next added piece lands. null means "append at the end", which is
   // what the trailing FAB does; a number is the gap a "+" divider was clicked
@@ -413,7 +406,7 @@
                </div>
                ${FORMS[p.type](p.id, p.data)}
              </div>`
-          : PIECES[p.type](p.data);
+          : PIECES[p.type](p.data, { pattern: isPatterned() ? backdrop : null });
         // A "+" divider sits in the gap above every piece, so a new piece can
         // go anywhere in the sequence instead of only on the end.
         const divider = `<div class="activity-insert" data-insert-at="${i}">
@@ -425,8 +418,21 @@
       })
       .join("\n");
     // .info-beat is what activates the point-list/heading/CTA spacing rules
-    // in styles.css — every piece here is designed to live inside it.
-    preview.innerHTML = body ? `<div class="info-beat">${body}</div>` : "";
+    // in styles.css — every piece here is designed to live inside it. The
+    // stage around it is the module's own .section-inner: carrying the chosen
+    // data-pattern is all it takes for the frame, the ambient canvas, the
+    // answer and takeaway borders, the scenario chip and the CTA to retint
+    // together, because they all already read those variables.
+    const inner = body ? `<div class="info-beat">${body}</div>` : "";
+    preview.innerHTML = !backdrop
+      ? `<p class="activity-stage-hint">Start by choosing a backdrop. It's the slide style everything sits on — the frame, the tint, and the accent colour every piece you add will pick up.</p>`
+      : `<div class="activity-stage-bar">
+           <span class="activity-stage-name">Backdrop — ${esc(backdropLabel())}</span>
+           <button type="button" class="activity-stage-change" data-action="choose-backdrop">Change backdrop</button>
+         </div>` +
+        (isPatterned()
+          ? `<div class="section-inner activity-stage" data-pattern="${esc(backdrop)}">${inner}</div>`
+          : `<div class="activity-stage is-blank">${inner}</div>`);
     // innerHTML above detaches addWrap (it was a previous child) without
     // destroying it — the same node gets re-attached below, so its listeners
     // and open-state carry over instead of needing to be rebuilt.
@@ -443,7 +449,7 @@
         : preview.querySelector(`.activity-insert[data-insert-at="${insertIndex}"]`);
 
     if (slot) slot.appendChild(addWrap);
-    else preview.appendChild(addWrap);
+    else (preview.querySelector(".activity-stage") || preview).appendChild(addWrap);
 
     addWrap.classList.toggle("is-inline", !!slot);
     preview.querySelectorAll(".activity-insert").forEach((d) => {
@@ -454,6 +460,56 @@
   function renderAll() {
     renderPreview();
   }
+
+  // ---- backdrop picker ----
+  // Rendered from BACKDROPS rather than written into activity.html so the
+  // list lives in one place. Each swatch is a miniature of the real thing —
+  // the same frame stroke and tint the stage will get — because the choice
+  // is a slide style, not a pattern graphic, and a bare pattern thumbnail
+  // showed none of what actually changes.
+  function renderBackdropPanel() {
+    backdropPanel.innerHTML = `
+      <span class="builder-backdrop-title">Choose a backdrop</span>
+      <div class="builder-backdrop-grid">
+        <button type="button" class="stage-swatch is-blank ${backdrop === "blank" ? "is-selected" : ""}" data-backdrop="blank" aria-pressed="${backdrop === "blank"}">
+          <span class="stage-swatch-tile"></span>
+          <span class="stage-swatch-label">Blank</span>
+        </button>
+        ${BACKDROPS.map(
+          (b) => `
+        <button type="button" class="stage-swatch ${backdrop === b.key ? "is-selected" : ""}" data-backdrop="${b.key}" aria-pressed="${backdrop === b.key}">
+          <span class="stage-swatch-tile" data-pattern="${b.key}">
+            <img class="stage-swatch-accent" src="assets/illustrations/patterns/${b.key}.webp" alt="">
+          </span>
+          <span class="stage-swatch-label">${esc(b.label)}</span>
+        </button>`
+        ).join("")}
+      </div>`;
+  }
+
+  function openBackdropPanel() {
+    closeAddPanel();
+    renderBackdropPanel();
+    backdropPanel.hidden = false;
+    addBtn.setAttribute("aria-expanded", "true");
+  }
+  function closeBackdropPanel() {
+    backdropPanel.hidden = true;
+    addBtn.setAttribute("aria-expanded", "false");
+  }
+  backdropPanel.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-backdrop]");
+    if (!btn) return;
+    backdrop = btn.dataset.backdrop;
+    closeBackdropPanel();
+    renderAll();
+    // Straight on to the content menu the first time, so choosing a backdrop
+    // leads somewhere instead of leaving an empty stage and a "+" to find.
+    if (!pieces.length) {
+      openAddPanel();
+      addBtn.focus();
+    }
+  });
 
   // ---- "+ Add a piece" trigger + panel ----
   function closeAddPanel() {
@@ -472,6 +528,12 @@
     addBtn.setAttribute("aria-expanded", "true");
   }
   addBtn.addEventListener("click", () => {
+    // Nothing can be added onto a surface that hasn't been chosen yet.
+    if (!backdrop) {
+      if (backdropPanel.hidden) openBackdropPanel();
+      else closeBackdropPanel();
+      return;
+    }
     if (addPanel.hidden) openAddPanel();
     else closeAddPanel();
   });
@@ -482,6 +544,10 @@
     closeAddPanel();
   });
   document.addEventListener("click", (e) => {
+    if (!backdropPanel.hidden && !e.target.closest(".builder-add-wrap") &&
+        !e.target.closest('[data-action="choose-backdrop"]')) {
+      closeBackdropPanel();
+    }
     if (addPanel.hidden) return;
     // The "+" dividers open the panel from outside .builder-add-wrap, and this
     // handler runs after theirs — without exempting them it would close the
@@ -490,7 +556,9 @@
     closeAddPanel();
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !addPanel.hidden) closeAddPanel();
+    if (e.key !== "Escape") return;
+    if (!addPanel.hidden) closeAddPanel();
+    if (!backdropPanel.hidden) closeBackdropPanel();
   });
 
   // ---- edit form input handling ----
@@ -538,6 +606,15 @@
   });
 
   preview.addEventListener("click", (e) => {
+    if (e.target.closest('[data-action="choose-backdrop"]')) {
+      // Park the picker back at the end of the list before opening it, so it
+      // isn't left sitting in a "+" gap it no longer belongs to.
+      insertIndex = null;
+      placeAddWrap();
+      openBackdropPanel();
+      return;
+    }
+
     const insertBtn = e.target.closest('[data-action="insert-at"]');
     if (insertBtn) {
       // No "click the same divider again to close" case to handle: the picker
@@ -673,8 +750,26 @@ document.addEventListener('click', function (e) {
       fetch("css/activity-builder.css").then((r) => r.text()),
     ]);
     // Always rendered in view mode, regardless of live-preview edit state.
-    const body = pieces.map((p) => PIECES[p.type](p.data, { interactive: false })).join("\n");
+    const patterned = isPatterned();
+    // Each piece is wrapped for the export only. In the live preview the "+"
+    // dividers sit in the gaps and own the spacing between pieces, so the
+    // pieces carry no margins of their own — the export has no dividers, and
+    // without this a takeaways list ran straight into the scenario chip below
+    // it with nothing between them.
+    const body = pieces
+      .map((p) => PIECES[p.type](p.data, { interactive: false, pattern: patterned ? backdrop : null }))
+      .map((html) => `<div class="activity-export-piece">${html}</div>`)
+      .join("\n");
     const needsScript = pieces.some((p) => p.type === "scenario");
+    // The exported file gets the same stage as the preview, so the backdrop
+    // travels with the activity rather than being a builder-only nicety. On a
+    // patterned stage .section-inner already centres itself at 780px and owns
+    // its padding, so the body only supplies the page ground; blank keeps the
+    // narrower reading column it always had.
+    const spacing = ".activity-export-piece + .activity-export-piece { margin-top: var(--space-8); }";
+    const page = patterned
+      ? "body { margin: 0; padding: var(--space-8) 0 var(--space-16); background: var(--color-paper); }"
+      : "body { max-width: 640px; margin: 0 auto; padding: var(--space-8) var(--space-6) var(--space-16); }";
 
     return `<!doctype html>
 <html lang="en">
@@ -689,13 +784,16 @@ document.addEventListener('click', function (e) {
 ${tokensCss}
 ${stylesCss}
 ${builderCss}
-body { max-width: 640px; margin: 0 auto; padding: var(--space-8) var(--space-6) var(--space-16); }
+${page}
+${spacing}
 </style>
 </head>
 <body>
+${patterned ? `<div class="section-inner" data-pattern="${esc(backdrop)}">` : ""}
 <div class="info-beat">
 ${body}
 </div>
+${patterned ? "</div>" : ""}
 ${needsScript ? `<script>\n${EXPORT_JS}\n</script>` : ""}
 </body>
 </html>
@@ -705,7 +803,9 @@ ${needsScript ? `<script>\n${EXPORT_JS}\n</script>` : ""}
   copyBtn.addEventListener("click", async () => {
     copyStatus.textContent = "";
     if (!pieces.length) {
-      copyStatus.textContent = "Add at least one piece first.";
+      copyStatus.textContent = backdrop
+        ? "Add at least one piece first."
+        : "Choose a backdrop and add a piece first.";
       setTimeout(() => (copyStatus.textContent = ""), 3000);
       return;
     }
