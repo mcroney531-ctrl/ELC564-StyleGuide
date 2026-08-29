@@ -125,15 +125,26 @@
      block — a solid fill at this size reads as a pressed button rather than a
      chosen answer, and it fights the correct/wrong states that follow it. */
   --answer-bg:              var(--color-white);
-  --answer-border:          #DDE2EA;
-  --answer-hover-border:    #B9C4D2;
   --answer-hover-shadow:    0 3px 10px -3px rgba(20, 33, 58, 0.13), 0 1px 3px -1px rgba(20, 33, 58, 0.08);
   --answer-shadow:          0 1px 2px rgba(20, 33, 58, 0.05), 0 1px 1px rgba(20, 33, 58, 0.03);
-  --answer-selected-bg:     #EDF3F1;
-  --answer-selected-border: var(--color-sage-500);
   --answer-radio:           #C4CDD8;
-  --answer-radio-on:        var(--color-sage-600);
   --answer-text:            var(--color-ink-900);
+
+  /* Resolved states. Warm forest / warm maroon rather than the generic
+     success+error pair, so they sit in the same family as the backdrops.
+     Both solve to 6.00:1 against white and their washes to an identical
+     luminance — picked that way because a straight "nice green, nice red"
+     leaves the maroon far heavier than the green (8.8:1 against 5.8:1), and
+     a wrong answer would land harder than a right one for no reason.
+     Shared with the feedback panel below the answers: it's the same
+     correct/wrong language, and letting it keep the old semantic pair put
+     an orange-red panel directly under a maroon card. */
+  --answer-correct:         #347032;
+  --answer-correct-bg:      #E7F4E7;
+  --answer-correct-label:   #2F6D2D;
+  --answer-wrong:           #A04845;
+  --answer-wrong-bg:        #F8EEEE;
+  --answer-wrong-label:     #A3403C;
   --answer-radius:          15px;
   --answer-pad-y:          1.05rem;
   --answer-pad-x:          1.25rem;

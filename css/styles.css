@@ -478,7 +478,7 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   width: 100%; text-align: left;
   padding: var(--answer-pad-y) var(--answer-pad-x);
   background: var(--answer-bg);
-  border: var(--border) solid var(--answer-border);
+  border: var(--border) solid hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
   border-radius: var(--answer-radius);
   box-shadow: var(--answer-shadow);
   transition: border-color var(--duration-micro) var(--ease-standard),
@@ -512,54 +512,60 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
    moment one is clicked so it never surfaces, but that leaves the CSS relying
    on the JS to hide a bug. Selected keeps its own hover lift below. */
 .option:hover:not([disabled]):not(.is-selected):not(.is-correct):not(.is-wrong) {
-  border-color: var(--answer-hover-border);
   box-shadow: var(--answer-hover-shadow);
 }
 .option:hover:not([disabled]):not(.is-selected):not(.is-correct):not(.is-wrong) .option-marker {
-  box-shadow: 0 0 0 var(--border) var(--color-ink-300) inset;
+  box-shadow: 0 0 0 var(--border) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset;
 }
 .option:active:not([disabled]) { transform: scale(0.995); box-shadow: var(--answer-shadow); }
 .option:focus-visible {
   outline: none;
-  border-color: var(--answer-selected-border);
   box-shadow: var(--answer-shadow), var(--shadow-focus);
 }
 
 /* State 1 — selected, unconfirmed: a holding state while the "answer" registers */
+/* The border is already the backdrop stroke on every answer, so selection is
+   carried by the wash and the filled radio rather than a second edge colour —
+   a lighter "selected" border would read as less chosen, not more. */
 .option.is-selected {
-  border-color: var(--answer-selected-border);
-  background: var(--answer-selected-bg);
+  background: hsl(var(--canvas-bg-h) 30% 94%);
   box-shadow: var(--answer-shadow);
 }
 .option.is-selected:hover:not([disabled]) { box-shadow: var(--answer-hover-shadow); }
 .option.is-selected .option-marker {
-  box-shadow: 0 0 0 var(--border) var(--answer-radio-on) inset;
+  box-shadow: 0 0 0 var(--border) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset;
   background: var(--color-white);
 }
 /* the filled centre — ::after is free in this state (only the resolved
    states use it for their glyph) */
 .option.is-selected .option-marker::after {
   content: ""; width: 10px; height: 10px; border-radius: 50%;
-  background: var(--answer-radio-on);
+  background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
 }
 
 /* State 2 — confirmed correct */
+/* The extra inset ring is what says "resolved" when hue can't: every answer
+   already carries the backdrop stroke, and on the sage backdrop that stroke
+   is 2.3 away from this green (dusty-rose sits 4.9 from the wrong maroon) —
+   close enough that the edge alone stops signalling. A ring rather than a
+   thicker border because border-box would shrink the content box and could
+   rewrap a tight answer. */
 .option.is-correct {
-  border-color: var(--color-success-500);
-  background: var(--color-success-100);
-  box-shadow: var(--answer-shadow);
+  border-color: var(--answer-correct);
+  background: var(--answer-correct-bg);
+  box-shadow: var(--answer-shadow), 0 0 0 1px var(--answer-correct) inset;
 }
-.option.is-correct .option-marker { background: var(--color-success-500); box-shadow: none; color: var(--color-white); }
+.option.is-correct .option-marker { background: var(--answer-correct); box-shadow: none; color: var(--color-white); }
 /* reset the selected state's dot geometry before drawing the glyph */
 .option.is-correct .option-marker::after { content: "✓"; color: inherit; width: auto; height: auto; border-radius: 0; background: none; }
 
 /* State 3 — confirmed wrong */
 .option.is-wrong {
-  border-color: var(--color-error-500);
-  background: var(--color-error-100);
-  box-shadow: var(--answer-shadow);
+  border-color: var(--answer-wrong);
+  background: var(--answer-wrong-bg);
+  box-shadow: var(--answer-shadow), 0 0 0 1px var(--answer-wrong) inset;
 }
-.option.is-wrong .option-marker { background: var(--color-error-500); box-shadow: none; color: var(--color-white); }
+.option.is-wrong .option-marker { background: var(--answer-wrong); box-shadow: none; color: var(--color-white); }
 .option.is-wrong .option-marker::after { content: "✕"; color: inherit; width: auto; height: auto; border-radius: 0; background: none; }
 
 .option[disabled] { cursor: default; }
@@ -580,15 +586,15 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .feedback-icon { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: var(--text-caption); color: var(--color-white); }
 .feedback-body .label { display: block; margin-bottom: var(--space-1); }
 
-.feedback.is-corrective { background: var(--color-error-100); box-shadow: 0 0 0 var(--border) var(--color-error-500) inset; }
-.feedback.is-corrective .feedback-icon { background: var(--color-error-500); }
+.feedback.is-corrective { background: var(--answer-wrong-bg); box-shadow: 0 0 0 var(--border) var(--answer-wrong) inset; }
+.feedback.is-corrective .feedback-icon { background: var(--answer-wrong); }
 .feedback.is-corrective .feedback-icon::after { content: "✕"; }
-.feedback.is-corrective .label { color: var(--color-error-700); }
+.feedback.is-corrective .label { color: var(--answer-wrong-label); }
 
-.feedback.is-success { background: var(--color-success-100); box-shadow: 0 0 0 var(--border) var(--color-success-500) inset; }
-.feedback.is-success .feedback-icon { background: var(--color-success-500); }
+.feedback.is-success { background: var(--answer-correct-bg); box-shadow: 0 0 0 var(--border) var(--answer-correct) inset; }
+.feedback.is-success .feedback-icon { background: var(--answer-correct); }
 .feedback.is-success .feedback-icon::after { content: "✓"; }
-.feedback.is-success .label { color: var(--color-success-700); }
+.feedback.is-success .label { color: var(--answer-correct-label); }
 
 .feedback-actions { margin-top: var(--space-5); }
 
