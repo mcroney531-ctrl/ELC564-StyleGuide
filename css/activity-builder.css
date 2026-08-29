@@ -184,8 +184,73 @@
 .builder-preview:has(.info-beat) { justify-content: flex-start; }
 .builder-preview .banner-wrap { max-width: 320px; }
 .activity-scenario-block { display: block; margin-bottom: var(--space-8); }
-.activity-piece { margin-bottom: var(--space-8); }
-.activity-piece:last-child { margin-bottom: 0; }
+/* The gap between pieces is owned by the "+" divider that sits in it (see
+   below), so the pieces themselves no longer carry a bottom margin — two
+   sources of spacing in the same gap would double it. */
+.activity-piece { margin-bottom: 0; }
+
+/* ---- "+" insert dividers ----
+   One sits in the gap above every piece so a new piece can be dropped
+   anywhere in the sequence, not just appended. At rest it's empty space; the
+   hairline and button only appear on hover/focus, so a finished activity
+   reads as content rather than as a row of controls. */
+.activity-insert {
+  position: relative;
+  height: var(--space-8);
+  display: flex; align-items: center; justify-content: center;
+}
+.activity-insert::before {
+  content: "";
+  position: absolute; left: 0; right: 0; top: 50%;
+  height: 1.5px; background: var(--color-sage-300);
+  transform: scaleX(0);
+  transition: transform var(--duration-system) var(--ease-out);
+}
+.activity-insert:hover::before,
+.activity-insert:focus-within::before,
+.activity-insert.is-active::before { transform: scaleX(1); }
+
+.activity-insert-btn {
+  position: relative; z-index: 1;
+  width: 26px; height: 26px; display: grid; place-items: center;
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: 0 0 0 1.5px var(--color-sage-600) inset, var(--shadow-resting);
+  color: var(--color-sage-600);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity var(--duration-micro) var(--ease-standard),
+              transform var(--duration-micro) var(--ease-standard);
+}
+.activity-insert-btn svg { width: 14px; height: 14px; }
+.activity-insert:hover .activity-insert-btn,
+.activity-insert-btn:focus-visible { opacity: 1; transform: scale(1); }
+.activity-insert-btn:focus-visible { outline: none; box-shadow: 0 0 0 1.5px var(--color-sage-600) inset, var(--activity-shadow-focus); }
+/* While the picker is parked in this gap, the divider's own button would be a
+   second, redundant trigger sitting under the menu. */
+.activity-insert.is-active { height: auto; padding: var(--space-4) 0; }
+.activity-insert.is-active .activity-insert-btn { display: none; }
+
+/* The picker normally trails the list; inline it's already inside a gap that
+   provides the spacing. */
+.builder-add-wrap.is-inline { margin-top: 0; width: 100%; }
+
+/* Brief ring on the piece the user actually moved, so when two rows trade
+   places it's obvious which one was acted on. */
+.activity-piece.is-just-moved {
+  border-radius: var(--radius-md);
+  animation: activity-moved-flash 0.7s var(--ease-out);
+}
+@keyframes activity-moved-flash {
+  0%   { box-shadow: 0 0 0 2px var(--color-sage-600); }
+  60%  { box-shadow: 0 0 0 2px var(--color-sage-600); }
+  100% { box-shadow: 0 0 0 2px rgba(80, 114, 107, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .activity-insert::before,
+  .activity-insert-btn { transition: none; }
+  .activity-piece.is-just-moved { animation: none; box-shadow: 0 0 0 2px var(--color-sage-600); }
+}
 
 /* ---- edit form ---- */
 .activity-edit-form {

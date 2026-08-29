@@ -284,11 +284,72 @@
   let nextId = 1;
   const pieces = [];
 
+  // Where the next added piece lands. null means "append at the end", which is
+  // what the trailing FAB does; a number is the gap a "+" divider was clicked
+  // in, so a piece can be inserted anywhere rather than only at the end.
+  let insertIndex = null;
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* Reorder/insert motion, FLIP-style: measure every piece's position before
+   * the list changes, re-render, then start each one from the offset it just
+   * moved by and let it travel to its new home. The rows appear to slide past
+   * each other even though the DOM was replaced wholesale. Hand-rolled on the
+   * Web Animations API rather than pulling GSAP onto this page — it's a
+   * transform tween on a handful of nodes, not worth the payload. */
+  function renderWithMotion(highlightId) {
+    if (prefersReducedMotion.matches) {
+      renderAll();
+      return;
+    }
+
+    const before = new Map();
+    preview.querySelectorAll("[data-piece-id]").forEach((el) => {
+      before.set(el.dataset.pieceId, el.getBoundingClientRect().top);
+    });
+
+    renderAll();
+
+    preview.querySelectorAll("[data-piece-id]").forEach((el) => {
+      const prevTop = before.get(el.dataset.pieceId);
+      const isNew = prevTop === undefined;
+
+      if (isNew) {
+        el.animate(
+          [
+            { opacity: 0, transform: "translateY(-8px)" },
+            { opacity: 1, transform: "translateY(0)" },
+          ],
+          { duration: 320, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }
+        );
+        return;
+      }
+
+      const dy = prevTop - el.getBoundingClientRect().top;
+      if (!dy) return;
+      el.animate(
+        [{ transform: `translateY(${dy}px)` }, { transform: "translateY(0)" }],
+        { duration: 340, easing: "cubic-bezier(0.16, 1, 0.3, 1)" }
+      );
+    });
+
+    // A brief ring on the piece that was actually acted on, so when two rows
+    // trade places it's clear which one the user moved.
+    if (highlightId != null) {
+      const moved = preview.querySelector(`[data-piece-id="${highlightId}"]`);
+      if (moved) {
+        moved.classList.add("is-just-moved");
+        setTimeout(() => moved.classList.remove("is-just-moved"), 700);
+      }
+    }
+  }
+
   function addPiece(type) {
     pieces.forEach((p) => (p.editing = false));
     const piece = { id: nextId++, type, data: DEFAULTS[type](), editing: true };
-    pieces.push(piece);
-    renderAll();
+    pieces.splice(insertIndex === null ? pieces.length : insertIndex, 0, piece);
+    insertIndex = null;
+    renderWithMotion();
     requestAnimationFrame(() => {
       const el = preview.querySelector(`[data-piece-id="${piece.id}"]`);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -298,7 +359,8 @@
   function removePiece(id) {
     const i = pieces.findIndex((p) => p.id === id);
     if (i !== -1) pieces.splice(i, 1);
-    renderAll();
+    if (insertIndex !== null && insertIndex > i) insertIndex--;
+    renderWithMotion();
   }
 
   function movePiece(id, dir) {
@@ -306,7 +368,14 @@
     const j = dir === "up" ? i - 1 : i + 1;
     if (i === -1 || j < 0 || j >= pieces.length) return;
     [pieces[i], pieces[j]] = [pieces[j], pieces[i]];
-    renderAll();
+    renderWithMotion(id);
+    // The control that was clicked is gone (the list re-rendered), so put focus
+    // on the same action at the row's new position — otherwise a run of moves
+    // by keyboard drops focus to the top of the document after the first one.
+    requestAnimationFrame(() => {
+      const btn = preview.querySelector(`[data-piece-id="${id}"] [data-action="move-${dir}"]`);
+      if (btn && !btn.disabled) btn.focus();
+    });
   }
 
   function setEditing(id, editing) {
@@ -345,17 +414,41 @@
                ${FORMS[p.type](p.id, p.data)}
              </div>`
           : PIECES[p.type](p.data);
-        return `<div class="activity-piece" data-piece-id="${p.id}">${controls}${inner}</div>`;
+        // A "+" divider sits in the gap above every piece, so a new piece can
+        // go anywhere in the sequence instead of only on the end.
+        const divider = `<div class="activity-insert" data-insert-at="${i}">
+               <button type="button" class="activity-insert-btn" data-action="insert-at" data-index="${i}" aria-label="Add a piece before ${label}">
+                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+               </button>
+             </div>`;
+        return `${divider}<div class="activity-piece" data-piece-id="${p.id}">${controls}${inner}</div>`;
       })
       .join("\n");
     // .info-beat is what activates the point-list/heading/CTA spacing rules
     // in styles.css — every piece here is designed to live inside it.
     preview.innerHTML = body ? `<div class="info-beat">${body}</div>` : "";
     // innerHTML above detaches addWrap (it was a previous child) without
-    // destroying it — re-attach the same node as the trailing element so
-    // "+ Add a piece" always sits right after the last piece, and its
-    // listeners/open-state carry over instead of needing to be rebuilt.
-    preview.appendChild(addWrap);
+    // destroying it — the same node gets re-attached below, so its listeners
+    // and open-state carry over instead of needing to be rebuilt.
+    placeAddWrap();
+  }
+
+  // The picker is a single roaming node: it normally trails the last piece,
+  // but moves into whichever "+" divider was clicked so the menu opens where
+  // the piece will actually land.
+  function placeAddWrap() {
+    const slot =
+      insertIndex === null
+        ? null
+        : preview.querySelector(`.activity-insert[data-insert-at="${insertIndex}"]`);
+
+    if (slot) slot.appendChild(addWrap);
+    else preview.appendChild(addWrap);
+
+    addWrap.classList.toggle("is-inline", !!slot);
+    preview.querySelectorAll(".activity-insert").forEach((d) => {
+      d.classList.toggle("is-active", d === slot);
+    });
   }
 
   function renderAll() {
@@ -366,6 +459,13 @@
   function closeAddPanel() {
     addPanel.hidden = true;
     addBtn.setAttribute("aria-expanded", "false");
+    // Send the picker back to the end of the list. Done by moving the node
+    // rather than re-rendering, so dismissing the menu doesn't wipe out any
+    // scenario a viewer is part-way through answering in the preview.
+    if (insertIndex !== null) {
+      insertIndex = null;
+      placeAddWrap();
+    }
   }
   function openAddPanel() {
     addPanel.hidden = false;
@@ -382,7 +482,12 @@
     closeAddPanel();
   });
   document.addEventListener("click", (e) => {
-    if (!addPanel.hidden && !e.target.closest(".builder-add-wrap")) closeAddPanel();
+    if (addPanel.hidden) return;
+    // The "+" dividers open the panel from outside .builder-add-wrap, and this
+    // handler runs after theirs — without exempting them it would close the
+    // panel in the same click that opened it.
+    if (e.target.closest(".builder-add-wrap") || e.target.closest('[data-action="insert-at"]')) return;
+    closeAddPanel();
   });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !addPanel.hidden) closeAddPanel();
@@ -433,6 +538,18 @@
   });
 
   preview.addEventListener("click", (e) => {
+    const insertBtn = e.target.closest('[data-action="insert-at"]');
+    if (insertBtn) {
+      // No "click the same divider again to close" case to handle: the picker
+      // parks in this gap and hides this button, and its own FAB becomes the
+      // toggle (which also sends it back to the end of the list).
+      insertIndex = Number(insertBtn.dataset.index);
+      placeAddWrap();
+      openAddPanel();
+      addBtn.focus();
+      return;
+    }
+
     const doneBtn = e.target.closest('[data-action="done-edit"]');
     if (doneBtn) {
       setEditing(Number(doneBtn.dataset.id), false);
