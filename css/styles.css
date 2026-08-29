@@ -265,16 +265,16 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
    reads as a forest tone rather than a pastel of the backdrop.
    They differ because hue-luminance spread widens with saturation, so one
    shared value would leave the green backdrops visibly lighter. */
-[data-pattern="concentric-arcs-blue"] { --pattern-border: #BCCEE6; --pattern-accent: #2F6FC4; --pattern-accent-hover: #3476CF; --canvas-bg-h: 214; --canvas-bg-l: 54.0%; --canvas-bd-l: 42.0%; }
-[data-pattern="confetti-peach"] { --pattern-border: #E6CEBC; --pattern-accent: #A55D27; --pattern-accent-hover: #AF6329; --canvas-bg-h: 26; --canvas-bg-l: 51.7%; --canvas-bd-l: 37.2%; }
-[data-pattern="corner-lines-sage"] { --pattern-border: #CDD6CC; --pattern-accent: #5B7658; --pattern-accent-hover: #617E5E; --canvas-bg-h: 114; --canvas-bg-l: 47.9%; --canvas-bd-l: 31.0%; }
-[data-pattern="diamond-cluster-dusty-rose"] { --pattern-border: #E0C2C4; --pattern-accent: #B94A52; --pattern-accent-hover: #BD565D; --canvas-bg-h: 356; --canvas-bg-l: 56.1%; --canvas-bd-l: 45.7%; }
-[data-pattern="dot-matrix-mint"] { --pattern-border: #C9D9D4; --pattern-accent: #4A7869; --pattern-accent-hover: #4F7F70; --canvas-bg-h: 161; --canvas-bg-l: 47.5%; --canvas-bd-l: 30.6%; }
-[data-pattern="dot-square-seafoam"] { --pattern-border: #C5DDD9; --pattern-accent: #3A796F; --pattern-accent-hover: #3E8276; --canvas-bg-h: 170; --canvas-bg-l: 47.4%; --canvas-bd-l: 30.4%; }
-[data-pattern="geometric-marks-powder-blue"] { --pattern-border: #BCD0E6; --pattern-accent: #2D71BC; --pattern-accent-hover: #2F78C7; --canvas-bg-h: 211; --canvas-bg-l: 53.4%; --canvas-bd-l: 40.7%; }
-[data-pattern="mini-circles-peach"] { --pattern-border: #E6CBBC; --pattern-accent: #AB5729; --pattern-accent-hover: #B75D2B; --canvas-bg-h: 21; --canvas-bg-l: 52.7%; --canvas-bd-l: 38.8%; }
-[data-pattern="offset-squares-sage-gray"] { --pattern-border: #CCD6D2; --pattern-accent: #577569; --pattern-accent-hover: #5D7D70; --canvas-bg-h: 156; --canvas-bg-l: 47.6%; --canvas-bd-l: 30.7%; }
-[data-pattern="ring-cluster-lavender"] { --pattern-border: #CBBCE6; --pattern-accent: #8253D6; --pattern-accent-hover: #895DD9; --canvas-bg-h: 261; --canvas-bg-l: 57.3%; --canvas-bd-l: 51.3%; }
+[data-pattern="concentric-arcs-blue"] { --pattern-border: #BCCEE6; --pattern-accent: #2F6FC4; --pattern-accent-hover: #3476CF; --canvas-bg-h: 214; --canvas-bg-l: 54.0%; --canvas-bd-l: 42.0%; --canvas-bd-l-hover: 48.1%; }
+[data-pattern="confetti-peach"] { --pattern-border: #E6CEBC; --pattern-accent: #A55D27; --pattern-accent-hover: #AF6329; --canvas-bg-h: 26; --canvas-bg-l: 51.7%; --canvas-bd-l: 37.2%; --canvas-bd-l-hover: 42.6%; }
+[data-pattern="corner-lines-sage"] { --pattern-border: #CDD6CC; --pattern-accent: #5B7658; --pattern-accent-hover: #617E5E; --canvas-bg-h: 114; --canvas-bg-l: 47.9%; --canvas-bd-l: 31.0%; --canvas-bd-l-hover: 35.6%; }
+[data-pattern="diamond-cluster-dusty-rose"] { --pattern-border: #E0C2C4; --pattern-accent: #B94A52; --pattern-accent-hover: #BD565D; --canvas-bg-h: 356; --canvas-bg-l: 56.1%; --canvas-bd-l: 45.7%; --canvas-bd-l-hover: 52.1%; }
+[data-pattern="dot-matrix-mint"] { --pattern-border: #C9D9D4; --pattern-accent: #4A7869; --pattern-accent-hover: #4F7F70; --canvas-bg-h: 161; --canvas-bg-l: 47.5%; --canvas-bd-l: 30.6%; --canvas-bd-l-hover: 35.1%; }
+[data-pattern="dot-square-seafoam"] { --pattern-border: #C5DDD9; --pattern-accent: #3A796F; --pattern-accent-hover: #3E8276; --canvas-bg-h: 170; --canvas-bg-l: 47.4%; --canvas-bd-l: 30.4%; --canvas-bd-l-hover: 34.8%; }
+[data-pattern="geometric-marks-powder-blue"] { --pattern-border: #BCD0E6; --pattern-accent: #2D71BC; --pattern-accent-hover: #2F78C7; --canvas-bg-h: 211; --canvas-bg-l: 53.4%; --canvas-bd-l: 40.7%; --canvas-bd-l-hover: 46.6%; }
+[data-pattern="mini-circles-peach"] { --pattern-border: #E6CBBC; --pattern-accent: #AB5729; --pattern-accent-hover: #B75D2B; --canvas-bg-h: 21; --canvas-bg-l: 52.7%; --canvas-bd-l: 38.8%; --canvas-bd-l-hover: 44.4%; }
+[data-pattern="offset-squares-sage-gray"] { --pattern-border: #CCD6D2; --pattern-accent: #577569; --pattern-accent-hover: #5D7D70; --canvas-bg-h: 156; --canvas-bg-l: 47.6%; --canvas-bd-l: 30.7%; --canvas-bd-l-hover: 35.2%; }
+[data-pattern="ring-cluster-lavender"] { --pattern-border: #CBBCE6; --pattern-accent: #8253D6; --pattern-accent-hover: #895DD9; --canvas-bg-h: 261; --canvas-bg-l: 57.3%; --canvas-bd-l: 51.3%; --canvas-bd-l-hover: 56.2%; }
 
 /* ---- Section content (lives inside .card-section once a card expands) ---- */
 /* Each cluster page is framed like one of the backdrop cards: a bold stroke
@@ -411,18 +411,23 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   content: ""; flex: none; width: 8px; height: 8px; margin-top: 8px; border-radius: 50%;
   background: var(--illo-accent, var(--color-ink-900));
 }
-/* Takes the backdrop's colour rather than the global sage, so the button
-   belongs to the page it's on — the frame border, the corner pattern and this
-   button are all the same hue. --pattern-accent is a darkened, AA-safe
-   companion to --pattern-border (the border tints are far too pale to carry
-   white text). Both rules need the same specificity as .btn-primary:hover or
-   the hover would win on source order and drop back to sage. */
+/* Fills with the same colour the frame stroke is drawn in, so the button, the
+   border and the corner pattern are one tone rather than three shades of the
+   backdrop's hue. That's --canvas-bd-*, not --pattern-accent: the accent was
+   solved against white for the chip, and sitting it next to the deeper stroke
+   read as a second, lighter blue.
+   The hover lightness is solved per hue rather than a flat "+n%" — the stroke
+   tones are equal-luminance, so one shared step lands the greens at 4.26:1
+   against a 14px white label, under AA. Solved, every backdrop hovers at
+   4.80:1.
+   Both rules need the same specificity as .btn-primary:hover, or the hover
+   would win on source order and drop the button back to sage. */
 .info-beat .start-cta {
   margin-top: var(--space-8);
-  background: var(--pattern-accent, var(--color-sage-600));
+  background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
 }
 .info-beat .start-cta:hover {
-  background: var(--pattern-accent-hover, var(--color-sage-500));
+  background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l-hover, var(--canvas-bd-l)));
 }
 
 /* ---- Scenario / MCQ ---- */
