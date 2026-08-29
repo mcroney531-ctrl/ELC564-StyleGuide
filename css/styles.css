@@ -460,50 +460,103 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 
 .option-list { display: flex; flex-direction: column; gap: var(--space-3); }
 
+/* Answer cards. The edge is a real border rather than an inset ring here, so
+   the radio and the copy sit inside the padding box and long options wrap
+   against a predictable width; the shadow is what lifts the card, the border
+   only draws its edge. Transitions name their properties so the resolved
+   correct/wrong states don't cross-fade through the hover colour. */
 .option {
-  display: flex; align-items: center; gap: var(--space-4);
+  display: flex; align-items: center; gap: var(--answer-gap);
   width: 100%; text-align: left;
-  padding: var(--space-4) var(--space-5);
-  background: var(--color-white);
-  border-radius: var(--radius-md);
-  box-shadow: 0 0 0 var(--border) var(--color-line) inset;
-  transition: box-shadow var(--duration-micro) var(--ease-standard), background-color var(--duration-micro) var(--ease-standard);
+  padding: var(--answer-pad-y) var(--answer-pad-x);
+  background: var(--answer-bg);
+  border: var(--border) solid var(--answer-border);
+  border-radius: var(--answer-radius);
+  box-shadow: var(--answer-shadow);
+  transition: border-color var(--duration-micro) var(--ease-standard),
+              background-color var(--duration-micro) var(--ease-standard),
+              box-shadow var(--duration-micro) var(--ease-standard),
+              transform var(--duration-micro) var(--ease-standard);
 }
 .option-marker {
-  flex: none; width: 24px; height: 24px; border-radius: 50%;
-  box-shadow: 0 0 0 var(--border) var(--color-line) inset;
-  display: grid; place-items: center; font: var(--text-caption); color: transparent;
-  transition: background-color var(--duration-micro) var(--ease-standard), box-shadow var(--duration-micro) var(--ease-standard);
+  flex: none;
+  width: var(--answer-radio-size); height: var(--answer-radio-size);
+  border-radius: 50%;
+  background: var(--color-white);
+  box-shadow: 0 0 0 var(--border) var(--answer-radio) inset;
+  display: grid; place-items: center;
+  font: var(--text-caption); color: transparent;
+  transition: background-color var(--duration-micro) var(--ease-standard),
+              box-shadow var(--duration-micro) var(--ease-standard);
 }
-.option-text { font: var(--text-body); color: var(--color-charcoal); }
+.option-text {
+  font: var(--text-body); color: var(--answer-text);
+  line-height: 1.55;
+  /* long answers wrap inside the card instead of pushing the radio around */
+  min-width: 0;
+}
 
-.option:hover:not([disabled]) { box-shadow: 0 0 0 var(--border) var(--color-ink-500) inset; }
-.option:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
+/* ---- interactive states ----
+   The hover rule is scoped away from the state classes on purpose.
+   ".option:hover:not([disabled])" is specificity 0,3,0 and would otherwise
+   outrank ".option.is-selected" at 0,2,0 — hovering a chosen answer would
+   drop its sage edge back to plain grey. Today the flow disables options the
+   moment one is clicked so it never surfaces, but that leaves the CSS relying
+   on the JS to hide a bug. Selected keeps its own hover lift below. */
+.option:hover:not([disabled]):not(.is-selected):not(.is-correct):not(.is-wrong) {
+  border-color: var(--answer-hover-border);
+  box-shadow: var(--answer-hover-shadow);
+}
+.option:hover:not([disabled]):not(.is-selected):not(.is-correct):not(.is-wrong) .option-marker {
+  box-shadow: 0 0 0 var(--border) var(--color-ink-300) inset;
+}
+.option:active:not([disabled]) { transform: scale(0.995); box-shadow: var(--answer-shadow); }
+.option:focus-visible {
+  outline: none;
+  border-color: var(--answer-selected-border);
+  box-shadow: var(--answer-shadow), var(--shadow-focus);
+}
 
 /* State 1 — selected, unconfirmed: a holding state while the "answer" registers */
 .option.is-selected {
-  box-shadow: 0 0 0 var(--border-thick) var(--color-ink-900) inset;
-  background: var(--color-ink-100);
+  border-color: var(--answer-selected-border);
+  background: var(--answer-selected-bg);
+  box-shadow: var(--answer-shadow);
 }
-.option.is-selected .option-marker { box-shadow: 0 0 0 var(--border) var(--color-ink-900) inset; background: var(--color-white); }
+.option.is-selected:hover:not([disabled]) { box-shadow: var(--answer-hover-shadow); }
+.option.is-selected .option-marker {
+  box-shadow: 0 0 0 var(--border) var(--answer-radio-on) inset;
+  background: var(--color-white);
+}
+/* the filled centre — ::after is free in this state (only the resolved
+   states use it for their glyph) */
+.option.is-selected .option-marker::after {
+  content: ""; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--answer-radio-on);
+}
 
 /* State 2 — confirmed correct */
 .option.is-correct {
-  box-shadow: 0 0 0 var(--border-thick) var(--color-success-500) inset;
+  border-color: var(--color-success-500);
   background: var(--color-success-100);
+  box-shadow: var(--answer-shadow);
 }
 .option.is-correct .option-marker { background: var(--color-success-500); box-shadow: none; color: var(--color-white); }
-.option.is-correct .option-marker::after { content: "✓"; color: inherit; }
+/* reset the selected state's dot geometry before drawing the glyph */
+.option.is-correct .option-marker::after { content: "✓"; color: inherit; width: auto; height: auto; border-radius: 0; background: none; }
 
 /* State 3 — confirmed wrong */
 .option.is-wrong {
-  box-shadow: 0 0 0 var(--border-thick) var(--color-error-500) inset;
+  border-color: var(--color-error-500);
   background: var(--color-error-100);
+  box-shadow: var(--answer-shadow);
 }
 .option.is-wrong .option-marker { background: var(--color-error-500); box-shadow: none; color: var(--color-white); }
-.option.is-wrong .option-marker::after { content: "✕"; color: inherit; }
+.option.is-wrong .option-marker::after { content: "✕"; color: inherit; width: auto; height: auto; border-radius: 0; background: none; }
 
 .option[disabled] { cursor: default; }
+/* a locked-in answer keeps its state but stops behaving like a control */
+.option[disabled]:hover { box-shadow: var(--answer-shadow); transform: none; }
 .option:not(.is-selected):not(.is-correct):not(.is-wrong)[disabled] { opacity: 0.5; }
 
 /* ---- Feedback panel: corrective (retry) vs success, as one documented system ---- */

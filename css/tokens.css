@@ -114,6 +114,32 @@
      above the three-tier scale on purpose rather than stretching "thick". */
   --border-frame: 4px;
 
+  /* ---- MCQ answer cards ----
+     The answers are the one thing on a scenario page a reader actually
+     operates, so they get their own token set rather than borrowing the
+     generic surface values: a wider radius, a softer shadow and roomier
+     padding than a plain bordered box, and a selected state built from the
+     sage accent rather than ink. Grouped here so the whole component can be
+     dialled up or down from one place.
+     Selection is deliberately a pale wash plus a coloured edge, not a filled
+     block — a solid fill at this size reads as a pressed button rather than a
+     chosen answer, and it fights the correct/wrong states that follow it. */
+  --answer-bg:              var(--color-white);
+  --answer-border:          #DDE2EA;
+  --answer-hover-border:    #B9C4D2;
+  --answer-hover-shadow:    0 3px 10px -3px rgba(20, 33, 58, 0.13), 0 1px 3px -1px rgba(20, 33, 58, 0.08);
+  --answer-shadow:          0 1px 2px rgba(20, 33, 58, 0.05), 0 1px 1px rgba(20, 33, 58, 0.03);
+  --answer-selected-bg:     #EDF3F1;
+  --answer-selected-border: var(--color-sage-500);
+  --answer-radio:           #C4CDD8;
+  --answer-radio-on:        var(--color-sage-600);
+  --answer-text:            var(--color-ink-900);
+  --answer-radius:          15px;
+  --answer-pad-y:          1.05rem;
+  --answer-pad-x:          1.25rem;
+  --answer-gap:            0.9rem;
+  --answer-radio-size:      22px;
+
   /* ---- Section canvas ----
      Ambient light behind an open section, not a flat fill: a soft pool in the
      upper-centre that dissipates into --canvas-bg-base, so there's no line
