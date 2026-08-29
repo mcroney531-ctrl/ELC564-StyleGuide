@@ -380,7 +380,6 @@
 
   function openSection(clusterId) {
     if (isAnimating) return;
-    isAnimating = true;
 
     const { slot, card, state } = entries[clusterId];
     const sectionRoot = card.querySelector(".card-section");
@@ -391,7 +390,10 @@
     // grid row never has a moment of collapsing/resizing.
     slot.style.height = card.getBoundingClientRect().height + "px";
 
-    const flipState = Flip.getState(card);
+    // Captured before the class swap relocates the card. Skipped under reduced
+    // motion, where there's no tween to run between the two states.
+    const flipState = prefersReducedMotion.matches ? null : Flip.getState(card);
+
     card.classList.add("is-expanded");
     card.tabIndex = -1;
     card.setAttribute("aria-expanded", "true");
@@ -399,6 +401,17 @@
     if (state.currentQuestion === 0 && !sectionRoot.querySelector(".scenario.is-active")) {
       showView(sectionRoot, "info");
     }
+
+    // Land on the end state directly, matching how closeSection honors the
+    // same preference. isAnimating stays false: there's no animation to guard,
+    // and closeSection's own reduced-motion path relies on being able to run
+    // immediately after this.
+    if (prefersReducedMotion.matches) {
+      gsap.set(otherCards(clusterId), { opacity: 0, scale: 0.94, pointerEvents: "none" });
+      return;
+    }
+
+    isAnimating = true;
 
     gsap.to(otherCards(clusterId), {
       opacity: 0,
