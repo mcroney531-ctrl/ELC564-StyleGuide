@@ -154,7 +154,7 @@
         <div class="demo-shell">
           <div class="demo-grid-3" id="card-demo"></div>
         </div>
-        <p class="body guide-block-note">Hover the card above — it lifts with a spring bounce (the one deliberate bounce in the system; see Motion). On click in the real module, this exact element is what GSAP Flip expands into the section.</p>
+        <p class="body guide-block-note">Hover the card above — it lifts with a spring bounce (the one deliberate bounce in the system; see Motion). On click in the real module, this exact element is what becomes the full-screen section.</p>
       </div>
 
       <div class="guide-block">
@@ -319,9 +319,9 @@
               <tr><td>Takeaways stagger in</td><td>info beat shown</td><td>0.5s, 0.06s stagger</td><td><code>power2.out</code></td></tr>
               <tr><td>Option → selected</td><td>click</td><td>instant + 0.55s hold</td><td>—</td></tr>
               <tr><td>Feedback panel reveal</td><td>answer confirmed</td><td>0.5s</td><td><code>ease-out</code></td></tr>
-              <tr><td><strong>Card → section (signature)</strong></td><td>card click</td><td>0.65s</td><td><code>power2.inOut</code></td></tr>
-              <tr><td>Siblings recede</td><td>card click (parallel)</td><td>0.35s</td><td><code>power2.out</code></td></tr>
-              <tr><td>Section → card (reverse)</td><td>"Overview" click</td><td>0.65s</td><td><code>power2.inOut</code></td></tr>
+              <tr><td><strong>Overview leaves (signature)</strong></td><td>card click</td><td>0.35s</td><td><code>power2.in</code></td></tr>
+              <tr><td>Section arrives</td><td>card click (after)</td><td>0.5s / 0.55s, 0.1s stagger</td><td><code>power2.out</code></td></tr>
+              <tr><td>Section → card (exit)</td><td>"Overview" click</td><td>0.3s out, 0.4s back</td><td><code>power2.inOut</code> / <code>power2.out</code></td></tr>
             </tbody>
           </table>
         </div>
@@ -329,14 +329,14 @@
 
       <div class="guide-block">
         <h3 class="h3 guide-block-title">The signature transition, in the actual code</h3>
-        <p class="body">The card-to-section move uses GSAP's <strong>Flip</strong> plugin rather than a hand-rolled position tween, and it animates the exact same DOM element the whole way — no hand-off between a card and a separate section overlay, which is what keeps it looking like one object changing size rather than two objects cutting between each other:</p>
+        <p class="body">Opening a cluster is the same two-step handoff the cover uses for "Start Activity" — one view leaves, the next arrives — so entering a section from a card and entering the module from the cover feel like the same move rather than two unrelated effects:</p>
         <ol style="padding-left: 1.25em; margin: var(--space-4) 0; display:flex; flex-direction:column; gap: var(--space-2)" class="body">
-          <li><strong>First</strong> — <code>Flip.getState(card)</code> captures the clicked card's exact grid position and size before anything changes.</li>
-          <li><strong>Last</strong> — adding the <code>is-expanded</code> class switches that same card from a normal grid item to <code>position:fixed; inset:0</code> (full viewport). Its <code>.card-slot</code> wrapper stays behind holding the grid cell open, so the other two cards never reflow.</li>
-          <li><strong>Play</strong> — <code>Flip.from(state)</code> animates the card from the captured grid rect to its new full-screen layout. Sibling cards fade and scale down 6% in a parallel tween so attention stays on the one expanding.</li>
-          <li><strong>Reverse</strong> — on exit, <code>Flip.getState(card)</code> captures the full-screen rect, removing <code>is-expanded</code> snaps it back to its grid layout, and <code>Flip.from(state)</code> animates the shrink — same element, same technique, run backwards.</li>
+          <li><strong>Out</strong> — the overview (intro copy and all three cards) fades to 0 and lifts 16px on <code>power2.in</code> over 0.35s. The cards fade, not their <code>.card-slot</code> wrappers: a slot's opacity would still apply to the expanded card inside it, even once that card is <code>position:fixed</code>.</li>
+          <li><strong>Swap</strong> — with the overview invisible, the <code>is-expanded</code> class switches the clicked card from a grid item to <code>position:fixed; inset:0</code>. Nothing animates across this step, so the geometry change is never on screen; its slot stays behind holding the grid cell open, so the other cards never reflow.</li>
+          <li><strong>In</strong> — the section's top bar settles up from 16px over 0.5s, and its content follows from 24px over 0.55s, 0.1s behind. Only the transform is animated on the content — its opacity belongs to the <code>.is-visible</code> CSS fade, and driving both would have the two fighting over one property.</li>
+          <li><strong>Exit</strong> — deliberately not this run backwards. The expanded view scales to 0.96 and fades while the overview returns underneath it, so leaving reads as pushing back into the stack rather than a full screen of content folding down into a small card.</li>
         </ol>
-        <p class="body guide-block-note">Corner radius is cross-faded from 20px (card) to 0 (full-bleed section) across the same duration, reinforcing the same idea.</p>
+        <p class="body guide-block-note">Both halves overlap on the way out. Run them in sequence and there's a beat where the section has gone but the overview hasn't returned, showing a bare page.</p>
       </div>        </div>
       </details>
 
@@ -440,7 +440,7 @@
           </figure>
           <figure class="screen-figure">
             <img src="assets/screens/info-beat.png" alt="Expanded section showing the info beat for the Bring cluster" loading="lazy">
-            <figcaption>Info beat<span class="caption-note">The card has expanded to fill the screen — this is the Flip transition mid-result, not a new page.</span></figcaption>
+            <figcaption>Info beat<span class="caption-note">The card itself has become the full screen — this is the same element as the card, not a new page.</span></figcaption>
           </figure>
           <figure class="screen-figure">
             <img src="assets/screens/scenario.png" alt="An MCQ scenario screen before an answer is chosen" loading="lazy">

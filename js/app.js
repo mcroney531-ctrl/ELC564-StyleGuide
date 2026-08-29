@@ -1,20 +1,16 @@
 /**
  * App logic for "AI Do's & Don'ts at Work."
  *   1. Render the landing cards (each wrapping its own hidden section content).
- *   2. Card <-> section transition via GSAP Flip (the signature interaction) —
- *      the SAME element grows from grid slot to full screen, rather than
- *      handing off between two different elements.
- *   3. MCQ flow: selected -> confirmed-correct/-wrong -> corrective retry or advance.
+ *   2. Card <-> section transition — one view fades out and up, the next
+ *      settles in behind it, the same two-step handoff the cover uses.
+ *   3. MCQ flow: selected -> confirmed-correct/-wrong or corrective retry or advance.
  *   4. Progress persisted per cluster in localStorage.
  */
 
 (function () {
   "use strict";
 
-  gsap.registerPlugin(Flip);
-
   const STORAGE_KEY = "aidodont-progress";
-  const TRANSITION_DURATION = 0.65;
   const SELECT_HOLD_MS = 550; // "selected, unconfirmed" beat before it resolves
 
   const grid = document.getElementById("card-grid");
@@ -216,8 +212,8 @@
       duration: 0.5,
       ease: "power2.out",
       stagger: 0.06,
-      // let the card finish most of its 0.65s expansion before the
-      // takeaways settle in, so the two moments read in sequence
+      // let the view it lives in settle first, so the two moments read in
+      // sequence rather than as one blur of movement
       delay: 0.3,
       clearProps: "all",
     });
@@ -362,12 +358,12 @@
     }, SELECT_HOLD_MS);
   }
 
-  /* ---------------- card <-> section transition (GSAP Flip) ----------------
-   * The card is the ONLY element that moves: Flip.getState captures its grid
-   * rect, the "is-expanded" class swaps it to a fixed full-viewport overlay,
-   * and Flip.from animates the same element between those two states. Its
-   * .card-slot wrapper never leaves the grid, so the siblings never reflow —
-   * they're just faded/scaled independently in parallel.
+  /* ---------------- card <-> section transition ----------------
+   * The "is-expanded" class swaps the clicked card to a fixed full-viewport
+   * overlay; its .card-slot wrapper never leaves the grid, so the siblings
+   * never reflow and can be faded independently. Nothing tweens between the
+   * two geometries — the overview fades out before the swap and the section
+   * fades in after it, so the class change itself is never on screen.
    */
 
   let isAnimating = false;
@@ -378,6 +374,21 @@
       .map((e) => e.card);
   }
 
+  // Everything that makes up the overview: the intro copy plus every card.
+  // The cards rather than their .card-slot wrappers — the slots hold the grid's
+  // layout, and fading a slot would take the expanded card down with it, since
+  // opacity on an ancestor still applies to a position:fixed descendant.
+  function landingLayer() {
+    const intro = document.querySelector(".landing-intro");
+    const cards = Object.values(entries).map((e) => e.card);
+    return intro ? [intro, ...cards] : cards;
+  }
+
+  /* Opening runs the same two-step fade as "Start Activity" on the cover: the
+   * outgoing view drops away upward, then the incoming one settles up into
+   * place, staggered. It replaces a Flip that grew the card from its grid slot
+   * to full screen — same destination, but this reads as one view handing off
+   * to the next rather than a card inflating. */
   function openSection(clusterId) {
     if (isAnimating) return;
 
@@ -386,52 +397,68 @@
 
     if (progress[clusterId] === "not-started") setProgress(clusterId, "in-progress");
 
-    // Lock the slot's height before the card leaves normal flow, so the
-    // grid row never has a moment of collapsing/resizing.
-    slot.style.height = card.getBoundingClientRect().height + "px";
+    const expand = () => {
+      // Lock the slot's height before the card leaves normal flow, so the grid
+      // row never has a moment of collapsing/resizing.
+      slot.style.height = card.getBoundingClientRect().height + "px";
+      card.classList.add("is-expanded");
+      card.tabIndex = -1;
+      card.setAttribute("aria-expanded", "true");
+      // Clicking a card means the pointer is on it, so the hover-lift tween
+      // (y: -8) is usually still running — and mouseleave won't undo it, since
+      // by then the card is expanded and that handler bails. Left alone it
+      // offsets the whole full-screen section by 8px. The Flip this replaced
+      // hid the problem by measuring real rects; a fixed overlay just inherits
+      // the transform, so it has to be killed outright.
+      gsap.killTweensOf(card);
+      // The card faded out with the rest of the overview a moment ago; now that
+      // it *is* the incoming view, it has to be fully visible and unoffset.
+      gsap.set(card, { clearProps: "opacity,y,scale,transform" });
 
-    // Captured before the class swap relocates the card. Skipped under reduced
-    // motion, where there's no tween to run between the two states.
-    const flipState = prefersReducedMotion.matches ? null : Flip.getState(card);
-
-    card.classList.add("is-expanded");
-    card.tabIndex = -1;
-    card.setAttribute("aria-expanded", "true");
-
-    if (state.currentQuestion === 0 && !sectionRoot.querySelector(".scenario.is-active")) {
-      showView(sectionRoot, "info");
-    }
+      if (state.currentQuestion === 0 && !sectionRoot.querySelector(".scenario.is-active")) {
+        showView(sectionRoot, "info");
+      }
+    };
 
     // Land on the end state directly, matching how closeSection honors the
     // same preference. isAnimating stays false: there's no animation to guard,
     // and closeSection's own reduced-motion path relies on being able to run
     // immediately after this.
     if (prefersReducedMotion.matches) {
-      gsap.set(otherCards(clusterId), { opacity: 0, scale: 0.94, pointerEvents: "none" });
+      gsap.set(landingLayer(), { opacity: 0 });
+      gsap.set(otherCards(clusterId), { pointerEvents: "none" });
+      expand();
       return;
     }
 
     isAnimating = true;
 
-    gsap.to(otherCards(clusterId), {
+    gsap.to(landingLayer(), {
       opacity: 0,
-      scale: 0.94,
+      y: -16,
       duration: 0.35,
-      ease: "power2.out",
-      pointerEvents: "none",
-    });
-
-    Flip.from(flipState, {
-      duration: TRANSITION_DURATION,
-      ease: "power2.inOut",
-      absolute: true,
-      scale: true,
+      ease: "power2.in",
       onComplete: () => {
+        gsap.set(otherCards(clusterId), { pointerEvents: "none" });
+        expand();
+
+        // Mirrors the cover handoff: the header settles first, then the body
+        // just behind it. Only the transform is animated on .section-content —
+        // its opacity belongs to the .is-visible CSS fade showView triggers,
+        // and driving both would have the two fighting over the same property.
+        const topbar = sectionRoot.querySelector(".section-topbar");
+        const view = sectionRoot.querySelector(".section-content.is-active");
+
+        if (topbar) {
+          gsap.from(topbar, { opacity: 0, y: 16, duration: 0.5, ease: "power2.out", clearProps: "all" });
+        }
+        if (view) {
+          gsap.from(view, { y: 24, duration: 0.55, ease: "power2.out", delay: 0.1, clearProps: "transform" });
+        }
+
         isAnimating = false;
       },
     });
-
-    gsap.fromTo(card, { borderRadius: 20 }, { borderRadius: 0, duration: TRANSITION_DURATION, ease: "power2.inOut" });
   }
 
   /* Closing is deliberately NOT the expansion played backwards. Reversing the
@@ -446,18 +473,22 @@
 
     const { slot, card } = entries[clusterId];
 
-    // Put the card back in its slot and undo everything openSection changed.
+    // Put the card back in its slot. Deliberately does NOT clear the rest of
+    // the overview: on the animated path that's still mid-tween when this runs,
+    // and wiping its inline styles there would flash for a frame before the
+    // tween wrote them again. Each path below cleans up its own.
     const restore = () => {
       card.classList.remove("is-expanded");
       card.tabIndex = 0;
       card.setAttribute("aria-expanded", "false");
       slot.style.height = "";
-      gsap.set(card, { clearProps: "opacity,scale,borderRadius" });
-      gsap.set(otherCards(clusterId), { clearProps: "opacity,scale,pointerEvents" });
+      gsap.set(card, { clearProps: "opacity,scale,y,borderRadius" });
+      gsap.set(otherCards(clusterId), { clearProps: "pointerEvents" });
     };
 
     if (prefersReducedMotion.matches) {
       restore();
+      gsap.set(landingLayer(), { clearProps: "opacity,y" });
       return;
     }
 
@@ -468,15 +499,19 @@
     // screen shows a bare page. Note we never transform .landing or #card-grid
     // here: they're ancestors of the still-fixed card, and transforming an
     // ancestor would re-anchor it mid-flight.
-    const siblings = otherCards(clusterId);
+    // Everything the overview is made of except the card currently standing in
+    // for the section — it's mid-exit and gets restored by restore() below.
+    // These come back from where openSection left them (opacity 0, y -16),
+    // so the properties have to match what it actually set.
+    const returning = landingLayer().filter((el) => el !== card);
 
-    gsap.to(siblings, {
+    gsap.to(returning, {
       opacity: 1,
-      scale: 1,
+      y: 0,
       duration: 0.4,
       ease: "power2.out",
       stagger: 0.04,
-      pointerEvents: "auto",
+      clearProps: "opacity,y",
     });
 
     gsap.to(card, {
