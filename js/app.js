@@ -120,14 +120,14 @@
               (q, qi) => `
             <div class="section-content scenario" data-view="scenario" data-question="${qi}">
               <div class="scenario-meta">
-                <span class="scenario-number">${qi + 1}</span>
-                <span class="label" style="color:var(--color-gray-500)">Scenario ${qi + 1} of ${cluster.questions.length}</span>
+                <span class="scenario-count">Scenario ${qi + 1} of ${cluster.questions.length}</span>
               </div>
               <div class="banner-wrap">
                 <img class="content-banner" src="assets/illustrations/scenes/${q.image}" alt="">
                 <img class="scene-pattern" src="assets/illustrations/patterns/${q.pattern}" alt="" aria-hidden="true">
               </div>
               <h2 class="scenario-prompt">${q.prompt}</h2>
+              <span class="scenario-underline" aria-hidden="true"></span>
               <div class="option-list" role="group" aria-label="Answer options">
                 ${q.options
                   .map(

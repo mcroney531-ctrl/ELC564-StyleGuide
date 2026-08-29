@@ -157,10 +157,10 @@
     scenario: (d) => `
       <div class="activity-scenario-block" data-activity-scenario>
         <div class="scenario-meta">
-          <span class="scenario-number">1</span>
-          <span class="label" style="color:var(--color-gray-500)">Scenario 1 of 1</span>
+          <span class="scenario-count">Scenario 1 of 1</span>
         </div>
         <h2 class="scenario-prompt">${esc(d.prompt)}</h2>
+        <span class="scenario-underline" aria-hidden="true"></span>
         <div class="option-list" role="group" aria-label="Answer options" data-activity-group>
           ${d.options
             .map(

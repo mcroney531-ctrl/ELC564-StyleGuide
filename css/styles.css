@@ -373,12 +373,30 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .info-beat .start-cta { margin-top: var(--space-8); }
 
 /* ---- Scenario / MCQ ---- */
-.scenario-meta { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4); }
-.scenario-number {
-  width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center;
-  background: var(--color-ink-100); color: var(--color-ink-900); font: var(--text-caption);
+/* The counter is one bordered chip rather than a numbered circle beside a
+   label — the number was saying the same thing as the "of N" text next to it. */
+.scenario-meta { display: flex; align-items: center; margin-bottom: var(--space-5); }
+.scenario-count {
+  display: inline-flex; align-items: center;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--color-white);
+  box-shadow: 0 0 0 var(--border) var(--color-line) inset;
+  font: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  text-transform: uppercase;
+  color: var(--color-gray-500);
 }
-.scenario-prompt { font: var(--text-h2); color: var(--color-ink-900); margin-bottom: var(--space-8); }
+.scenario-prompt { font: var(--text-h2); color: var(--color-ink-900); margin-bottom: var(--space-4); }
+/* Same rule the cluster cards use under their title, so a question reads as
+   part of the same family. Falls back to sage where no cluster accent is in
+   scope — the builder's preview and its exported file. */
+.scenario-underline {
+  display: block; width: 40px; height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--illo-accent, var(--color-sage-600));
+  margin-bottom: var(--space-8);
+}
 
 .option-list { display: flex; flex-direction: column; gap: var(--space-3); }
 
