@@ -392,25 +392,33 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 /* The counter is one bordered chip rather than a numbered circle beside a
    label — the number was saying the same thing as the "of N" text next to it. */
 .scenario-meta { display: flex; align-items: center; margin-bottom: var(--space-5); }
+/* Border and label take this slide's backdrop colour, the same way the info
+   beat's CTA does — the frame, the corner pattern, and this chip are one hue.
+   --pattern-accent is set on .section-inner from whichever view is active, so
+   the chip retints as the reader moves between scenarios. It falls back to the
+   neutral pair outside a patterned frame (the builder's preview and its
+   exported file, where no backdrop is in scope). */
 .scenario-count {
   display: inline-flex; align-items: center;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-pill);
   background: var(--color-white);
-  box-shadow: 0 0 0 var(--border) var(--color-line) inset;
+  box-shadow: 0 0 0 var(--border) var(--pattern-accent, var(--color-line)) inset;
   font: var(--text-caption);
   letter-spacing: var(--tracking-caption);
   text-transform: uppercase;
-  color: var(--color-gray-500);
+  color: var(--pattern-accent, var(--color-gray-500));
 }
 .scenario-prompt { font: var(--text-h2); color: var(--color-ink-900); margin-bottom: var(--space-4); }
-/* Same rule the cluster cards use under their title, so a question reads as
-   part of the same family. Falls back to sage where no cluster accent is in
-   scope — the builder's preview and its exported file. */
+/* Same rule the cluster cards use under their title. It follows the backdrop
+   rather than the cluster accent so it agrees with the counter chip directly
+   above it — those two sit in the same header, and a lavender chip over a
+   cluster-blue rule read as a mistake. Falls back to the cluster accent, then
+   sage, where no backdrop is in scope (the builder and its exported file). */
 .scenario-underline {
   display: block; width: 40px; height: 3px;
   border-radius: var(--radius-pill);
-  background: var(--illo-accent, var(--color-sage-600));
+  background: var(--pattern-accent, var(--illo-accent, var(--color-sage-600)));
   margin-bottom: var(--space-8);
 }
 
