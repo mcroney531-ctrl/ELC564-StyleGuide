@@ -11,6 +11,9 @@
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="css/style-guide.css">
+<!-- Blocking, and first thing before <body> exists: the page-entry transition
+     has to be armed before anything paints. See js/nav-exit.js. -->
+<script src="js/nav-exit.js"></script>
 </head>
 <body>
 
@@ -348,6 +351,8 @@
               <tr><td><strong>Overview leaves (signature)</strong></td><td>card click</td><td>0.35s</td><td><code>power2.in</code></td></tr>
               <tr><td>Section arrives</td><td>card click (after)</td><td>0.5s / 0.55s, 0.1s stagger</td><td><code>power2.out</code></td></tr>
               <tr><td>Section → card (exit)</td><td>"Back to overview" click</td><td>0.3s out, 0.4s back</td><td><code>power2.inOut</code> / <code>power2.out</code></td></tr>
+              <tr><td>Page leaves (exit)</td><td>link to another page</td><td>0.3s</td><td><code>ease-standard</code></td></tr>
+              <tr><td>Page arrives (entry)</td><td>page load</td><td>0.38s</td><td><code>ease-out</code></td></tr>
             </tbody>
           </table>
         </div>
@@ -363,6 +368,16 @@
           <li><strong>Exit</strong> — deliberately not this run backwards. The expanded view scales to 0.96 and fades while the overview returns underneath it, so leaving reads as pushing back into the stack rather than a full screen of content folding down into a small card.</li>
         </ol>
         <p class="body guide-block-note">Both halves overlap on the way out. Run them in sequence and there's a beat where the section has gone but the overview hasn't returned, showing a bare page.</p>
+      </div>
+
+      <div class="guide-block">
+        <h3 class="h3 guide-block-title">Page-to-page transitions</h3>
+        <p class="body">Every navigation <em>inside</em> a page animates, so real page loads were the odd one out — clicking "Style Guide" or "Back to module" hard-cut while everything else moved. They now get the matching pair, applied to any link that leaves the current page:</p>
+        <ol style="padding-left: 1.25em; margin: var(--space-4) 0; display:flex; flex-direction:column; gap: var(--space-2)" class="body">
+          <li><strong>Out</strong> — the page scales to 0.96 and fades over 0.3s on <code>ease-standard</code>, then the link is followed. Same push-back as leaving a section, so every exit in the system is one gesture.</li>
+          <li><strong>In</strong> — the next page settles forward from 0.98 over 0.38s on <code>ease-out</code>. Deliberately not the exit reversed: starting as deep as the exit ended reads as a rebound, so the entry begins shallower and lands on a decelerating curve.</li>
+        </ol>
+        <p class="body guide-block-note">Two implementation details carry it. It's a blocking script in <code>&lt;head&gt;</code>, not at the end of <code>&lt;body&gt;</code> — down there the parser had already run GSAP and painted several opaque frames, so the page popped into view and only then faded up from nothing. And it animates <code>&lt;html&gt;</code>, both because <code>&lt;body&gt;</code> doesn't exist yet that early and because a background on the root element is propagated to the viewport canvas rather than painted on the element, so the content fades while the paper background stays put. Matched on "is this a real navigation" rather than a list of classes, so in-page anchors — this page's own nav — are left alone.</p>
       </div>        </div>
       </details>
 
@@ -539,6 +554,5 @@
 <script src="js/vendor/gsap.min.js"></script>
 <script src="js/content.js"></script>
 <script src="js/style-guide.js"></script>
-<script src="js/nav-exit.js"></script>
 </body>
 </html>

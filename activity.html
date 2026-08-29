@@ -11,6 +11,9 @@
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="css/activity-builder.css">
+<!-- Blocking, and first thing before <body> exists: the page-entry transition
+     has to be armed before anything paints. See js/nav-exit.js. -->
+<script src="js/nav-exit.js"></script>
 </head>
 <body>
 
@@ -140,6 +143,5 @@
 </main>
 
 <script src="js/activity-builder.js"></script>
-<script src="js/nav-exit.js"></script>
 </body>
 </html>
