@@ -192,16 +192,17 @@
     wireCard(cluster, card, state);
   }
 
-  // The takeaways are read, not clicked, so they get an arrival animation
-  // rather than a hover one: each rectangle fades up in sequence when the
-  // info beat appears. back.out is deliberately NOT used here — the motion
+  // back.out is deliberately NOT used in the row reveal below — the motion
   // spec reserves that overshoot for the clickable card lift, and reusing it
-  // on static content would read as a false affordance. Their hover state is
-  // a shadow lift in CSS, no movement.
+  // on a row that only fades into place would read as a false affordance.
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  function revealPoints(target) {
-    const items = target.querySelectorAll(".point-list li");
+  // Takeaways and answers are the same shape — a stack of rectangles that
+  // arrives as a set — so they arrive the same way. Answers get the reveal but
+  // keep their own hover: a takeaway is read, an answer is clicked, and the
+  // hover has to keep saying which is which.
+  function revealRows(target) {
+    const items = target.querySelectorAll(".point-list li, .option-list .option");
     if (!items.length) return;
     if (prefersReducedMotion.matches) {
       gsap.set(items, { clearProps: "all" });
@@ -248,6 +249,27 @@
 
     const sectionRoot = card.querySelector(".card-section");
     sectionRoot.addEventListener("click", (e) => {
+      // Home is a real navigation, so the browser would hard-cut away mid-view.
+      // Play the same push-back the "exit" transition opens with, then follow
+      // the link — leaving a section should look the same however you leave it.
+      const homeLink = e.target.closest(".section-home");
+      if (homeLink && !prefersReducedMotion.matches && !isAnimating) {
+        e.preventDefault();
+        e.stopPropagation();
+        isAnimating = true;
+        const card = entries[cluster.id].card;
+        gsap.to(card, {
+          opacity: 0,
+          scale: 0.96,
+          duration: 0.3,
+          ease: "power2.inOut",
+          onComplete: () => {
+            window.location.href = homeLink.href;
+          },
+        });
+        return;
+      }
+
       const actionBtn = e.target.closest("[data-action]");
       if (actionBtn) {
         const action = actionBtn.dataset.action;
@@ -301,7 +323,7 @@
     syncFrameToPattern(sectionRoot, target);
     requestAnimationFrame(() => {
       target.classList.add("is-visible");
-      revealPoints(target);
+      revealRows(target);
     });
   }
 
@@ -563,6 +585,19 @@
   /* ---------------- init ---------------- */
 
   CONTENT.clusters.forEach(buildCard);
+
+  // The Home exit fades the card out and then navigates. Coming back via the
+  // browser's Back button can restore this page from the back/forward cache
+  // exactly as it was left — a card at opacity 0 and isAnimating still true,
+  // which reads as a blank screen that no longer responds. A restore isn't a
+  // fresh load, so nothing else resets it.
+  window.addEventListener("pageshow", (e) => {
+    if (!e.persisted) return;
+    isAnimating = false;
+    Object.values(entries).forEach(({ card }) => {
+      gsap.set(card, { clearProps: "opacity,scale,y" });
+    });
+  });
 
   // The cover stands alone — the clusters aren't on the page behind it.
   // "Start Activity" swaps the cover out and brings the cards in, staggered,
