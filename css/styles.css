@@ -60,8 +60,8 @@ a { color: var(--color-teal-600); }
 .btn-primary { background: var(--color-sage-600); color: var(--color-white); }
 .btn-primary:hover { background: var(--color-sage-500); }
 
-.btn-secondary { background: var(--color-white); color: var(--color-ink-900); box-shadow: 0 0 0 1.5px var(--color-line) inset; }
-.btn-secondary:hover { box-shadow: 0 0 0 1.5px var(--color-sage-600) inset; }
+.btn-secondary { background: var(--color-white); color: var(--color-ink-900); box-shadow: 0 0 0 var(--border) var(--color-line) inset; }
+.btn-secondary:hover { box-shadow: 0 0 0 var(--border) var(--color-sage-600) inset; }
 
 .btn-ghost { background: transparent; color: var(--color-gray-700); padding: var(--space-2) var(--space-3); }
 .btn-ghost:hover { color: var(--color-ink-900); }
@@ -162,20 +162,23 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   position: relative;
   background: var(--color-white);
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow-resting);
+  box-shadow: 0 0 0 var(--border) var(--color-line) inset, var(--shadow-resting);
   overflow: hidden;
   text-align: left;
   cursor: pointer;
   will-change: transform;
   --illo-ink: var(--color-ink-900);
 }
-.card:focus-visible { outline: none; box-shadow: var(--shadow-focus), var(--shadow-resting); }
+.card:focus-visible { outline: none; box-shadow: 0 0 0 var(--border) var(--color-ink-900) inset, var(--shadow-focus), var(--shadow-resting); }
 
 .card.is-expanded {
   position: fixed;
   inset: 0;
   z-index: 40;
   border-radius: 0;
+  /* full-bleed: the inset ring the card carries would otherwise outline the
+     entire viewport once it expands */
+  box-shadow: none;
   overflow-y: auto;
   cursor: default;
   background: var(--color-paper);
@@ -283,7 +286,7 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   margin: var(--space-6) auto;
   padding: var(--space-8) var(--space-8) var(--space-16);
   border-radius: var(--radius-lg);
-  box-shadow: 0 0 0 1px var(--pattern-border, var(--color-line)) inset;
+  box-shadow: 0 0 0 var(--border) var(--pattern-border, var(--color-line)) inset;
   transition: box-shadow var(--duration-system) var(--ease-out);
 }
 @media (max-width: 720px) {
@@ -357,12 +360,12 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .info-beat .point-list { margin-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-3); }
 .info-beat .point-list li {
   display: flex; gap: var(--space-3); align-items: flex-start;
-  padding: var(--space-4); background: var(--color-white); border-radius: var(--radius-md); box-shadow: var(--shadow-resting);
+  padding: var(--space-4); background: var(--color-white); border-radius: var(--radius-md); box-shadow: 0 0 0 var(--border) var(--color-line) inset, var(--shadow-resting);
   transition: box-shadow var(--duration-micro) var(--ease-standard);
 }
 /* Elevation only — no lift or overshoot. These are read, not clicked, so the
    hover acknowledges the row without implying it does something. */
-.info-beat .point-list li:hover { box-shadow: var(--shadow-lifted); }
+.info-beat .point-list li:hover { box-shadow: 0 0 0 var(--border) var(--color-ink-300) inset, var(--shadow-lifted); }
 .info-beat .point-list li::before {
   content: ""; flex: none; width: 8px; height: 8px; margin-top: 8px; border-radius: 50%;
   background: var(--illo-accent, var(--color-ink-900));
@@ -385,30 +388,30 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   padding: var(--space-4) var(--space-5);
   background: var(--color-white);
   border-radius: var(--radius-md);
-  box-shadow: 0 0 0 1.5px var(--color-line) inset;
+  box-shadow: 0 0 0 var(--border) var(--color-line) inset;
   transition: box-shadow var(--duration-micro) var(--ease-standard), background-color var(--duration-micro) var(--ease-standard);
 }
 .option-marker {
   flex: none; width: 24px; height: 24px; border-radius: 50%;
-  box-shadow: 0 0 0 1.5px var(--color-line) inset;
+  box-shadow: 0 0 0 var(--border) var(--color-line) inset;
   display: grid; place-items: center; font: var(--text-caption); color: transparent;
   transition: background-color var(--duration-micro) var(--ease-standard), box-shadow var(--duration-micro) var(--ease-standard);
 }
 .option-text { font: var(--text-body); color: var(--color-charcoal); }
 
-.option:hover:not([disabled]) { box-shadow: 0 0 0 1.5px var(--color-ink-500) inset; }
+.option:hover:not([disabled]) { box-shadow: 0 0 0 var(--border) var(--color-ink-500) inset; }
 .option:focus-visible { outline: none; box-shadow: var(--shadow-focus); }
 
 /* State 1 — selected, unconfirmed: a holding state while the "answer" registers */
 .option.is-selected {
-  box-shadow: 0 0 0 1.5px var(--color-ink-900) inset;
+  box-shadow: 0 0 0 var(--border-thick) var(--color-ink-900) inset;
   background: var(--color-ink-100);
 }
-.option.is-selected .option-marker { box-shadow: 0 0 0 1.5px var(--color-ink-900) inset; background: var(--color-white); }
+.option.is-selected .option-marker { box-shadow: 0 0 0 var(--border) var(--color-ink-900) inset; background: var(--color-white); }
 
 /* State 2 — confirmed correct */
 .option.is-correct {
-  box-shadow: 0 0 0 1.5px var(--color-success-500) inset;
+  box-shadow: 0 0 0 var(--border-thick) var(--color-success-500) inset;
   background: var(--color-success-100);
 }
 .option.is-correct .option-marker { background: var(--color-success-500); box-shadow: none; color: var(--color-white); }
@@ -416,7 +419,7 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 
 /* State 3 — confirmed wrong */
 .option.is-wrong {
-  box-shadow: 0 0 0 1.5px var(--color-error-500) inset;
+  box-shadow: 0 0 0 var(--border-thick) var(--color-error-500) inset;
   background: var(--color-error-100);
 }
 .option.is-wrong .option-marker { background: var(--color-error-500); box-shadow: none; color: var(--color-white); }
@@ -438,12 +441,12 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .feedback-icon { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: var(--text-caption); color: var(--color-white); }
 .feedback-body .label { display: block; margin-bottom: var(--space-1); }
 
-.feedback.is-corrective { background: var(--color-error-100); }
+.feedback.is-corrective { background: var(--color-error-100); box-shadow: 0 0 0 var(--border) var(--color-error-500) inset; }
 .feedback.is-corrective .feedback-icon { background: var(--color-error-500); }
 .feedback.is-corrective .feedback-icon::after { content: "✕"; }
 .feedback.is-corrective .label { color: var(--color-error-700); }
 
-.feedback.is-success { background: var(--color-success-100); }
+.feedback.is-success { background: var(--color-success-100); box-shadow: 0 0 0 var(--border) var(--color-success-500) inset; }
 .feedback.is-success .feedback-icon { background: var(--color-success-500); }
 .feedback.is-success .feedback-icon::after { content: "✓"; }
 .feedback.is-success .label { color: var(--color-success-700); }
@@ -462,17 +465,17 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .section-complete .actions { margin-top: var(--space-8); display: flex; justify-content: center; }
 
 /* ---- Callouts (used in style guide + reused as a component) ---- */
-.callout { padding: var(--space-5); border-radius: var(--radius-md); display: flex; gap: var(--space-3); }
+.callout { padding: var(--space-5); border-radius: var(--radius-md); display: flex; gap: var(--space-3); border: var(--border) solid var(--callout-edge, var(--color-line)); }
 .callout-icon { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: var(--text-caption); color: var(--color-white); }
-.callout.info { background: var(--color-info-100); }
+.callout.info { background: var(--color-info-100); --callout-edge: var(--color-info-500); }
 .callout.info .callout-icon { background: var(--color-info-500); }
-.callout.success { background: var(--color-success-100); }
+.callout.success { background: var(--color-success-100); --callout-edge: var(--color-success-500); }
 .callout.success .callout-icon { background: var(--color-success-500); }
-.callout.warning { background: var(--color-warning-100); }
+.callout.warning { background: var(--color-warning-100); --callout-edge: var(--color-warning-500); }
 .callout.warning .callout-icon { background: var(--color-warning-500); }
-.callout.error { background: var(--color-error-100); }
+.callout.error { background: var(--color-error-100); --callout-edge: var(--color-error-500); }
 .callout.error .callout-icon { background: var(--color-error-500); }
-.callout.accent { background: var(--color-sage-100); border: 2px solid var(--color-sage-600); }
+.callout.accent { background: var(--color-sage-100); --callout-edge: var(--color-sage-600); }
 .callout.accent .callout-icon { background: var(--color-sage-600); }
 
 /* ---- Motion helpers ---- */

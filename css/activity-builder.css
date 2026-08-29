@@ -74,7 +74,7 @@
 /* ---- "About the exported file" ---- */
 .activity-about-wrap { max-width: 1180px; margin: 0 auto var(--space-12); padding: 0 var(--space-8); }
 .activity-about {
-  background: var(--color-white); border-radius: var(--radius-card); box-shadow: var(--activity-shadow-card);
+  background: var(--color-white); border-radius: var(--radius-card); box-shadow: 0 0 0 var(--border) var(--color-line) inset, var(--activity-shadow-card);
   padding: var(--space-8);
   display: flex; gap: var(--space-6); align-items: flex-start;
 }
@@ -138,7 +138,7 @@
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; border-radius: 50%;
   background: var(--color-white);
-  box-shadow: 0 0 0 2px var(--color-sage-600) inset, var(--shadow-raised);
+  box-shadow: 0 0 0 var(--border-thick) var(--color-sage-600) inset, var(--shadow-raised);
   color: var(--color-sage-600);
   transition: transform var(--duration-micro) var(--ease-standard), background-color var(--duration-micro) var(--ease-standard);
 }
@@ -146,14 +146,14 @@
 .builder-add-fab:hover { transform: translateY(-1px); background: var(--color-cloud); }
 .builder-add-fab:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-sage-600) inset, var(--shadow-raised), var(--activity-shadow-focus);
+  box-shadow: 0 0 0 var(--border-thick) var(--color-sage-600) inset, var(--shadow-raised), var(--activity-shadow-focus);
 }
 
 .builder-add-toolbar {
   position: absolute; top: calc(100% + var(--space-3)); left: 50%; transform: translateX(-50%);
   z-index: 5; width: max-content; max-width: 100%;
   background: var(--color-white); border-radius: var(--radius-card);
-  box-shadow: var(--shadow-raised);
+  box-shadow: 0 0 0 var(--border) var(--color-line) inset, var(--shadow-raised);
   padding: var(--space-4) var(--space-3);
   flex-wrap: wrap; justify-content: center;
   gap: var(--space-1);
@@ -175,7 +175,7 @@
 
 /* ---- preview ---- */
 .builder-preview {
-  background: var(--color-paper); border-radius: var(--radius-lg); box-shadow: var(--shadow-resting);
+  background: var(--color-paper); border-radius: var(--radius-lg); box-shadow: 0 0 0 var(--border) var(--color-line) inset, var(--shadow-resting);
   padding: var(--space-8) var(--space-6); min-height: 240px;
   display: flex; flex-direction: column; justify-content: center;
 }
@@ -202,7 +202,7 @@
 .activity-insert::before {
   content: "";
   position: absolute; left: 0; right: 0; top: 50%;
-  height: 1.5px; background: var(--color-sage-300);
+  height: var(--border); background: var(--color-sage-300);
   transform: scaleX(0);
   transition: transform var(--duration-system) var(--ease-out);
 }
@@ -215,7 +215,7 @@
   width: 26px; height: 26px; display: grid; place-items: center;
   border-radius: 50%;
   background: var(--color-white);
-  box-shadow: 0 0 0 1.5px var(--color-sage-600) inset, var(--shadow-resting);
+  box-shadow: 0 0 0 var(--border) var(--color-sage-600) inset, var(--shadow-resting);
   color: var(--color-sage-600);
   opacity: 0;
   transform: scale(0.8);
@@ -225,7 +225,7 @@
 .activity-insert-btn svg { width: 14px; height: 14px; }
 .activity-insert:hover .activity-insert-btn,
 .activity-insert-btn:focus-visible { opacity: 1; transform: scale(1); }
-.activity-insert-btn:focus-visible { outline: none; box-shadow: 0 0 0 1.5px var(--color-sage-600) inset, var(--activity-shadow-focus); }
+.activity-insert-btn:focus-visible { outline: none; box-shadow: 0 0 0 var(--border) var(--color-sage-600) inset, var(--activity-shadow-focus); }
 /* While the picker is parked in this gap, the divider's own button would be a
    second, redundant trigger sitting under the menu. */
 .activity-insert.is-active { height: auto; padding: var(--space-4) 0; }
@@ -242,20 +242,20 @@
   animation: activity-moved-flash 0.7s var(--ease-out);
 }
 @keyframes activity-moved-flash {
-  0%   { box-shadow: 0 0 0 2px var(--color-sage-600); }
-  60%  { box-shadow: 0 0 0 2px var(--color-sage-600); }
-  100% { box-shadow: 0 0 0 2px rgba(80, 114, 107, 0); }
+  0%   { box-shadow: 0 0 0 var(--border-thick) var(--color-sage-600); }
+  60%  { box-shadow: 0 0 0 var(--border-thick) var(--color-sage-600); }
+  100% { box-shadow: 0 0 0 var(--border-thick) rgba(80, 114, 107, 0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .activity-insert::before,
   .activity-insert-btn { transition: none; }
-  .activity-piece.is-just-moved { animation: none; box-shadow: 0 0 0 2px var(--color-sage-600); }
+  .activity-piece.is-just-moved { animation: none; box-shadow: 0 0 0 var(--border-thick) var(--color-sage-600); }
 }
 
 /* ---- edit form ---- */
 .activity-edit-form {
   background: var(--color-white); border-radius: var(--radius-md);
-  box-shadow: 0 0 0 1.5px var(--color-line) inset;
+  box-shadow: 0 0 0 var(--border) var(--color-line) inset;
   padding: var(--space-6);
   display: flex; flex-direction: column; gap: var(--space-4);
 }
@@ -270,7 +270,7 @@
 .activity-field input[type="text"],
 .activity-field textarea {
   width: 100%; font: var(--text-body); color: var(--color-charcoal);
-  background: var(--color-paper); border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+  background: var(--color-paper); border: var(--border) solid var(--color-line); border-radius: var(--radius-sm);
   padding: var(--space-2) var(--space-3);
   transition: box-shadow var(--duration-micro) var(--ease-standard), border-color var(--duration-micro) var(--ease-standard);
 }
@@ -288,7 +288,7 @@
 .activity-option-field input[type="radio"] { flex: none; width: 18px; height: 18px; accent-color: var(--activity-accent-600); }
 .activity-option-field input[type="text"] {
   flex: 1; font: var(--text-body); color: var(--color-charcoal);
-  background: var(--color-paper); border: 1px solid var(--color-line); border-radius: var(--radius-sm);
+  background: var(--color-paper); border: var(--border) solid var(--color-line); border-radius: var(--radius-sm);
   padding: var(--space-2) var(--space-3);
 }
 .activity-option-field input[type="text"]:focus {
@@ -328,14 +328,14 @@
 .activity-pattern-swatch {
   aspect-ratio: 1; padding: var(--space-2);
   background: var(--color-paper); border-radius: var(--radius-md);
-  box-shadow: 0 0 0 1.5px var(--color-line) inset;
+  box-shadow: 0 0 0 var(--border) var(--color-line) inset;
   display: flex; align-items: center; justify-content: center;
   transition: box-shadow var(--duration-micro) var(--ease-standard), background-color var(--duration-micro) var(--ease-standard);
 }
 .activity-pattern-swatch img { width: 100%; height: 100%; object-fit: contain; }
 .activity-pattern-swatch:hover { background: var(--color-cloud); }
 .activity-pattern-swatch:focus-visible { outline: none; box-shadow: var(--activity-shadow-focus); }
-.activity-pattern-swatch.is-selected { background: var(--color-cloud); box-shadow: 0 0 0 2px var(--activity-accent-600) inset; }
+.activity-pattern-swatch.is-selected { background: var(--color-cloud); box-shadow: 0 0 0 var(--border-thick) var(--activity-accent-600) inset; }
 .activity-field-note { color: var(--color-gray-500); font: var(--text-caption); margin-top: var(--space-2); }
 
 /* ---- backdrop piece: bordered card + corner pattern ----
@@ -348,7 +348,7 @@
   aspect-ratio: 16 / 9;
   border-radius: var(--radius-lg);
   background: var(--color-white);
-  box-shadow: 0 0 0 1px var(--pattern-border, var(--color-line)) inset;
+  box-shadow: 0 0 0 var(--border) var(--pattern-border, var(--color-line)) inset;
   overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   color: var(--color-gray-500); font: var(--text-label);
@@ -361,7 +361,7 @@
 .backdrop-frame[data-action="choose-asset"]:hover { background: var(--color-ink-100); }
 .backdrop-frame[data-action="choose-asset"]:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--pattern-border, var(--color-line)) inset, var(--activity-shadow-focus);
+  box-shadow: 0 0 0 var(--border) var(--pattern-border, var(--color-line)) inset, var(--activity-shadow-focus);
 }
 
 /* The pattern sources are content-tight (no baked-in transparent padding)

@@ -31,7 +31,10 @@
   --color-white:     #FFFFFF;
   --color-paper:     #F7F8FA;  /* app background */
   --color-cloud:     #EDEFF3;  /* section fills, dividers */
-  --color-line:      #DBDFE7;  /* hairlines */
+  --color-line:      #C3CBD9;  /* borders — see the Borders scale below */
+  --color-line-soft: #DBDFE7;  /* the old hairline, kept for dividers inside
+                                  a bordered surface, where a full-strength
+                                  line would compete with the surface's edge */
   --color-gray-500:  #6B7280;  /* secondary text */
   --color-gray-700:  #454C56;
   --color-charcoal:  #1C1F26;  /* primary text */
@@ -94,6 +97,19 @@
   --space-12: 3rem;
   --space-16: 4rem;
   --space-24: 6rem;
+
+  /* ---- Borders ----
+     Every surface in this system is defined by its edge first and its shadow
+     second — the shadow lifts it, the border says where it ends. Three widths
+     only, so a bordered thing reads as belonging to one of three tiers:
+     - "thin"   dividers and rules *inside* a surface
+     - default  every real surface: cards, options, panels, inputs
+     - "thick"  the element currently being acted on (selected, focused, moved)
+     Applied as box-shadow insets in most places rather than the border
+     property, so an edge can be added or thickened without changing layout. */
+  --border-thin:  1.5px;
+  --border:       2px;
+  --border-thick: 3px;
 
   /* ---- Radius ---- */
   --radius-sm: 6px;
