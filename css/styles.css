@@ -472,6 +472,8 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .callout.warning .callout-icon { background: var(--color-warning-500); }
 .callout.error { background: var(--color-error-100); }
 .callout.error .callout-icon { background: var(--color-error-500); }
+.callout.accent { background: var(--color-sage-100); border: 2px solid var(--color-sage-600); }
+.callout.accent .callout-icon { background: var(--color-sage-600); }
 
 /* ---- Motion helpers ---- */
 .js-flip-ghost { position: fixed; z-index: 50; pointer-events: none; }
