@@ -120,6 +120,10 @@
               (q, qi) => `
             <div class="section-content scenario" data-view="scenario" data-question="${qi}">
               <div class="scenario-meta">
+                <button class="btn btn-ghost scenario-back" type="button" data-action="back">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+                  Back
+                </button>
                 <span class="scenario-count">Scenario ${qi + 1} of ${cluster.questions.length}</span>
               </div>
               <div class="banner-wrap">
@@ -283,6 +287,18 @@
         if (action === "start-scenarios") {
           state.currentQuestion = 0;
           showView(sectionRoot, "scenario", 0);
+        }
+        // Step back one view: the first scenario returns to the takeaways it
+        // came from, the rest to the scenario before. Answered scenarios keep
+        // their state, so going back and forward again doesn't wipe progress.
+        if (action === "back") {
+          const qi = Number(actionBtn.closest(".scenario").dataset.question);
+          if (qi === 0) {
+            showView(sectionRoot, "info");
+          } else {
+            state.currentQuestion = qi - 1;
+            showView(sectionRoot, "scenario", qi - 1);
+          }
         }
         if (action === "retry") {
           resetQuestion(actionBtn.closest(".scenario"));

@@ -383,6 +383,10 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   position: relative;
   max-width: 420px;
   margin: 0 auto var(--space-8);
+  /* The corner accent is sized and offset in cqw so it scales with the
+     illustration instead of staying a fixed 96px while the art shrinks —
+     see .scene-pattern. */
+  container-type: inline-size;
 }
 .content-banner {
   position: relative;
@@ -398,24 +402,53 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   filter: drop-shadow(0 10px 16px rgba(20, 33, 58, 0.14));
 }
 
-/* Small pastel pattern accent, one per cluster set, peeking out from behind
-   the top-right corner of the illustration — a quiet, secondary flourish,
-   never the focal point. Capping both axes (rather than width alone) keeps
-   every pattern on the same footprint despite their 0.78–1.41 aspect range;
-   see the .backdrop-accent note in activity-builder.css. */
+/* Small pastel pattern accent, one per cluster set, tucked into the top-right
+   of the illustration — a quiet, secondary flourish, never the focal point.
+   Capping both axes (rather than width alone) keeps every pattern on the same
+   footprint despite their 0.78-1.41 aspect range; see the .backdrop-accent
+   note in activity-builder.css.
+
+   Everything here is in cqw — a share of the illustration's own width — and
+   that is the whole point. At a fixed 96px the accent stayed the same size
+   while the art scaled down with the viewport, so it took up an ever larger
+   share of the picture and, on 7 of the 13 scenes, sank into the artwork:
+   worst on verify-q2 and present-q1, where a quarter of its marks were
+   swallowed by the illustration and the rest read as scattered debris rather
+   than a pattern. Proportional units make the geometry identical at every
+   width, so it is solved once instead of per breakpoint.
+
+   The three values are measured against the alpha masks of all 13 scene/
+   pattern pairs, not eyeballed. Two of the three are pinned by limits that
+   have nothing to do with the artwork, which is why the accent ends up
+   smaller rather than merely moved:
+   - the 4.2cqw right offset is capped by the section frame, which clips
+     rather than overflows. The tightest point is the 481px breakpoint, where
+     the illustration is already 417px wide but sits only 20px short of the
+     frame; 4.2cqw is 17.5px there. A larger value looked fine on a phone and
+     on a desktop and still cut the accent off at exactly that width.
+   - the 4.0cqw rise is capped by the headings. Lifting the accent clear of
+     the art was the obvious fix and it does not survive contact with the
+     copy: between roughly 430px and 600px the last line of a heading reaches
+     into this column and leaves only 25px of headroom, and the accent paints
+     above that text, so a big rise just trades a collision with the
+     illustration for one with the words.
+   - 14cqw is then the largest the accent can be and still clear the drawn
+     silhouette of every scene given those two (worst case 13px of daylight,
+     on verify-q2). It is a little over half its old footprint; at 96px fixed
+     it had simply outgrown the illustration it was meant to decorate.
+   Re-derive by measurement if the art changes — nudging one of the three in
+   isolation will break one of the others. */
 .scene-pattern {
   position: absolute;
-  top: -22px;
-  right: -22px;
+  top: -4.0cqw;
+  right: -4.2cqw;
   width: auto;
   height: auto;
-  max-width: 96px;
-  max-height: 96px;
+  max-width: 14cqw;
+  max-height: 14cqw;
   z-index: 0;
   pointer-events: none;
 }
-@media (max-width: 480px) {
-  .scene-pattern { max-width: 72px; max-height: 72px; top: -14px; right: -14px; }
 }
 
 .info-beat .eyebrow { display: block; margin-bottom: var(--space-3); }
@@ -465,7 +498,14 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 /* ---- Scenario / MCQ ---- */
 /* The counter is one bordered chip rather than a numbered circle beside a
    label — the number was saying the same thing as the "of N" text next to it. */
-.scenario-meta { display: flex; align-items: center; margin-bottom: var(--space-5); }
+.scenario-meta { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-5); }
+/* Sits left of the count chip, inside the scenario rather than up in the
+   topbar: the topbar is shared by every view, so a back control there would
+   need showing and hiding per view, while here it simply doesn't exist on the
+   info beat or the completion screen. Pulled left by its own padding so the
+   label lines up with the content column and the home icon above it. */
+.scenario-back { margin-left: calc(-1 * var(--space-3)); gap: var(--space-1); padding-left: var(--space-3); padding-right: var(--space-3); }
+.scenario-back svg { width: 18px; height: 18px; }
 /* Border and label take this slide's backdrop colour, the same way the info
    beat's CTA does — the frame, the corner pattern, and this chip are one hue.
    --pattern-accent is set on .section-inner from whichever view is active, so
