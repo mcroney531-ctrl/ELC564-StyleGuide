@@ -327,6 +327,19 @@
     scenarioEl.querySelectorAll(".option").forEach((btn) => {
       btn.disabled = false;
       btn.classList.remove("is-selected", "is-correct", "is-wrong");
+      delete btn.dataset.tried;
+    });
+    scenarioEl.querySelectorAll(".feedback").forEach((f) => f.classList.remove("is-visible"));
+  }
+
+  // Clear the previous attempt's result without unlocking anything. Answering
+  // again straight from the corrective panel — rather than via "Try again" —
+  // used to leave the old wrong mark and its feedback on screen next to the
+  // new ones, so a right answer could show a red ✕ and a green ✓ at once with
+  // both panels stacked underneath.
+  function clearAttempt(scenarioEl) {
+    scenarioEl.querySelectorAll(".option").forEach((btn) => {
+      btn.classList.remove("is-selected", "is-correct", "is-wrong");
     });
     scenarioEl.querySelectorAll(".feedback").forEach((f) => f.classList.remove("is-visible"));
   }
@@ -337,6 +350,7 @@
     const question = cluster.questions[qIndex];
     const chosenIndex = Number(optionBtn.dataset.option);
 
+    clearAttempt(scenarioEl);
     scenarioEl.querySelectorAll(".option").forEach((btn) => (btn.disabled = true));
     optionBtn.classList.add("is-selected");
 
@@ -349,9 +363,13 @@
       scenarioEl.querySelector(`[data-feedback="${feedbackName}"]`).classList.add("is-visible");
 
       if (!isCorrect) {
-        // same-question retry only: other (untried) options stay clickable
+        // An answer already ruled out stays locked, but the lock is tracked on
+        // the element rather than read back off .is-wrong — that class gets
+        // cleared on the next attempt, and reading it here would quietly hand
+        // a spent answer back to the reader.
+        optionBtn.dataset.tried = "1";
         scenarioEl.querySelectorAll(".option").forEach((btn) => {
-          if (!btn.classList.contains("is-wrong")) btn.disabled = false;
+          if (!btn.dataset.tried) btn.disabled = false;
         });
       } else {
         updateTicks(sectionRoot, qIndex + 1);

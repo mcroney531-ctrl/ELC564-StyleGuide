@@ -36,11 +36,11 @@ const CONTENT = {
             "You need a client email about a delayed project. You type: “Write an email telling the client we're delayed.” What's missing from this request?",
           options: [
             "Nothing — the AI can infer the right tone and details on its own.",
-            "The actual specifics: what caused the delay, the new timeline, and the history with this client.",
             "A request to make the email longer.",
+            "The actual specifics: what caused the delay, the new timeline, and the history with this client.",
             "A sign-off with your name.",
           ],
-          correct: 1,
+          correct: 2,
           corrective:
             "An AI tool can't infer facts it was never given. Without the real cause, the new date, and the relationship context, it can only guess — and a guessed email to a real client is a real risk. Bringing the actual details is what makes the draft usable.",
           success:
@@ -52,12 +52,12 @@ const CONTENT = {
           prompt:
             "An AI tool hands you a polished-looking first draft of a proposal. What should you do next?",
           options: [
-            "Send it as-is — it already reads well.",
             "Apply your own expertise and judgment before it goes out.",
+            "Send it as-is — it already reads well.",
             "Ask a coworker to redo it from scratch instead.",
             "Ask the AI to make it longer so it looks more thorough.",
           ],
-          correct: 1,
+          correct: 0,
           corrective:
             "Polished isn't the same as finished. A confident-sounding draft still reflects only what the tool could guess at — your expertise, your read on this client, your judgment calls are what make it actually fit for purpose.",
           success:
@@ -97,11 +97,11 @@ const CONTENT = {
             "You ask an AI tool to check your reasoning on a decision. It responds: “This is an excellent approach!” What should that tell you?",
           options: [
             "Your reasoning must be correct — the AI confirmed it.",
-            "Nothing about whether it's correct — an agreeable tone isn't evidence the reasoning is sound.",
             "You should phrase questions more flatteringly next time.",
             "The AI is being sarcastic.",
+            "Nothing about whether it's correct — an agreeable tone isn't evidence the reasoning is sound.",
           ],
-          correct: 1,
+          correct: 3,
           corrective:
             "Confidence and agreement are a tone, not a QA process. AI tools are prone to telling you what sounds supportive — that's the sycophancy trap. The enthusiasm tells you nothing about whether the reasoning underneath actually holds up.",
           success:
@@ -157,11 +157,11 @@ const CONTENT = {
             "An AI tool recommends a course of action based on the data you gave it. A trusted colleague raises a concern from experience the data doesn't capture. What should you do?",
           options: [
             "Follow the AI's recommendation — it's the data-driven answer.",
-            "Weigh both the AI's analysis and your colleague's experience before deciding.",
             "Ignore your colleague since the AI already answered the question.",
             "Ask the AI to resolve the disagreement for you.",
+            "Weigh both the AI's analysis and your colleague's experience before deciding.",
           ],
-          correct: 1,
+          correct: 3,
           corrective:
             "A data-driven recommendation only accounts for what was in the data. Your colleague's experience is a second, legitimate input the model never had access to — the decision needs both, not an automatic tiebreak toward whichever one sounds more analytical.",
           success:
@@ -173,12 +173,12 @@ const CONTENT = {
           prompt:
             "You use AI to draft a difficult, personal message to a direct report about a performance issue. What's the right way to handle sending it?",
           options: [
-            "Send the AI's draft directly — it's well-written and saves time.",
             "Rework it in your own voice and deliver it yourself — this conversation needs your presence.",
+            "Send the AI's draft directly — it's well-written and saves time.",
             "Have the AI send it directly to save you the discomfort.",
             "Forward the AI draft to HR to send instead.",
           ],
-          correct: 1,
+          correct: 0,
           corrective:
             "A well-written draft doesn't make the conversation less personal. A performance conversation is exactly the moment where the person deserves your actual presence — not a message that was merely routed through you.",
           success:

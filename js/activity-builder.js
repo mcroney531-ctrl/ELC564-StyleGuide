@@ -594,6 +594,7 @@
       scenario.querySelectorAll(".option").forEach((b) => {
         b.disabled = false;
         b.classList.remove("is-selected", "is-correct", "is-wrong");
+        delete b.dataset.tried;
       });
       scenario.querySelectorAll(".feedback").forEach((f) => f.classList.remove("is-visible"));
       return;
@@ -603,6 +604,11 @@
     if (optionBtn && !optionBtn.disabled) {
       const scenario = optionBtn.closest("[data-activity-scenario]");
       const group = optionBtn.closest("[data-activity-group]");
+      // clear the previous attempt first, or answering again straight from the
+      // corrective panel leaves the old mark and feedback beside the new ones
+      group.querySelectorAll(".option").forEach((b) => b.classList.remove("is-selected", "is-correct", "is-wrong"));
+      scenario.querySelectorAll(".feedback").forEach((f) => f.classList.remove("is-visible"));
+
       group.querySelectorAll(".option").forEach((b) => (b.disabled = true));
       optionBtn.classList.add("is-selected");
       setTimeout(() => {
@@ -612,8 +618,11 @@
         const panel = scenario.querySelector(`[data-feedback="${correct ? "success" : "corrective"}"]`);
         if (panel) panel.classList.add("is-visible");
         if (!correct) {
+          // tracked on the element, not read back off .is-wrong — that class is
+          // cleared on the next attempt and would unlock a spent answer
+          optionBtn.dataset.tried = "1";
           group.querySelectorAll(".option").forEach((b) => {
-            if (!b.classList.contains("is-wrong")) b.disabled = false;
+            if (!b.dataset.tried) b.disabled = false;
           });
         }
       }, 550);
@@ -632,6 +641,7 @@ document.addEventListener('click', function (e) {
     scenario.querySelectorAll('.option').forEach(function (b) {
       b.disabled = false;
       b.classList.remove('is-selected', 'is-correct', 'is-wrong');
+      delete b.dataset.tried;
     });
     scenario.querySelectorAll('.feedback').forEach(function (f) { f.classList.remove('is-visible'); });
     return;
@@ -640,6 +650,11 @@ document.addEventListener('click', function (e) {
   if (optionBtn && !optionBtn.disabled) {
     var scenario = optionBtn.closest('[data-activity-scenario]');
     var group = optionBtn.closest('[data-activity-group]');
+    group.querySelectorAll('.option').forEach(function (b) {
+      b.classList.remove('is-selected', 'is-correct', 'is-wrong');
+    });
+    scenario.querySelectorAll('.feedback').forEach(function (f) { f.classList.remove('is-visible'); });
+
     group.querySelectorAll('.option').forEach(function (b) { b.disabled = true; });
     optionBtn.classList.add('is-selected');
     setTimeout(function () {
@@ -649,8 +664,9 @@ document.addEventListener('click', function (e) {
       var panel = scenario.querySelector('[data-feedback="' + (correct ? 'success' : 'corrective') + '"]');
       if (panel) panel.classList.add('is-visible');
       if (!correct) {
+        optionBtn.dataset.tried = '1';
         group.querySelectorAll('.option').forEach(function (b) {
-          if (!b.classList.contains('is-wrong')) b.disabled = false;
+          if (!b.dataset.tried) b.disabled = false;
         });
       }
     }, 550);
