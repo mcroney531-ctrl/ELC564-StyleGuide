@@ -345,8 +345,29 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .section-home { padding: var(--space-2); border-radius: var(--radius-md); }
 .section-home svg { width: 24px; height: 24px; }
 .section-progress-track { display: flex; gap: var(--space-2); }
-.section-progress-track .tick { width: 28px; height: 4px; border-radius: var(--radius-pill); background: var(--color-line); }
-.section-progress-track .tick.is-done { background: var(--illo-accent, var(--color-ink-900)); }
+/* Both states are the backdrop's own deep stroke — the same value the section
+   frame, the options and the takeaways use — so the progress reads as part of
+   the current backdrop rather than a separate gray-and-accent scale.
+   The inactive tick is that stroke at low alpha rather than a second solved
+   color: the stroke is already luminance-matched across all ten hues, and a
+   fixed alpha carries that through, where the obvious existing light token
+   would not (--pattern-border spans 14.2 luma across the hues, lavender to
+   seafoam, so the idle tick would read heavier on some backdrops than others).
+   0.24 is measured, not derived: composited over the real canvas it lands at
+   59.1 luma against --color-line's 59.3, so the idle tick keeps exactly the
+   weight it had and only changes family. Sampling the rendered pixels is the
+   only way to get this right — the ambient wash behind the topbar is darker
+   than --canvas-bg-base, and computing against the flat base predicts 59.3 at
+   0.30 alpha, which actually renders at 53.4.
+   hsl() is written out at the tick rather than composed into a variable
+   higher up: a color composed on :root has its var()s substituted there, and
+   the per-pattern hue set on .section-inner would never reach it. */
+.section-progress-track .tick {
+  width: 28px; height: 4px; border-radius: var(--radius-pill);
+  background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l) / 0.24);
+  transition: background-color var(--duration-micro) var(--ease-standard);
+}
+.section-progress-track .tick.is-done { background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)); }
 
 .section-content { display: none; opacity: 0; }
 .section-content.is-active { display: block; }

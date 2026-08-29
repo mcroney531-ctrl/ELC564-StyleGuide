@@ -319,6 +319,9 @@
         : sectionRoot.querySelector(`[data-view="${viewName}"]`);
 
     target.classList.add("is-active");
+    if (viewName === "scenario") sectionRoot.dataset.activeQuestion = String(questionIndex);
+    else delete sectionRoot.dataset.activeQuestion;
+    refreshTicks(sectionRoot);
     syncFrameToPattern(sectionRoot, target);
     requestAnimationFrame(() => {
       target.classList.add("is-visible");
@@ -338,9 +341,16 @@
     else delete inner.dataset.pattern;
   }
 
-  function updateTicks(sectionRoot, resolvedCount) {
+  // A tick is filled once its scenario is either underway or already solved,
+  // so the pair reads as "which one of these am I on" and not only as a score.
+  // Driven from showView and the solved count together: the info beat has no
+  // scenario active and so fills none, the complete view has them all.
+  function refreshTicks(sectionRoot) {
+    const solved = Number(sectionRoot.dataset.solved || 0);
+    const active = sectionRoot.dataset.activeQuestion;
+    const activeIndex = active === undefined ? -1 : Number(active);
     sectionRoot.querySelectorAll(".tick").forEach((tick, i) => {
-      tick.classList.toggle("is-done", i < resolvedCount);
+      tick.classList.toggle("is-done", i < solved || i <= activeIndex);
     });
   }
 
@@ -392,7 +402,8 @@
         if (!btn.dataset.tried) btn.disabled = false;
       });
     } else {
-      updateTicks(sectionRoot, qIndex + 1);
+      sectionRoot.dataset.solved = String(Math.max(Number(sectionRoot.dataset.solved || 0), qIndex + 1));
+      refreshTicks(sectionRoot);
     }
   }
 

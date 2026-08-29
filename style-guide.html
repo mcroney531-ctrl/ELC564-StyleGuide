@@ -223,12 +223,30 @@
           </div>
           <div>
             <span class="demo-label">Section topbar (inside an expanded card)</span>
-            <div style="background:var(--color-white); border-radius:var(--radius-md); box-shadow:var(--shadow-resting); padding:var(--space-4) var(--space-6); display:flex; align-items:center; justify-content:space-between">
+            <div data-pattern="dot-matrix-mint" style="background:var(--color-white); border-radius:var(--radius-md); box-shadow:var(--shadow-resting); padding:var(--space-4) var(--space-6); display:flex; align-items:center; justify-content:space-between">
               <a class="btn btn-ghost section-home" href="#" aria-label="Home">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.75 12 3.5l9 7.25"/><path d="M5.5 9.75V19.5a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V9.75"/><path d="M9.75 20.5V14.5h4.5v6"/></svg>
               </a>
               <div class="section-progress-track"><span class="tick is-done"></span><span class="tick"></span></div>
             </div>
+          </div>
+          <div>
+            <span class="demo-label">Progress ticks — they follow the backdrop</span>
+            <div style="background:var(--color-white); border-radius:var(--radius-md); box-shadow:var(--shadow-resting); padding:var(--space-4) var(--space-6); display:flex; flex-direction:column; gap:var(--space-4)">
+              <div data-pattern="concentric-arcs-blue" style="display:flex; align-items:center; gap:var(--space-4)">
+                <div class="section-progress-track"><span class="tick"></span><span class="tick"></span></div>
+                <span class="body guide-block-note" style="margin:0">Info beat — neither scenario reached</span>
+              </div>
+              <div data-pattern="diamond-cluster-dusty-rose" style="display:flex; align-items:center; gap:var(--space-4)">
+                <div class="section-progress-track"><span class="tick is-done"></span><span class="tick"></span></div>
+                <span class="body guide-block-note" style="margin:0">On scenario 1</span>
+              </div>
+              <div data-pattern="corner-lines-sage" style="display:flex; align-items:center; gap:var(--space-4)">
+                <div class="section-progress-track"><span class="tick is-done"></span><span class="tick is-done"></span></div>
+                <span class="body guide-block-note" style="margin:0">On scenario 2, with 1 solved</span>
+              </div>
+            </div>
+            <p class="body guide-block-note">Both states are the current backdrop's own deep stroke — the filled tick is the identical value to the section frame and the option borders. The idle tick is that same stroke at 0.24 alpha rather than a second colour, so it inherits the stroke's per-hue luminance solve: it renders within 1.6 luma across all ten backdrops, where the existing light token (<code>--pattern-border</code>) spans 14.2 and would read heavier on lavender than on seafoam. A tick fills when its scenario is <em>underway or solved</em>, not solved alone — so the pair reads as which of the two you're on, not only as a score.</p>
           </div>
         </div>
       </div>        </div>
@@ -291,7 +309,7 @@
         <ul style="display:flex; flex-direction:column; gap:var(--space-2)">
           <li class="body">• <strong>Hover</strong> — cards lift 8px with a spring bounce; buttons tighten their border, and answer cards darken their edge and raise their shadow.</li>
           <li class="body">• <strong>Resolved</strong> — an answer goes straight to correct or wrong on the click, in warm forest or warm maroon, and its feedback panel fades in beneath the stack.</li>
-          <li class="body">• <strong>Completed</strong> — a cluster's progress badge switches from gray "Not started" to amber "In progress" to green "Complete," and its section's two progress ticks fill in as each scenario is solved.</li>
+          <li class="body">• <strong>Completed</strong> — a cluster's progress badge switches from gray "Not started" to amber "In progress" to green "Complete," and its section's two progress ticks fill in as each scenario is reached and solved, in the backdrop's own colour.</li>
         </ul>
       </div>        </div>
       </details>
