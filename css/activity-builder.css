@@ -138,15 +138,15 @@
   display: inline-flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; border-radius: 50%;
   background: var(--color-white);
-  box-shadow: 0 0 0 2px var(--color-ink-900) inset, var(--shadow-raised);
-  color: var(--color-ink-900);
+  box-shadow: 0 0 0 2px var(--color-sage-600) inset, var(--shadow-raised);
+  color: var(--color-sage-600);
   transition: transform var(--duration-micro) var(--ease-standard), background-color var(--duration-micro) var(--ease-standard);
 }
 .builder-add-fab svg { width: 20px; height: 20px; }
 .builder-add-fab:hover { transform: translateY(-1px); background: var(--color-cloud); }
 .builder-add-fab:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-ink-900) inset, var(--shadow-raised), var(--activity-shadow-focus);
+  box-shadow: 0 0 0 2px var(--color-sage-600) inset, var(--shadow-raised), var(--activity-shadow-focus);
 }
 
 .builder-add-toolbar {
