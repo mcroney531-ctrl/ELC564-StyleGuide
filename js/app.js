@@ -254,7 +254,14 @@
       const actionBtn = e.target.closest("[data-action]");
       if (actionBtn) {
         const action = actionBtn.dataset.action;
-        if (action === "exit") return closeSection(cluster.id);
+        if (action === "exit") {
+          // Don't let this reach the card's own open-on-click listener: by the
+          // time the event bubbles, closeSection has already removed
+          // "is-expanded", so that listener's guard would pass and immediately
+          // re-open the section we're leaving.
+          e.stopPropagation();
+          return closeSection(cluster.id);
+        }
         if (action === "start-scenarios") {
           state.currentQuestion = 0;
           showView(sectionRoot, "scenario", 0);
@@ -414,35 +421,75 @@
     gsap.fromTo(card, { borderRadius: 20 }, { borderRadius: 0, duration: TRANSITION_DURATION, ease: "power2.inOut" });
   }
 
+  /* Closing is deliberately NOT the expansion played backwards. Reversing the
+   * Flip meant a full screen of text and artwork was visibly squeezed down
+   * into a small card, and power2.inOut's slow start read as lag once you'd
+   * already decided to leave. Instead the expanded view pushes back into the
+   * stack — it scales down slightly and fades while the grid comes forward
+   * from 1.02 — so the exit reads as depth rather than a fold, and nothing
+   * has to track a shrinking rectangle. */
   function closeSection(clusterId) {
     if (isAnimating) return;
-    isAnimating = true;
 
     const { slot, card } = entries[clusterId];
 
-    const flipState = Flip.getState(card);
-    card.classList.remove("is-expanded");
-    card.tabIndex = 0;
-    card.setAttribute("aria-expanded", "false");
+    // Put the card back in its slot and undo everything openSection changed.
+    const restore = () => {
+      card.classList.remove("is-expanded");
+      card.tabIndex = 0;
+      card.setAttribute("aria-expanded", "false");
+      slot.style.height = "";
+      gsap.set(card, { clearProps: "opacity,scale,borderRadius" });
+      gsap.set(otherCards(clusterId), { clearProps: "opacity,scale,pointerEvents" });
+    };
 
-    Flip.from(flipState, {
-      duration: TRANSITION_DURATION,
-      ease: "power2.inOut",
-      absolute: true,
-      scale: true,
-      onComplete: () => {
-        slot.style.height = "";
-        isAnimating = false;
-      },
-    });
+    if (prefersReducedMotion.matches) {
+      restore();
+      return;
+    }
 
-    gsap.to(card, { borderRadius: 20, duration: TRANSITION_DURATION, ease: "power2.inOut" });
-    gsap.to(otherCards(clusterId), {
+    isAnimating = true;
+
+    // The two halves overlap deliberately. Run sequentially and there's a beat
+    // where the expanded view has faded but the grid hasn't returned, so the
+    // screen shows a bare page. Note we never transform .landing or #card-grid
+    // here: they're ancestors of the still-fixed card, and transforming an
+    // ancestor would re-anchor it mid-flight.
+    const siblings = otherCards(clusterId);
+
+    gsap.to(siblings, {
       opacity: 1,
       scale: 1,
-      duration: 0.35,
+      duration: 0.4,
       ease: "power2.out",
+      stagger: 0.04,
       pointerEvents: "auto",
+    });
+
+    gsap.to(card, {
+      opacity: 0,
+      scale: 0.96,
+      duration: 0.3,
+      ease: "power2.inOut",
+      onComplete: () => {
+        restore();
+        // Now that it's back in normal flow, let it settle in from slightly
+        // forward so it reads as having pushed back into the stack.
+        gsap.fromTo(
+          card,
+          { opacity: 0, scale: 1.02 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.28,
+            ease: "power2.out",
+            clearProps: "opacity,scale",
+            onComplete: () => {
+              isAnimating = false;
+            },
+          }
+        );
+      },
     });
   }
 
