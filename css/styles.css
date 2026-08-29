@@ -4,7 +4,9 @@
    ========================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-font-smoothing: antialiased; }
+/* matches body: the brand exit fades the body out, and without this the html
+   background shows through as white for the length of the transition */
+html { -webkit-font-smoothing: antialiased; background: var(--color-paper); }
 
 body {
   margin: 0;
