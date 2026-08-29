@@ -257,24 +257,34 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
    and pattern read as one piece. Values are the average solid-ink color of
    each pattern file, pushed to L=0.82 and desaturated so it stays a hairline
    rather than an outline. Set data-pattern on the framed element to pick one;
-   anything without it falls back to the neutral --color-line. */
-[data-pattern="concentric-arcs-blue"] { --pattern-border: #BCCEE6; --pattern-accent: #2F6FC4; --pattern-accent-hover: #3476CF; }
-[data-pattern="confetti-peach"] { --pattern-border: #E6CEBC; --pattern-accent: #A55D27; --pattern-accent-hover: #AF6329; }
-[data-pattern="corner-lines-sage"] { --pattern-border: #CDD6CC; --pattern-accent: #5B7658; --pattern-accent-hover: #617E5E; }
-[data-pattern="diamond-cluster-dusty-rose"] { --pattern-border: #E0C2C4; --pattern-accent: #B94A52; --pattern-accent-hover: #BD565D; }
-[data-pattern="dot-matrix-mint"] { --pattern-border: #C9D9D4; --pattern-accent: #4A7869; --pattern-accent-hover: #4F7F70; }
-[data-pattern="dot-square-seafoam"] { --pattern-border: #C5DDD9; --pattern-accent: #3A796F; --pattern-accent-hover: #3E8276; }
-[data-pattern="geometric-marks-powder-blue"] { --pattern-border: #BCD0E6; --pattern-accent: #2D71BC; --pattern-accent-hover: #2F78C7; }
-[data-pattern="mini-circles-peach"] { --pattern-border: #E6CBBC; --pattern-accent: #AB5729; --pattern-accent-hover: #B75D2B; }
-[data-pattern="offset-squares-sage-gray"] { --pattern-border: #CCD6D2; --pattern-accent: #577569; --pattern-accent-hover: #5D7D70; }
-[data-pattern="ring-cluster-lavender"] { --pattern-border: #CBBCE6; --pattern-accent: #8253D6; --pattern-accent-hover: #895DD9; }
+   anything without it falls back to the neutral --color-line.
+
+   --canvas-bg-h is the same hue expressed for the section canvas. The two
+   lightness values are solved so every backdrop lands at equal luminance:
+   -bg-l for the ambient wash (S 17%), -bd-l for the frame stroke (S 42%).
+   They differ because hue-luminance spread widens with saturation, so one
+   shared value would leave the green backdrops visibly lighter. */
+[data-pattern="concentric-arcs-blue"] { --pattern-border: #BCCEE6; --pattern-accent: #2F6FC4; --pattern-accent-hover: #3476CF; --canvas-bg-h: 214; --canvas-bg-l: 54.0%; --canvas-bd-l: 66.0%; }
+[data-pattern="confetti-peach"] { --pattern-border: #E6CEBC; --pattern-accent: #A55D27; --pattern-accent-hover: #AF6329; --canvas-bg-h: 26; --canvas-bg-l: 51.7%; --canvas-bd-l: 61.6%; }
+[data-pattern="corner-lines-sage"] { --pattern-border: #CDD6CC; --pattern-accent: #5B7658; --pattern-accent-hover: #617E5E; --canvas-bg-h: 114; --canvas-bg-l: 47.9%; --canvas-bd-l: 50.2%; }
+[data-pattern="diamond-cluster-dusty-rose"] { --pattern-border: #E0C2C4; --pattern-accent: #B94A52; --pattern-accent-hover: #BD565D; --canvas-bg-h: 356; --canvas-bg-l: 56.1%; --canvas-bd-l: 69.3%; }
+[data-pattern="dot-matrix-mint"] { --pattern-border: #C9D9D4; --pattern-accent: #4A7869; --pattern-accent-hover: #4F7F70; --canvas-bg-h: 161; --canvas-bg-l: 47.5%; --canvas-bd-l: 49.4%; }
+[data-pattern="dot-square-seafoam"] { --pattern-border: #C5DDD9; --pattern-accent: #3A796F; --pattern-accent-hover: #3E8276; --canvas-bg-h: 170; --canvas-bg-l: 47.4%; --canvas-bd-l: 49.1%; }
+[data-pattern="geometric-marks-powder-blue"] { --pattern-border: #BCD0E6; --pattern-accent: #2D71BC; --pattern-accent-hover: #2F78C7; --canvas-bg-h: 211; --canvas-bg-l: 53.4%; --canvas-bd-l: 65.0%; }
+[data-pattern="mini-circles-peach"] { --pattern-border: #E6CBBC; --pattern-accent: #AB5729; --pattern-accent-hover: #B75D2B; --canvas-bg-h: 21; --canvas-bg-l: 52.7%; --canvas-bd-l: 63.4%; }
+[data-pattern="offset-squares-sage-gray"] { --pattern-border: #CCD6D2; --pattern-accent: #577569; --pattern-accent-hover: #5D7D70; --canvas-bg-h: 156; --canvas-bg-l: 47.6%; --canvas-bd-l: 49.6%; }
+[data-pattern="ring-cluster-lavender"] { --pattern-border: #CBBCE6; --pattern-accent: #8253D6; --pattern-accent-hover: #895DD9; --canvas-bg-h: 261; --canvas-bg-l: 57.3%; --canvas-bd-l: 71.2%; }
 
 /* ---- Section content (lives inside .card-section once a card expands) ---- */
-/* Each cluster page is framed like one of the backdrop cards: a hairline
-   border around the content column, with the cluster's own corner pattern
-   inside it. Border + pattern together are what make the full backdrop.
-   Background stays --color-paper (not white) so the white takeaway
-   rectangles inside still read as raised against it. */
+/* Each cluster page is framed like one of the backdrop cards: a bold stroke
+   around the content column, the cluster's own corner pattern inside it, and
+   an ambient wash of the same hue behind everything. Stroke + pattern + wash
+   together are what make the full backdrop.
+
+   The hsl() calls are written out here rather than composed into a colour on
+   :root. A colour composed on :root has its var() substituted there, so the
+   per-pattern hue set on this element would never reach it — the whole thing
+   would silently stay sage. */
 /* The gutter comes from width, not from auto margins. Once the viewport is
    narrower than max-width the column fills it and auto margins compute to 0,
    which put the frame's side borders flush on the screen edge — visible on
@@ -286,7 +296,33 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   margin: var(--space-6) auto;
   padding: var(--space-8) var(--space-8) var(--space-16);
   border-radius: var(--radius-lg);
-  box-shadow: 0 0 0 var(--border) var(--pattern-border, var(--color-line)) inset;
+  background:
+    /* 1 · the ambient pool, upper-centre */
+    radial-gradient(118% calc(var(--canvas-bg-span) * 0.46)
+        at 50% calc(var(--canvas-bg-span) * 0.19),
+        hsl(var(--canvas-bg-h) var(--canvas-bg-s) var(--canvas-bg-l) / var(--canvas-bg-a-pool)) 0%,
+        hsl(var(--canvas-bg-h) var(--canvas-bg-s) var(--canvas-bg-l) / 0) 70%),
+    /* 2 · wider, weaker spill across the upper perimeter */
+    radial-gradient(165% calc(var(--canvas-bg-span) * 0.34)
+        at 50% calc(var(--canvas-bg-span) * 0.26),
+        hsl(var(--canvas-bg-h) var(--canvas-bg-s) var(--canvas-bg-l) / var(--canvas-bg-a-spill)) 0%,
+        hsl(var(--canvas-bg-h) var(--canvas-bg-s) var(--canvas-bg-l) / 0) 78%),
+    /* 3 · faint vertical wash — without it the very top edge reads lighter
+           than the pool below and you can see where the pool begins */
+    linear-gradient(180deg,
+        hsl(var(--canvas-bg-h) var(--canvas-bg-s) var(--canvas-bg-l) / var(--canvas-bg-a-wash)) 0,
+        hsl(var(--canvas-bg-h) var(--canvas-bg-s) var(--canvas-bg-l) / var(--canvas-bg-a-fade)) calc(var(--canvas-bg-span) * 0.34),
+        hsl(var(--canvas-bg-h) var(--canvas-bg-s) var(--canvas-bg-l) / 0) calc(var(--canvas-bg-span) * 0.76)),
+    /* 4 · near-white base resolving to the neutral the content sits on */
+    linear-gradient(180deg,
+        #FDFDFD 0,
+        #FCFDFD calc(var(--canvas-bg-span) * 0.30),
+        var(--canvas-bg-base) calc(var(--canvas-bg-span) * 0.72),
+        var(--canvas-bg-base) 100%);
+  background-repeat: no-repeat;
+  background-color: var(--canvas-bg-base);
+  box-shadow: 0 0 0 var(--border-frame)
+              hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset;
   transition: box-shadow var(--duration-system) var(--ease-out);
 }
 @media (max-width: 720px) {

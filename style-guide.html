@@ -139,7 +139,7 @@
 
       <div class="guide-block">
         <h3 class="h3 guide-block-title">Borders</h3>
-        <p class="body">Every surface is defined by its edge first and its shadow second — the shadow lifts it, the border says where it ends. Three widths only, so a bordered thing always reads as one of three tiers.</p>
+        <p class="body">Every surface is defined by its edge first and its shadow second — the shadow lifts it, the border says where it ends. Four widths, so a bordered thing always reads as one of four tiers.</p>
         <div class="demo-row" style="margin-top:var(--space-6); align-items:stretch">
           <div style="flex:1; min-width:180px; background:var(--color-white); border-radius:var(--radius-md); padding:var(--space-5); box-shadow:0 0 0 var(--border-thin) var(--color-line-soft) inset">
             <span class="name" style="display:block; font:var(--text-label); color:var(--color-ink-900)">thin — 1.5px</span>
@@ -153,8 +153,12 @@
             <span class="name" style="display:block; font:var(--text-label); color:var(--color-ink-900)">thick — 3px</span>
             <span class="hex" style="display:block; font:var(--text-caption); color:var(--color-gray-500)">The element being acted on</span>
           </div>
+          <div style="flex:1; min-width:180px; background:var(--color-white); border-radius:var(--radius-md); padding:var(--space-5); box-shadow:0 0 0 var(--border-frame) hsl(214 42% 66%) inset">
+            <span class="name" style="display:block; font:var(--text-label); color:var(--color-ink-900)">frame — 4px</span>
+            <span class="hex" style="display:block; font:var(--text-caption); color:var(--color-gray-500)">The section frame, in its backdrop's hue</span>
+          </div>
         </div>
-        <p class="body guide-block-note">Applied as <code>box-shadow</code> insets rather than the <code>border</code> property nearly everywhere, so an edge can be added or thickened on hover and selection without the element changing size and nudging its neighbors.</p>
+        <p class="body guide-block-note">Applied as <code>box-shadow</code> insets rather than the <code>border</code> property nearly everywhere, so an edge can be added or thickened on hover and selection without the element changing size and nudging its neighbors. The frame tier sits above the other three on purpose: it is the one edge meant to read at arm’s length, and it takes its colour from whichever backdrop the section is on.</p>
       </div>        </div>
       </details>
 

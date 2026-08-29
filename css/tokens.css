@@ -110,6 +110,39 @@
   --border-thin:  1.5px;
   --border:       2px;
   --border-thick: 3px;
+  /* The section frame is the one edge that reads at arm's length, so it sits
+     above the three-tier scale on purpose rather than stretching "thick". */
+  --border-frame: 4px;
+
+  /* ---- Section canvas ----
+     Ambient light behind an open section, not a flat fill: a soft pool in the
+     upper-centre that dissipates into --canvas-bg-base, so there's no line
+     where the gradient "starts". Only the hue moves between backdrops; the
+     alphas and the geometry are shared.
+
+     Lightness is solved per hue rather than fixed, and solved TWICE, because
+     the two uses run at different saturations and hue-luminance differences
+     amplify with saturation. A single lightness would make the green
+     backdrops read lighter than the blue ones — 2.2 luma adrift on the wash,
+     21 on the stroke. See --canvas-bg-l / --canvas-bd-l per pattern in
+     styles.css. */
+  --canvas-bg-base: #F8F8F8;
+  --canvas-bg-h: 168;   /* #759e96 sage — the fallback outside a backdrop */
+  --canvas-bg-s: 17%;
+  --canvas-bg-l: 54%;
+  --canvas-bd-s: 42%;
+  --canvas-bd-l: 66%;
+
+  --canvas-bg-a-pool:  0.155;  /* the ambient pool                */
+  --canvas-bg-a-spill: 0.078;  /* wider, weaker perimeter spill   */
+  --canvas-bg-a-wash:  0.065;  /* keeps the top edge from reading
+                                  lighter than the pool below it  */
+  --canvas-bg-a-fade:  0.03;
+
+  /* How far the atmosphere reaches. A percentage would stretch the pool down
+     the whole page on a long scrolling section; this keeps it to roughly the
+     first screenful whatever the content length. */
+  --canvas-bg-span: clamp(520px, 82vh, 940px);
 
   /* ---- Radius ---- */
   --radius-sm: 6px;
