@@ -92,8 +92,9 @@
         <div class="section-inner">
           <div class="section-topbar">
             <div class="section-nav">
-              <button class="btn btn-ghost" data-action="exit" aria-label="Back to overview">← Overview</button>
-              <a class="btn btn-ghost" href="index.html">Home</a>
+              <a class="btn btn-ghost section-home" href="index.html" aria-label="Home">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.75 12 3.5l9 7.25"/><path d="M5.5 9.75V19.5a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V9.75"/><path d="M9.75 20.5V14.5h4.5v6"/></svg>
+              </a>
             </div>
             <div class="section-progress-track" aria-hidden="true">
               <span class="tick" data-tick="0"></span>

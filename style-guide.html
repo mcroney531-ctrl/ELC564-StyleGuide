@@ -218,7 +218,9 @@
           <div>
             <span class="demo-label">Section topbar (inside an expanded card)</span>
             <div style="background:var(--color-white); border-radius:var(--radius-md); box-shadow:var(--shadow-resting); padding:var(--space-4) var(--space-6); display:flex; align-items:center; justify-content:space-between">
-              <button class="btn btn-ghost">← Overview</button>
+              <a class="btn btn-ghost section-home" href="#" aria-label="Home">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.75 12 3.5l9 7.25"/><path d="M5.5 9.75V19.5a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V9.75"/><path d="M9.75 20.5V14.5h4.5v6"/></svg>
+              </a>
               <div class="section-progress-track"><span class="tick is-done"></span><span class="tick"></span></div>
             </div>
           </div>
@@ -342,7 +344,7 @@
               <tr><td>Feedback panel reveal</td><td>answer confirmed</td><td>0.5s</td><td><code>ease-out</code></td></tr>
               <tr><td><strong>Overview leaves (signature)</strong></td><td>card click</td><td>0.35s</td><td><code>power2.in</code></td></tr>
               <tr><td>Section arrives</td><td>card click (after)</td><td>0.5s / 0.55s, 0.1s stagger</td><td><code>power2.out</code></td></tr>
-              <tr><td>Section → card (exit)</td><td>"Overview" click</td><td>0.3s out, 0.4s back</td><td><code>power2.inOut</code> / <code>power2.out</code></td></tr>
+              <tr><td>Section → card (exit)</td><td>"Back to overview" click</td><td>0.3s out, 0.4s back</td><td><code>power2.inOut</code> / <code>power2.out</code></td></tr>
             </tbody>
           </table>
         </div>
