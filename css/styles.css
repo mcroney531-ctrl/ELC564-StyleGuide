@@ -401,17 +401,26 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .info-beat .h1 { color: var(--color-ink-900); margin-bottom: var(--space-6); }
 .info-beat p + p { margin-top: var(--space-4); }
 .info-beat .point-list { margin-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-3); }
+/* Same card treatment as the answers, off the same tokens — the two are the
+   same object on screen a screen apart, and a reader shouldn't have to notice
+   that one is a rounder, softer rectangle than the other. */
 .info-beat .point-list li {
-  display: flex; gap: var(--space-3); align-items: flex-start;
-  padding: var(--space-4); background: var(--color-white); border-radius: var(--radius-md); box-shadow: 0 0 0 var(--border) var(--color-line) inset, var(--shadow-resting);
+  display: flex; gap: var(--answer-gap); align-items: flex-start;
+  padding: var(--answer-pad-y) var(--answer-pad-x);
+  background: var(--answer-bg);
+  border: var(--border) solid hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
+  border-radius: var(--answer-radius);
+  box-shadow: var(--answer-shadow);
   transition: box-shadow var(--duration-micro) var(--ease-standard);
 }
-/* Elevation only — no lift or overshoot. These are read, not clicked, so the
-   hover acknowledges the row without implying it does something. */
-.info-beat .point-list li:hover { box-shadow: 0 0 0 var(--border) var(--color-ink-300) inset, var(--shadow-lifted); }
+/* Elevation only — no border shift. These are read, not clicked, so the hover
+   acknowledges the row without implying it does something. */
+.info-beat .point-list li:hover { box-shadow: var(--answer-hover-shadow); }
+/* The bullet follows the backdrop too. It was on the vivid cluster accent,
+   which next to a deep muted border read as a leftover from another palette. */
 .info-beat .point-list li::before {
-  content: ""; flex: none; width: 8px; height: 8px; margin-top: 8px; border-radius: 50%;
-  background: var(--illo-accent, var(--color-ink-900));
+  content: ""; flex: none; width: 8px; height: 8px; margin-top: 9px; border-radius: 50%;
+  background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
 }
 /* Fills with the same colour the frame stroke is drawn in, so the button, the
    border and the corner pattern are one tone rather than three shades of the

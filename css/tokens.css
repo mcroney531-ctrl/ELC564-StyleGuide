@@ -168,7 +168,11 @@
   --canvas-bg-s: 17%;
   --canvas-bg-l: 54%;
   --canvas-bd-s: 42%;
-  --canvas-bd-l: 66%;
+  /* Solved to the same luminance as every per-pattern stroke, not left pale.
+     This is what the builder's preview and its exported file fall back to —
+     no backdrop is in scope there — and a light default made those answers
+     and takeaways look like the change hadn't landed. */
+  --canvas-bd-l: 30.4%;
 
   --canvas-bg-a-pool:  0.155;  /* the ambient pool                */
   --canvas-bg-a-spill: 0.078;  /* wider, weaker perimeter spill   */
