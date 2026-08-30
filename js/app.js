@@ -30,8 +30,23 @@
     if (!progress[c.id]) progress[c.id] = "not-started";
   });
 
+  /* Reads are already guarded; writes have to be too, and for a sharper
+     reason than tidiness. A browser that blocks storage — Safari with
+     "Prevent cross-site tracking", Chrome with third-party cookies off,
+     any private window — throws on access, not on quota. saveProgress runs
+     from setProgress, which runs the moment a cluster is opened, so an
+     unguarded write took the whole card expansion down with it: the section
+     never opened and the module was dead on click. That only happens when
+     the page is embedded in an iframe, which is exactly where nobody would
+     be watching a console.
+     Failing quietly is the right outcome: the reader loses the badge
+     memory between visits and keeps everything else. */
   function saveProgress() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    } catch (e) {
+      /* storage unavailable — progress just won't survive a reload */
+    }
   }
 
   function setProgress(clusterId, state) {
