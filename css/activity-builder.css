@@ -11,6 +11,8 @@
   --activity-accent-300: #A6BFBA;
   --activity-accent-100: #E8EDEC;
   --activity-shadow-focus: 0 0 0 3px rgba(117, 158, 150, 0.35);
+  /* Delete's hover. Fixed, not derived from the backdrop — see .piece-ctrl. */
+  --utility-danger: #5E211F;
   --activity-shadow-card: 0 4px 8px rgba(20, 33, 58, 0.06), 0 24px 48px -16px rgba(20, 33, 58, 0.18);
 }
 
@@ -118,16 +120,49 @@
    There's no sidebar checklist any more — these live directly on the piece
    they act on, as a slim row above its content. Only shown in view mode
    (the edit form has its own Done button, so no redundant edit trigger). */
-.activity-piece-controls { display: flex; justify-content: flex-end; gap: 2px; margin-bottom: var(--space-2); }
+/* ---- piece controls: solid tiles, tinted by the backdrop ----
+   The tile is the section frame's own colour — the identical value the
+   option and takeaway borders, the progress ticks and the CTA already use —
+   so the controls join the slide's colour rather than sitting on it in a
+   neutral grey that belongs to nothing on screen. That was the whole problem
+   with a fixed grey: it read as the loudest thing on the slide precisely
+   because it matched nothing else.
+   White glyphs land at 5.96:1 on every one of the ten backdrops, with a
+   spread of 0.02, because those stroke colours were already solved to equal
+   luminance. The contrast is uniform for free rather than needing a per-hue
+   check.
+   6px of gap, not the 2px the ghost buttons used: solid tiles that close
+   merge into a single dark bar. */
+.activity-piece-controls { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: var(--space-2); }
 .piece-ctrl {
-  width: 26px; height: 26px; display: grid; place-items: center;
-  border-radius: var(--radius-sm); color: var(--color-gray-500);
-  transition: background-color var(--duration-micro) var(--ease-standard), color var(--duration-micro) var(--ease-standard);
+  width: 28px; height: 28px; display: grid; place-items: center;
+  border-radius: 8px;
+  background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
+  color: var(--color-white);
+  box-shadow: 0 1px 2px rgba(20, 33, 58, 0.12);
+  transition: background-color var(--duration-micro) var(--ease-standard),
+              box-shadow var(--duration-micro) var(--ease-standard),
+              transform var(--duration-micro) var(--ease-standard);
 }
-.piece-ctrl svg { width: 15px; height: 15px; }
-.piece-ctrl:hover:not(:disabled) { background: var(--color-cloud); color: var(--color-ink-900); }
-.piece-ctrl:disabled { opacity: 0.25; cursor: default; }
-.piece-ctrl.is-remove:hover { background: var(--color-error-100); color: var(--color-error-700); }
+.piece-ctrl svg { width: 16px; height: 16px; }
+/* Hover goes lighter, not darker. That is what the CTA already does, on the
+   same per-hue --canvas-bd-l-hover solved to 4.80:1 — reusing it beats
+   inventing a second, darker value that would need solving all over again. */
+.piece-ctrl:hover:not(:disabled) {
+  background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l-hover, var(--canvas-bd-l)));
+  box-shadow: 0 2px 6px rgba(20, 33, 58, 0.18);
+}
+.piece-ctrl:active:not(:disabled) { transform: scale(0.97); }
+.piece-ctrl:focus-visible { outline: none; box-shadow: var(--activity-shadow-focus); }
+.piece-ctrl:disabled { opacity: 0.3; cursor: default; box-shadow: none; }
+/* Delete is the only irreversible control in the row, so it cannot look like
+   the other three — but it cannot signal with HUE either. The module's
+   --answer-wrong sits 9 RGB units from the dusty-rose tile and under 35 from
+   both peaches: on three of the ten backdrops a red hover would simply not
+   appear, because a warm backdrop is already red. Every tile is at ~12.6 luma
+   by construction, so the cue has to be lightness. This deep maroon is 3.6
+   luma, at least 74 units from every tile, and carries white at 12.26:1. */
+.piece-ctrl.is-remove:hover:not(:disabled) { background: var(--utility-danger); color: var(--color-white); }
 
 /* ---- "+ Add a piece" trigger + toolbar ----
    Lives inside #builder-preview itself, re-appended as the trailing child

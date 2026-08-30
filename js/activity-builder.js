@@ -36,12 +36,19 @@
   // Per-piece reorder/edit/remove controls now live on the piece itself
   // (there's no sidebar checklist any more), so every .activity-piece gets
   // this small icon row rendered above it.
+  // Solid tiles carrying white glyphs, tinted by the backdrop — see
+  // .piece-ctrl in activity-builder.css for why the colour comes from there.
+  // The pencil is a filled silhouette rather than an outline: at 16px an
+  // outline pencil's interior closes up into a smudge, where a filled body
+  // has no interior to lose. Arrows are full shaft-plus-head rather than
+  // chevrons, so "move" reads as travel rather than as a direction.
   const CTRL_ICONS = {
-    edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 4.5l4 4L8 20H4v-4Z"/></svg>',
-    up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 14l6-6 6 6"/></svg>',
-    down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10l6 6 6-6"/></svg>',
-    remove: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    edit: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25Z"/><path d="M20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83Z"/></svg>',
+    up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19.5V5"/><path d="M5.75 11.25 12 5l6.25 6.25"/></svg>',
+    down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4.5V19"/><path d="M18.25 12.75 12 19l-6.25-6.25"/></svg>',
+    remove: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',
   };
+
 
   // Colour and shape used to be one choice, because in the module each
   // backdrop is a (hue, pattern) pair. They're separate here: the theme sets
