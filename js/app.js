@@ -106,7 +106,7 @@
             <h1 class="h1">${cluster.info.heading}</h1>
             <div class="banner-wrap">
               <img class="content-banner" src="assets/illustrations/scenes/${cluster.info.image}" alt="">
-              <img class="scene-pattern" src="assets/illustrations/patterns/${cluster.info.pattern}" alt="" aria-hidden="true">
+              <span class="scene-pattern" data-shape="${cluster.info.pattern}" style="-webkit-mask-image:url(assets/illustrations/patterns/${cluster.info.pattern});mask-image:url(assets/illustrations/patterns/${cluster.info.pattern})" aria-hidden="true"></span>
             </div>
             ${cluster.info.body.map((p) => `<p class="body-lg">${p}</p>`).join("")}
             <ul class="point-list">
@@ -128,7 +128,7 @@
               </div>
               <div class="banner-wrap">
                 <img class="content-banner" src="assets/illustrations/scenes/${q.image}" alt="">
-                <img class="scene-pattern" src="assets/illustrations/patterns/${q.pattern}" alt="" aria-hidden="true">
+                <span class="scene-pattern" data-shape="${q.pattern}" style="-webkit-mask-image:url(assets/illustrations/patterns/${q.pattern});mask-image:url(assets/illustrations/patterns/${q.pattern})" aria-hidden="true"></span>
               </div>
               <h2 class="scenario-prompt">${q.prompt}</h2>
               <span class="scenario-underline" aria-hidden="true"></span>
@@ -175,7 +175,7 @@
             <p class="body-lg">Both scenarios answered. That badge is now checked off on the overview.</p>
             <div class="banner-wrap">
               <img class="content-banner" src="assets/illustrations/scenes/${cluster.completeImage}" alt="">
-              <img class="scene-pattern" src="assets/illustrations/patterns/${cluster.completePattern}" alt="" aria-hidden="true">
+              <span class="scene-pattern" data-shape="${cluster.completePattern}" style="-webkit-mask-image:url(assets/illustrations/patterns/${cluster.completePattern});mask-image:url(assets/illustrations/patterns/${cluster.completePattern})" aria-hidden="true"></span>
             </div>
             <div class="actions">
               <button class="btn btn-primary" data-action="exit">Back to overview</button>
@@ -351,8 +351,13 @@
   function syncFrameToPattern(sectionRoot, target) {
     const inner = sectionRoot.querySelector(".section-inner");
     if (!inner) return;
+    // Read off an explicit attribute rather than parsing the accent's image
+    // URL. That used to come from its src, which vanished the moment the
+    // accent stopped being an <img> — and the failure was silent and total:
+    // no key means no data-pattern, so the frame, canvas, borders, ticks,
+    // chip and CTA all quietly fell back to the :root sage on every screen.
     const pattern = target.querySelector(".scene-pattern");
-    const key = pattern && pattern.getAttribute("src").split("/").pop().replace(".webp", "");
+    const key = pattern && (pattern.dataset.shape || "").replace(".webp", "");
     if (key) inner.dataset.pattern = key;
     else delete inner.dataset.pattern;
   }

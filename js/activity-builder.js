@@ -149,7 +149,7 @@
       // images don't silently produce two accents.
       const accent =
         d.accent && opts.shape
-          ? `<span class="scene-pattern shape-accent" style="-webkit-mask-image:url(assets/illustrations/patterns/${esc(opts.shape)}.webp);mask-image:url(assets/illustrations/patterns/${esc(opts.shape)}.webp)" aria-hidden="true"></span>`
+          ? `<span class="scene-pattern" style="-webkit-mask-image:url(assets/illustrations/patterns/${esc(opts.shape)}.webp);mask-image:url(assets/illustrations/patterns/${esc(opts.shape)}.webp)" aria-hidden="true"></span>`
           : "";
       return `
       <div class="banner-wrap">

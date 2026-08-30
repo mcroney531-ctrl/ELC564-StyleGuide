@@ -404,11 +404,11 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 
 /* Small pastel pattern accent, one per cluster set, tucked into the top-right
    of the illustration — a quiet, secondary flourish, never the focal point.
-   Capping both axes (rather than width alone) keeps every pattern on the same
-   footprint despite their 0.78-1.41 aspect range: the sources are
+   Sizing on the larger axis (rather than width alone) keeps every pattern on
+   the same footprint despite their 0.78-1.41 aspect range: the sources are
    content-tight, with no baked-in transparent padding, but their intrinsic
-   sizes run 120-343px, so capping one axis alone would make the tall narrow
-   ones read small and the wide flat ones oversized.
+   sizes run 120-343px, so constraining one axis alone would make the tall
+   narrow ones read small and the wide flat ones oversized.
 
    Everything here is in cqw — a share of the illustration's own width — and
    that is the whole point. At a fixed 96px the accent stayed the same size
@@ -444,40 +444,30 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   position: absolute;
   top: -4.0cqw;
   right: -4.2cqw;
-  width: auto;
-  height: auto;
-  max-width: 14cqw;
-  max-height: 14cqw;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* The builder's variant of the same accent. It paints a colour through the
-   pattern file's alpha channel instead of showing the file's own pixels, so
-   the shape and the backdrop colour become independent: any of the ten
-   silhouettes can sit on any of the ten backdrops and still belong to it.
-   The shape lives entirely in the alpha (80-89% of each file is fully
-   transparent, 4-7% solid ink), which is what makes this work with no new
-   assets.
-   mask-image is set on the element itself rather than through a variable
-   here. A relative url() inside a custom property resolves against the
-   stylesheet it is substituted into, not the document — so a path written for
-   the page silently became /css/assets/... and the mask failed to load,
-   leaving a plain coloured square. Set in the markup it resolves against the
-   document, which is what both this page and the exported file need.
-
-   The box is square while the shapes are not, so the mask is pinned to the
-   box's top-right rather than centred — otherwise a tall shape would float
-   inward from the corner the offsets were solved against. Sizing still
-   resolves on the larger axis, exactly as the img's two-axis cap did. */
-.shape-accent {
   width: 14cqw;
   height: 14cqw;
+  z-index: 0;
+  pointer-events: none;
+  /* Painted through the file's alpha rather than shown as-is. The ten source
+     files were drawn separately and their inks range 14-95% saturation and
+     32.8-60.8 luminance, so some screens' accents read nearly twice as heavy
+     as others'; taking the colour from the solved backdrop palette instead
+     lands every one of them at the same weight. It also makes shape and
+     colour independent, which is what the activity builder needs.
+     mask-image is set on the element rather than through a variable: a
+     relative url() inside a custom property resolves against the stylesheet
+     it is substituted into, not the document, so a path written for the page
+     silently became /css/assets/... and the mask failed to load.
+     The box is square while the shapes are not, so the mask is pinned to its
+     top-right rather than centred — that keeps the ink's corner exactly where
+     the img's tight box put it, and `contain` still resolves on the larger
+     axis, so the offsets solved above did not move. */
   background-color: hsl(var(--canvas-bg-h) var(--shape-s) var(--shape-l));
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
   -webkit-mask-position: top right; mask-position: top right;
   -webkit-mask-size: contain; mask-size: contain;
 }
+
 }
 
 .info-beat .eyebrow { display: block; margin-bottom: var(--space-3); }
