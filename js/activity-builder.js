@@ -27,10 +27,10 @@
 
   const TYPE_LABELS = {
     heading: "Heading + intro text",
+    text: "Body text",
     image: "Image builder",
     takeaways: "Key takeaways list",
     scenario: "Scenario / MCQ question",
-    button: "Standalone CTA button",
   };
 
   // Per-piece reorder/edit/remove controls now live on the piece itself
@@ -108,11 +108,12 @@
       title: "Your activity title goes here",
       body: 'One or two sentences setting up what this teaches — the "why," not the whole lesson. Keep it short enough to read in one breath.',
     }),
-    // accent defaults on for the first image and off for any after it — the
-    // module never shows two corner accents on one screen.
     // The first image defaults to the shape this colour is paired with in the
     // module, so a one-click build still lands on a real screen; a second
     // image starts with none, because no module screen shows two.
+    text: () => ({
+      body: "A paragraph of your own. Leave a blank line between paragraphs and each one renders separately, the same way the module's info beats do.",
+    }),
     image: () => ({
       scene: null,
       shape: pieces.some((p) => p.type === "image") ? null : (isThemed() ? theme : null),
@@ -131,7 +132,6 @@
       corrective: "Explain why this answer misses the point, then let them try the same question again.",
       success: "A brief, affirming sentence on why this is right.",
     }),
-    button: () => ({ label: "Your call to action" }),
   };
 
   // Render templates — pure functions of data, used identically by the live
@@ -142,6 +142,17 @@
       <h1 class="h1">${esc(d.title)}</h1>
       <p class="body-lg">${esc(d.body)}</p>
     `,
+    // Blank-line-separated paragraphs, which is how the module's own info
+    // beats are authored (content.js holds an array and maps it to one
+    // <p class="body-lg"> each). A single textarea that splits on blank lines
+    // gives the same result without asking anyone to think about arrays.
+    text: (d) =>
+      String(d.body)
+        .split(/\n\s*\n/)
+        .map((para) => para.trim())
+        .filter(Boolean)
+        .map((para) => `<p class="body-lg">${esc(para)}</p>`)
+        .join(""),
     // opts.interactive is false only for the exported file, which has no JS
     // wiring behind the picker — these render as static instructions, not
     // live controls, so they drop the clickable affordance and "change" copy.
@@ -208,10 +219,6 @@
         </div>
       </div>
     `,
-    // .start-cta is what ties the button to the backdrop in the module — it
-    // fills with the same colour the frame stroke is drawn in. Without it the
-    // CTA stayed sage on every backdrop while everything around it retinted.
-    button: (d) => `<button class="btn btn-primary start-cta" type="button">${esc(d.label)}</button>`,
   };
 
   // Edit forms — one per type, driving the same data the templates above read.
@@ -228,6 +235,13 @@
       <div class="activity-field">
         <label for="f${id}-body">Intro text</label>
         <textarea id="f${id}-body" data-field="body" rows="3">${esc(d.body)}</textarea>
+      </div>
+    `,
+    text: (id, d) => `
+      <div class="activity-field">
+        <label for="f${id}-body">Body text</label>
+        <textarea id="f${id}-body" data-field="body" rows="6">${esc(d.body)}</textarea>
+        <p class="activity-field-note">Leave a blank line between paragraphs to split them.</p>
       </div>
     `,
     image: (id, d) => `
@@ -299,12 +313,6 @@
       <div class="activity-field">
         <label for="f${id}-success">Success feedback (right answer)</label>
         <textarea id="f${id}-success" data-field="success" rows="2">${esc(d.success)}</textarea>
-      </div>
-    `,
-    button: (id, d) => `
-      <div class="activity-field">
-        <label for="f${id}-label">Button label</label>
-        <input type="text" id="f${id}-label" data-field="label" value="${esc(d.label)}">
       </div>
     `,
   };
