@@ -548,8 +548,7 @@
 }
 .shape-swatch:focus-visible { outline: none; box-shadow: var(--activity-shadow-focus); }
 
-.activity-check { display: flex; align-items: center; gap: var(--space-2); font: var(--text-label); color: var(--color-ink-900); cursor: pointer; }
-.activity-check input { width: 16px; height: 16px; accent-color: var(--color-sage-600); }
+
 
 }
 
@@ -570,4 +569,60 @@
 .builder-preview .btn-primary:active {
   transform: translateY(1px);
   box-shadow: 0 1px 1px rgba(20, 35, 50, 0.08);
+}
+
+/* ---- everything else on a chosen backdrop takes its colour ----
+   Once the controls went backdrop-aware the remaining sage stood out badly:
+   on a dusty-rose slide a sage "+" and a sage Done button were the only
+   things on screen belonging to another palette. Found by walking the
+   rendered stage and flagging any paint whose hue landed in the sage/teal
+   band — four real offenders, plus the focus rings and the radio.
+
+   Scoped to a stage that actually has a backdrop, so "Blank" stays neutral
+   and the page's own chrome outside the slide — the hero, the About card,
+   Copy code — keeps the builder's sage identity. The slide is themed; the
+   tool around it is not. */
+.activity-stage[data-pattern] {
+  /* the focus ring, in the backdrop's hue instead of the page's sage */
+  --activity-shadow-focus: 0 0 0 3px hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l) / 0.35);
+}
+/* Done, and any other primary action inside the slide. Same value the CTA
+   already fills with, so the two never disagree. */
+.activity-stage[data-pattern] .btn-primary {
+  background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
+}
+.activity-stage[data-pattern] .btn-primary:hover {
+  background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l-hover, var(--canvas-bd-l)));
+}
+.activity-stage[data-pattern] .btn-secondary:hover {
+  box-shadow: 0 0 0 var(--border) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset;
+}
+/* the add control and the "+" dividers it parks in */
+.activity-stage[data-pattern] .builder-add-fab {
+  box-shadow: 0 0 0 var(--border-thick) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset, var(--shadow-raised);
+  color: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
+}
+.activity-stage[data-pattern] .builder-add-fab:focus-visible {
+  box-shadow: 0 0 0 var(--border-thick) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset, var(--shadow-raised), var(--activity-shadow-focus);
+}
+.activity-stage[data-pattern] .activity-insert-btn {
+  box-shadow: 0 0 0 var(--border) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset, var(--shadow-resting);
+  color: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
+}
+.activity-stage[data-pattern] .activity-insert-btn:focus-visible {
+  box-shadow: 0 0 0 var(--border) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset, var(--activity-shadow-focus);
+}
+/* the hairline the divider sits on — a light tint of the same stroke, the
+   same 0.3 alpha the idle progress tick uses */
+.activity-stage[data-pattern] .activity-insert::before {
+  background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l) / 0.3);
+}
+/* native controls: one property, and it takes a colour not a shadow */
+.activity-stage[data-pattern] input[type="radio"],
+.activity-stage[data-pattern] input[type="checkbox"] {
+  accent-color: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
+}
+/* the scene/shape swatch selection ring, and the illustration slot */
+.activity-stage[data-pattern] .activity-pattern-swatch.is-selected {
+  box-shadow: 0 0 0 var(--border-thick) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset;
 }

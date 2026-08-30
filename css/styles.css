@@ -471,6 +471,12 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 }
 
 .info-beat .eyebrow { display: block; margin-bottom: var(--space-3); }
+/* The eyebrow was the last thing on a section still painted in the shared
+   teal while everything around it took the backdrop's colour. It swaps to the
+   backdrop's own stroke, which happens to sit at almost exactly the same
+   luminance as the teal it replaces (12.6 against 13.0), so only the hue
+   moves and the label keeps its weight in the hierarchy. */
+[data-pattern] .eyebrow { color: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)); }
 .info-beat .h1 { color: var(--color-ink-900); margin-bottom: var(--space-6); }
 .info-beat p + p { margin-top: var(--space-4); }
 .info-beat .point-list { margin-top: var(--space-8); display: flex; flex-direction: column; gap: var(--space-3); }
