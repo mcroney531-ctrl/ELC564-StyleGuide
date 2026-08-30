@@ -169,7 +169,11 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-6);
 }
-@media (max-width: 900px) {
+/* 899.98, not 900: the landscape block opens at min-width 900, and a plain
+   max-width:900 matched it there too — an embed exactly 900px wide got
+   landscape sections above a single-column overview. The fraction also holds
+   up under zoom, where viewport widths are not integers. */
+@media (max-width: 899.98px) {
   .card-grid { grid-template-columns: 1fr; }
 }
 
@@ -178,7 +182,15 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
    flow. The .card itself switches from position:relative (a slot's only
    child) to position:fixed (a full-viewport overlay) on expand — since the
    slot stays put, the grid never reflows the other two cards. */
-.card-slot { position: relative; }
+/* A one-cell grid, so the card stretches to the slot in both axes. The slot
+   already stretches to the grid row, but the card inside it was a plain block
+   sizing to its own content — so a cluster whose description ran to one more
+   line than its neighbours' made a visibly longer card, and the two shorter
+   ones left a gap at the bottom of their slots. "Verify" does exactly that at
+   around 960px wide, which is where a Rise embed tends to land: 460px against
+   434px. Stretching the card costs the expanded state nothing, since that is
+   position:fixed and out of flow either way. */
+.card-slot { position: relative; display: grid; }
 
 .card {
   position: relative;
@@ -213,7 +225,12 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .card[data-accent="verify"]  { --illo-tint: var(--cluster-verify-tint);  --illo-accent: var(--cluster-verify); }
 .card[data-accent="present"] { --illo-tint: var(--cluster-present-tint); --illo-accent: var(--cluster-present); }
 
-.card-art { position: relative; aspect-ratio: 16 / 10; background: var(--illo-tint); overflow: hidden; }
+/* Fill the card, so the slack a stretched card gains is distributed rather
+   than left under the footer: the art holds its ratio, the body takes the
+   slack, and the footers line up across all three cards. */
+.card-preview { display: flex; flex-direction: column; height: 100%; }
+
+.card-art { flex: none; position: relative; aspect-ratio: 16 / 10; background: var(--illo-tint); overflow: hidden; }
 .card-art img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%; display: block; }
 /* The source illustrations are portrait canvases object-fit:cover into a
    landscape card, so cover never crops horizontally — whatever sits near
@@ -230,7 +247,7 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   pointer-events: none;
 }
 
-.card-body { padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-1); }
+.card-body { flex: 1; padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-1); }
 .card-badge-num {
   width: 32px; height: 32px; border-radius: 50%;
   background: var(--illo-accent);
