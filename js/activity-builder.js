@@ -30,7 +30,7 @@
     text: "Body text",
     image: "Image builder",
     takeaways: "Key takeaways list",
-    scenario: "Scenario / MCQ question",
+    scenario: "Question",
   };
 
   // Per-piece reorder/edit/remove controls now live on the piece itself
@@ -211,7 +211,6 @@
           </div>
         </div>
         <div class="feedback is-success" data-feedback="success">
-          <span class="feedback-icon" aria-hidden="true"></span>
           <div class="feedback-body">
             <span class="label">Correct</span>
             <p class="body">${esc(d.success)}</p>
