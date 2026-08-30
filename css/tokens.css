@@ -175,6 +175,17 @@
      and takeaways look like the change hadn't landed. */
   --canvas-bd-l: 30.4%;
 
+  /* Corner shapes are painted through the pattern file's alpha rather than
+     taking the colour baked into it, so any shape can sit on any backdrop and
+     still belong to it. One saturation for all of them, and a lightness solved
+     per hue to a fixed luminance — the ten source files were drawn separately
+     and range 14%-95% saturation and 32.8-60.8 luminance, so simply reusing
+     their own inks made some backdrops' accents three times heavier than
+     others'. Dial --shape-s to make the whole set louder or quieter; the
+     per-hue --shape-l values in styles.css would need re-solving if you do. */
+  --shape-s: 34%;
+  --shape-l: 62.4%;   /* fallback outside a backdrop: the sage default hue */
+
   --canvas-bg-a-pool:  0.155;  /* the ambient pool                */
   --canvas-bg-a-spill: 0.078;  /* wider, weaker perimeter spill   */
   --canvas-bg-a-wash:  0.065;  /* keeps the top edge from reading

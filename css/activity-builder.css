@@ -403,11 +403,17 @@
   position: relative; display: block; aspect-ratio: 4 / 3;
   border-radius: var(--radius-md);
   container-type: inline-size;
-  /* the stage's own recipe, compressed to a tile */
+  /* The stage's recipe, but deliberately not to scale. On the real slide the
+     wash is barely-there ambient light across 780px; shrunk to a 120px tile
+     at those alphas every colour rendered as the same near-white square and
+     only the 2px frame told them apart. A swatch has one job — name the
+     colour — so the wash is pushed until it does that, and the saturation is
+     taken off --canvas-bd-s (the frame's) rather than --canvas-bg-s (the
+     ambient one) for the same reason. */
   background:
-    radial-gradient(120% 60% at 50% 22%,
-      hsl(var(--canvas-bg-h) var(--canvas-bg-s) var(--canvas-bg-l) / 0.20) 0%,
-      hsl(var(--canvas-bg-h) var(--canvas-bg-s) var(--canvas-bg-l) / 0) 72%),
+    radial-gradient(135% 80% at 50% 12%,
+      hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l) / 0.30) 0%,
+      hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l) / 0.05) 78%),
     linear-gradient(180deg, #FDFDFD 0, var(--canvas-bg-base) 100%);
   box-shadow: 0 0 0 var(--border) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset;
   transition: transform var(--duration-micro) var(--ease-standard);
@@ -427,15 +433,49 @@
 .stage-swatch-label { font: var(--text-caption); color: var(--color-gray-700); }
 .stage-swatch.is-selected .stage-swatch-label { color: var(--color-ink-900); }
 
-/* The pattern sources are content-tight (no baked-in transparent padding)
-   but their aspect ratios run 0.78–1.41 and their intrinsic sizes 120–343px.
-   Capping BOTH axes constrains whichever one is larger, so every pattern
-   lands on the same corner footprint instead of a width-only cap making the
-   tall/narrow ones read small and the wide/flat ones read oversized. */
-.stage-swatch-accent {
-  position: absolute; top: 10%; right: 8%;
-  width: auto; height: auto;
-  max-width: 34cqw; max-height: 34cqw;
-  pointer-events: none;
+/* ---- shape row ----
+   The silhouettes are shown in the colour they'll actually come out in, which
+   is the whole point of separating them: the tile carries the chosen theme's
+   data-pattern, so switching colour above repaints this row rather than
+   invalidating it. Before a colour is picked there's nothing to paint them
+   in, so the row is disabled rather than shown in some placeholder grey that
+   isn't an option. */
+.builder-backdrop-title.is-second { margin-top: var(--space-5); }
+.builder-shape-grid.is-disabled { opacity: 0.4; pointer-events: none; }
+.shape-swatch {
+  border: 0; background: none; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
 }
+.shape-swatch-tile {
+  display: block; width: 100%; aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+  background-color: hsl(var(--canvas-bg-h) var(--shape-s) var(--shape-l));
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-size: 76%; mask-size: 76%;
+  transition: transform var(--duration-micro) var(--ease-standard);
+}
+/* "None" has no silhouette to show, so it gets an empty framed tile rather
+   than a blank gap — otherwise the option reads as a rendering failure. */
+.shape-swatch-tile.is-none {
+  -webkit-mask: none; mask: none;
+  background: var(--color-white);
+  box-shadow: 0 0 0 var(--border) var(--color-line) inset;
+}
+.shape-swatch:hover .shape-swatch-tile { transform: translateY(-2px); }
+.shape-swatch.is-selected .stage-swatch-label { color: var(--color-ink-900); font-weight: 600; }
+.shape-swatch.is-selected .shape-swatch-tile.is-none { box-shadow: 0 0 0 var(--border-thick) var(--color-ink-500) inset; }
+/* Selection has to live on the button, not the tile. The tile is masked, and
+   a mask clips everything the element paints — including its own outline or
+   ring, which simply vanished. The button is unmasked, so it can hold both. */
+.shape-swatch { padding: var(--space-2); border-radius: var(--radius-md); }
+.shape-swatch.is-selected {
+  background: var(--color-white);
+  box-shadow: 0 0 0 var(--border-thick) hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l)) inset;
+}
+.shape-swatch:focus-visible { outline: none; box-shadow: var(--activity-shadow-focus); }
+
+.activity-check { display: flex; align-items: center; gap: var(--space-2); font: var(--text-label); color: var(--color-ink-900); cursor: pointer; }
+.activity-check input { width: 16px; height: 16px; accent-color: var(--color-sage-600); }
+
 }
