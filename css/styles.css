@@ -661,13 +661,6 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   opacity: 0;
 }
 .feedback.is-visible { display: flex; opacity: 1; transition: opacity var(--duration-system) var(--ease-out); }
-/* Pulled up so the badge centres on the label's line rather than on the top of
-   the whole text block — a 26px badge beside a 19.6px line sits low otherwise. */
-.feedback-icon {
-  flex: none; width: var(--feedback-icon-size); height: var(--feedback-icon-size); margin-top: -3px;
-  border-radius: 50%; display: grid; place-items: center;
-  font: var(--text-caption); color: var(--color-white);
-}
 /* flex:1 so the body always fills the panel. Without it the body sizes to its
    own text, and a panel with short copy left the full-width action stopping
    well short of the right edge — invisible in the module, where the corrective
@@ -676,30 +669,22 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .feedback-body .label { display: block; margin-bottom: var(--space-2); }
 
 .feedback.is-corrective { background: var(--answer-wrong-bg); box-shadow: 0 0 0 var(--border) var(--answer-wrong) inset; }
-.feedback.is-corrective .feedback-icon { background: var(--answer-wrong); }
-.feedback.is-corrective .feedback-icon::after { content: "✕"; }
 .feedback.is-corrective .label { color: var(--answer-wrong-label); }
 
-/* No badge on this one — the green panel says "correct" by itself, and a tick
-   inside it was saying the same thing twice. The corrective panel keeps its
-   mark: it has to interrupt, and a color alone is a weaker signal for the
-   one state a reader needs to actually stop and read. */
+/* Neither panel carries a badge. The fill, the border and the label already
+   name the state three times over; a tick or a cross inside was a fourth.
+   Removing both retired the icon column too, which is why .feedback-actions
+   no longer needs a negative margin to climb back out of it. */
 .feedback.is-success { background: var(--answer-correct-bg); box-shadow: 0 0 0 var(--border) var(--answer-correct) inset; }
 .feedback.is-success .label { color: var(--answer-correct-label); }
 
 /* The action sat indented under the copy in a neutral grey pill, reading as
    though it belonged to the page rather than to the panel. It now carries the
    panel's own color and spans its content width.
-   The negative margin backs it out of the icon column: the body is offset by
-   the badge plus the gap, so without it the button sat 60px from the panel's
-   left edge and 20px from its right — visibly lopsided. */
+   It used to carry a negative left margin to climb back out of the badge
+   column; with the badges gone the body starts at the panel's padding edge
+   and the button lines up with the copy above it unaided. */
 .feedback-actions { margin-top: var(--space-6); }
-/* Only the corrective panel has a badge, so only its body is offset by one.
-   Applied to both, this would drag the success panel's own action a full
-   badge-width out past the panel's left edge. */
-.feedback.is-corrective .feedback-actions {
-  margin-left: calc(-1 * (var(--feedback-icon-size) + var(--answer-gap)));
-}
 .feedback-actions .btn { width: 100%; justify-content: center; }
 .feedback.is-corrective .btn-secondary {
   background: var(--color-white);

@@ -309,7 +309,6 @@
               <span class="demo-label">2 · Corrective (retry)</span>
               <div class="option-list" style="margin-bottom:var(--space-4)"><button class="option is-wrong" type="button" disabled><span class="option-marker"></span><span class="option-text">Chosen answer, marked wrong</span></button></div>
               <div class="feedback is-corrective is-visible" style="margin-top:0">
-                <span class="feedback-icon" aria-hidden="true"></span>
                 <div class="feedback-body"><span class="label">Not quite</span><p class="body">Explains why, then offers "Try again" — same question, not a new one.</p></div>
               </div>
             </div>
@@ -321,7 +320,7 @@
               </div>
             </div>
           </div>
-          <p class="body guide-block-note">Only the corrective panel carries a badge. The green panel already says "correct", and a tick inside it said the same thing twice; the corrective one has to interrupt, and color alone is a weaker signal for the one state a reader needs to stop and read. State 2 always loops back to state 1 on the same question — it never branches to a different follow-up question. That keeps the retry path predictable and the content scope finite.</p>
+          <p class="body guide-block-note">Neither panel carries a badge. The fill, the border and the label already name the state three times over, so a tick or a cross inside was a fourth. State 2 always loops back to state 1 on the same question — it never branches to a different follow-up question. That keeps the retry path predictable and the content scope finite.</p>
         </div>
       </div>
 
@@ -590,7 +589,6 @@
             <div class="mock">
               <div class="option-list" style="margin-bottom:var(--space-4)"><button class="option is-wrong" type="button" disabled><span class="option-marker"></span><span class="option-text">Selected answer</span></button></div>
               <div class="feedback is-corrective is-visible" style="margin-top:0">
-                <span class="feedback-icon" aria-hidden="true"></span>
                 <div class="feedback-body"><span class="label">Not quite</span><p class="body">One sentence on why, then a way to try the same question again.</p></div>
               </div>
             </div>

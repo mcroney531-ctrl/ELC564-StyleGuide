@@ -203,7 +203,6 @@
             .join("")}
         </div>
         <div class="feedback is-corrective" data-feedback="corrective">
-          <span class="feedback-icon" aria-hidden="true"></span>
           <div class="feedback-body">
             <span class="label">Not quite</span>
             <p class="body">${esc(d.corrective)}</p>
