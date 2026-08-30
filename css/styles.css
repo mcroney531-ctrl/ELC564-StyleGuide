@@ -812,6 +812,34 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
     width: 100%;
   }
 
+  /* The scene is centred against the question only — not against the feedback
+     panel underneath it.
+     Spanning every row, `align-self: center` re-centres the art whenever the
+     column grows, and answering opens a ~250px panel below the options: the
+     scene slid 124px down the screen on a wrong answer, 98px on a right one,
+     and snapped back on Try again. Anchoring it to the top instead would have
+     stopped the drift but left the art high against a tall column.
+     The rows are numbered because the scenario's shape is fixed — meta,
+     prompt, underline, options, then at most one panel, since the inactive
+     one is display:none and so not a grid item at all. The art spans the four
+     rows that never change; the panel takes the fifth and moves nothing.
+     Adding a child to the scenario template means renumbering here. */
+  .section-content.is-active.scenario > .scenario-meta      { grid-row: 1; }
+  .section-content.is-active.scenario > .scenario-prompt    { grid-row: 2; }
+  .section-content.is-active.scenario > .scenario-underline { grid-row: 3; }
+  .section-content.is-active.scenario > .option-list        { grid-row: 4; }
+  .section-content.is-active.scenario > .feedback           { grid-row: 5; }
+  .section-content.is-active.scenario > .banner-wrap {
+    grid-row: 1 / 5;
+    /* Headroom, so the art can never be the thing that sets those four rows.
+       If it outgrows them they stretch to fit it, prising the options away
+       from the prompt — and the widest frame left exactly 1px of margin on
+       the shortest question (rows 419, art 418). The cap costs ~13px of
+       illustration at 1100 and buys ~30px of clearance. */
+    max-width: 330px;
+    justify-self: center;
+  }
+
   /* the completion screen centres itself when it is a single column; beside
      an illustration that reads as a stray indent, so it left-aligns like the
      other two */
