@@ -216,7 +216,12 @@
   --surface-nested:  #F7F9FA;
   --surface-control: #FFFFFF;
 
-  --line-panel:         rgba(40, 60, 80, 0.08);
+  /* The panel edge is a real 2px ring, not a hairline. That is what the
+     "About the exported file" card already used, and it reads as part of the
+     same app as the module — which states every surface with a border rather
+     than with elevation alone. Drawn as an inset box-shadow, the way the rest
+     of this codebase draws edges, so thickening one never changes layout. */
+  --line-panel:         var(--color-line);
   --line-nested:        rgba(40, 60, 80, 0.07);
   --line-control:       rgba(40, 60, 80, 0.16);
   --line-control-hover: rgba(40, 60, 80, 0.26);
@@ -224,22 +229,24 @@
   /* Two layers, never one: a tight contact shadow to seat the panel, and a
      broad low-opacity ambient one for the depth. A single large blur reads as
      a floating modal instead of an application surface. */
-  --elev-panel:         0 1px 2px rgba(20, 35, 50, 0.03), 0 8px 24px rgba(20, 35, 50, 0.06);
+  --elev-panel:         0 4px 8px rgba(20, 33, 58, 0.06), 0 24px 48px -16px rgba(20, 33, 58, 0.18);
   --elev-control:       0 1px 1px rgba(20, 35, 50, 0.03);
   --elev-control-hover: 0 1px 2px rgba(20, 35, 50, 0.05), 0 2px 6px rgba(20, 35, 50, 0.05);
 
   /* ---- Radius ---- */
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-surface: 12px;   /* the one genuinely missing step: between a
-                               control and a panel, for nested surfaces */
+  --radius-surface: 14px;   /* the one genuinely missing step: between a
+                               control and a panel, for nested surfaces.
+                               14 rather than 12 so the ladder from a 20px
+                               panel down to a 10px control stays even. */
   --radius-lg: 16px;
   --radius-card: 20px;
   --radius-pill: 999px;
   /* Semantic aliases onto the scale above rather than a second set of
      numbers — so "panel" and "control" can be named without the two scales
      drifting apart. */
-  --radius-panel:   var(--radius-lg);
+  --radius-panel:   var(--radius-card);
   --radius-control: var(--radius-md);
 
   /* ---- Elevation ----
