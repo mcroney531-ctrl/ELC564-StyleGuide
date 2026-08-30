@@ -108,6 +108,12 @@
 }
 .demo-row { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; }
 .demo-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+/* Grid items default to min-width:auto, so a track can never shrink below its
+   content. The easing demos pair a fixed 120px curve with an unbreakable
+   cubic-bezier(...) string, which set a floor wider than 1fr and pushed the
+   whole page into horizontal scroll — at 320px and again at 1024px, where the
+   three-column layout still applies. */
+.demo-grid-3 > * { min-width: 0; }
 @media (max-width: 900px) { .demo-grid-3 { grid-template-columns: 1fr; } }
 .demo-label { font: var(--text-caption); text-transform: uppercase; letter-spacing: var(--tracking-caption); color: var(--color-gray-500); margin-bottom: var(--space-3); display: block; }
 
@@ -119,10 +125,11 @@
 .motion-spec-table th { font: var(--text-label); color: var(--color-gray-500); text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.7rem; }
 .motion-spec-table code { font-family: ui-monospace, "SF Mono", monospace; font-size: 0.85em; background: var(--color-cloud); padding: 2px 6px; border-radius: 4px; }
 
-.ease-curve { display: flex; align-items: center; gap: var(--space-2); }
+.ease-curve { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
 .ease-curve svg { flex: none; }
+/* the value is the one thing here that cannot be allowed to set the width */
+.ease-curve code { min-width: 0; overflow-wrap: anywhere; }
 
-.bounce-demo-btn { cursor: pointer; }
 
 /* ---- Applied examples ---- */
 .screen-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); }

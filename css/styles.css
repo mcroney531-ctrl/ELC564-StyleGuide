@@ -169,7 +169,6 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   text-align: left;
   cursor: pointer;
   will-change: transform;
-  --illo-ink: var(--color-ink-900);
 }
 .card:focus-visible { outline: none; box-shadow: 0 0 0 var(--border) var(--color-ink-900) inset, var(--shadow-focus), var(--shadow-resting); }
 
@@ -721,4 +720,3 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .callout.accent .callout-icon { background: var(--color-sage-600); }
 
 /* ---- Motion helpers ---- */
-.js-flip-ghost { position: fixed; z-index: 50; pointer-events: none; }

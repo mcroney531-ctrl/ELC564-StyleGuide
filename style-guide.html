@@ -104,6 +104,23 @@
       </div>
 
       <div class="guide-block">
+        <h3 class="h3 guide-block-title">Surfaces — layered depth</h3>
+        <div class="demo-shell">
+          <div style="background:var(--surface-panel); border-radius:var(--radius-panel); box-shadow:0 0 0 var(--border) var(--line-panel) inset, var(--elev-panel); padding:var(--space-6)">
+            <span class="demo-label" style="margin-bottom:var(--space-4)">Panel &middot; 20px &middot; 2px ring &middot; lifted</span>
+            <div style="background:var(--surface-nested); border:1px solid var(--line-nested); border-radius:var(--radius-surface); padding:var(--space-4)">
+              <span class="demo-label" style="margin-bottom:var(--space-3)">Nested surface &middot; 14px &middot; no shadow</span>
+              <div style="background:var(--surface-control); border:1px solid var(--line-control); border-radius:var(--radius-control); box-shadow:var(--elev-control); padding:var(--space-3); font:var(--text-body); color:var(--color-gray-500)">Control &middot; 10px &middot; contact shadow</div>
+            </div>
+          </div>
+        </div>
+        <p class="body guide-block-note">The reusable container language, used by the activity builder's editors, menus and About card. Four steps, each separated by a very small amount: page 93.8 luma, panel 100.0, nested 94.4, control 100.0, at 20 / 14 / 10px radii.<br>
+          <strong>The panel is the app's own card, named.</strong> It is not a hairline-and-soft-shadow panel of the sort most SaaS kits ship &mdash; that was tried and read as a different app, because the module states every surface with a border. It is exactly what the "About the exported file" card already was: a 2px <code>--color-line</code> ring and a genuinely lifted shadow, drawn as an inset <code>box-shadow</code> like every other edge here, so thickening one never changes layout.<br>
+          <strong>A nested surface groups a cluster, not every field.</strong> Applied per field it produces a stack of grey boxes and makes a three-field form read as three unrelated things. Only a group of controls gets one &mdash; the answer options, the scene and shape grids.<br>
+          <strong>Edges are <code>--line-*</code>, not <code>--border-*</code>.</strong> <code>--border-*</code> already means a width in this system (1.5/2/3/4px); one prefix holding both widths and colors is a trap. The radius names are aliases onto the existing scale rather than a second set of numbers, so the two cannot drift.</p>
+      </div>
+
+      <div class="guide-block">
         <h3 class="h3 guide-block-title">Color — Neutrals</h3>
         <div class="swatch-grid">
           <div class="swatch"><div class="swatch-color" style="background:var(--color-paper); box-shadow:inset 0 0 0 var(--border) var(--color-line)"></div><div class="swatch-meta"><span class="name">Paper (bg)</span><span class="hex">#F7F8FA</span></div></div>
