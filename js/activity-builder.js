@@ -27,7 +27,7 @@
 
   const TYPE_LABELS = {
     heading: "Heading + intro text",
-    image: "Photo scene",
+    image: "Image builder",
     takeaways: "Key takeaways list",
     scenario: "Scenario / MCQ question",
     button: "Standalone CTA button",
@@ -103,7 +103,13 @@
     }),
     // accent defaults on for the first image and off for any after it — the
     // module never shows two corner accents on one screen.
-    image: () => ({ scene: null, accent: !pieces.some((p) => p.type === "image") }),
+    // The first image defaults to the shape this colour is paired with in the
+    // module, so a one-click build still lands on a real screen; a second
+    // image starts with none, because no module screen shows two.
+    image: () => ({
+      scene: null,
+      shape: pieces.some((p) => p.type === "image") ? null : (isThemed() ? theme : null),
+    }),
     takeaways: () => ({
       items: ["First takeaway — state the behavior you want, plainly.", "Second takeaway.", "Third takeaway."],
     }),
@@ -143,13 +149,12 @@
       </div>
     `;
       }
-      // The corner accent belongs to the illustration, as it does in the
-      // module. Which shape and what colour both come from the slide, not
-      // from this piece — the piece only decides whether to show one, so two
-      // images don't silently produce two accents.
+      // The shape belongs to this image; only its colour comes from the slide,
+      // so the same silhouette recolours when the backdrop changes and no
+      // combination can clash.
       const accent =
-        d.accent && opts.shape
-          ? `<span class="scene-pattern" style="-webkit-mask-image:url(assets/illustrations/patterns/${esc(opts.shape)}.webp);mask-image:url(assets/illustrations/patterns/${esc(opts.shape)}.webp)" aria-hidden="true"></span>`
+        d.shape && opts.themed
+          ? `<span class="scene-pattern" style="-webkit-mask-image:url(assets/illustrations/patterns/${esc(d.shape)}.webp);mask-image:url(assets/illustrations/patterns/${esc(d.shape)}.webp)" aria-hidden="true"></span>`
           : "";
       return `
       <div class="banner-wrap">
@@ -232,11 +237,25 @@
         <p class="activity-field-note">Real scene photos from the module — pick whichever fits your activity.</p>
       </div>
       <div class="activity-field">
-        <label class="activity-check">
-          <input type="checkbox" data-field="accent" ${d.accent ? "checked" : ""}>
-          Corner shape on this image
-        </label>
-        <p class="activity-field-note">Uses the slide's shape, in the slide's colour. Turn it off here, or pick a different shape (or none) from Change backdrop.</p>
+        <label>Corner shape</label>
+        ${
+          isThemed()
+            ? `<div class="builder-backdrop-grid builder-shape-grid">
+          <button type="button" class="shape-swatch ${!d.shape ? "is-selected" : ""}" data-field="shape" data-value="" aria-pressed="${!d.shape}">
+            <span class="shape-swatch-tile is-none"></span>
+            <span class="stage-swatch-label">None</span>
+          </button>
+          ${SHAPES.map(
+            (x) => `
+          <button type="button" class="shape-swatch ${d.shape === x.key ? "is-selected" : ""}" data-field="shape" data-value="${x.key}" aria-pressed="${d.shape === x.key}">
+            <span class="shape-swatch-tile" style="-webkit-mask-image:url(assets/illustrations/patterns/${x.key}.webp);mask-image:url(assets/illustrations/patterns/${x.key}.webp)"></span>
+            <span class="stage-swatch-label">${esc(x.label)}</span>
+          </button>`
+          ).join("")}
+        </div>
+        <p class="activity-field-note">Sits in this illustration's top-right corner, painted in the backdrop's colour — so any shape works with any backdrop.</p>`
+            : `<p class="activity-field-note">Corner shapes take their colour from the backdrop, so they need one. Pick a colour under Change backdrop and they'll appear here.</p>`
+        }
       </div>
     `,
     takeaways: (id, d) =>
@@ -290,18 +309,17 @@
   let nextId = 1;
   const pieces = [];
 
-  // Neither of these is a piece — they're the surface every piece sits on.
-  // theme is the colour (the module's data-pattern, minus its pattern file);
-  // shape is the silhouette, or null for none. theme null means nothing has
-  // been chosen yet, which is the state the builder opens in: the first "+"
-  // asks for a backdrop before it will offer any content. "blank" is a
-  // deliberate choice of no colour, not the absence of one.
+  // The backdrop is not a piece — it's the surface every piece sits on, and
+  // it is now only a colour. The shape that used to live beside it here has
+  // moved onto the Image piece: a corner shape decorates an illustration, so
+  // it belongs to the illustration and not to the slide. theme null means
+  // nothing has been chosen yet, which is the state the builder opens in:
+  // the first "+" asks for a backdrop before it will offer any content.
+  // "blank" is a deliberate choice of no colour, not the absence of one.
   let theme = null;
-  let shape = null;
   const isThemed = () => !!theme && theme !== "blank";
   const themeLabel = () =>
     theme === "blank" ? "Blank" : (THEMES.find((t) => t.key === theme) || {}).label || "";
-  const shapeLabel = () => (SHAPES.find((x) => x.key === shape) || {}).label || "None";
 
   // Where the next added piece lands. null means "append at the end", which is
   // what the trailing FAB does; a number is the gap a "+" divider was clicked
@@ -432,7 +450,7 @@
                </div>
                ${FORMS[p.type](p.id, p.data)}
              </div>`
-          : PIECES[p.type](p.data, { shape: isThemed() ? shape : null });
+          : PIECES[p.type](p.data, { themed: isThemed() });
         // A "+" divider sits in the gap above every piece, so a new piece can
         // go anywhere in the sequence instead of only on the end.
         const divider = `<div class="activity-insert" data-insert-at="${i}">
@@ -453,7 +471,7 @@
     preview.innerHTML = !theme
       ? `<p class="activity-stage-hint">Start by choosing a backdrop. It's the slide everything sits on — the frame, the tint, and the colour every piece you add will pick up.</p>`
       : `<div class="activity-stage-bar">
-           <span class="activity-stage-name">${esc(themeLabel())}${isThemed() ? ` &middot; ${esc(shapeLabel())}` : ""}</span>
+           <span class="activity-stage-name">${esc(themeLabel())}</span>
            <button type="button" class="activity-stage-change" data-action="choose-backdrop">Change backdrop</button>
          </div>` +
         (isThemed()
@@ -495,7 +513,7 @@
   // showed none of what actually changes.
   function renderBackdropPanel() {
     backdropPanel.innerHTML = `
-      <span class="builder-backdrop-title">Colour</span>
+      <span class="builder-backdrop-title">Backdrop colour</span>
       <div class="builder-backdrop-grid">
         <button type="button" class="stage-swatch is-blank ${theme === "blank" ? "is-selected" : ""}" data-theme="blank" aria-pressed="${theme === "blank"}">
           <span class="stage-swatch-tile"></span>
@@ -509,20 +527,7 @@
         </button>`
         ).join("")}
       </div>
-      <span class="builder-backdrop-title is-second">Shape${isThemed() ? "" : " — pick a colour first"}</span>
-      <div class="builder-backdrop-grid builder-shape-grid ${isThemed() ? "" : "is-disabled"}"${isThemed() ? "" : " aria-hidden=\"true\""}>
-        <button type="button" class="shape-swatch ${!shape ? "is-selected" : ""}" data-shape="" aria-pressed="${!shape}" ${isThemed() ? "" : "disabled"}>
-          <span class="shape-swatch-tile is-none"></span>
-          <span class="stage-swatch-label">None</span>
-        </button>
-        ${SHAPES.map(
-          (x) => `
-        <button type="button" class="shape-swatch ${shape === x.key ? "is-selected" : ""}" data-shape="${x.key}" aria-pressed="${shape === x.key}" ${isThemed() ? "" : "disabled"}>
-          <span class="shape-swatch-tile"${isThemed() ? ` data-pattern="${esc(theme)}"` : ""} style="-webkit-mask-image:url(assets/illustrations/patterns/${x.key}.webp);mask-image:url(assets/illustrations/patterns/${x.key}.webp)"></span>
-          <span class="stage-swatch-label">${esc(x.label)}</span>
-        </button>`
-        ).join("")}
-      </div>`;
+      <p class="builder-backdrop-note">Sets every colour on the slide — the frame, the tint, the answer and takeaway borders, and the corner shapes on your images. Shapes are chosen per image, in the Image builder.</p>`;
   }
 
   function openBackdropPanel() {
@@ -537,8 +542,7 @@
   }
   backdropPanel.addEventListener("click", (e) => {
     const themeBtn = e.target.closest("[data-theme]");
-    const shapeBtn = e.target.closest("[data-shape]");
-    if (!themeBtn && !shapeBtn) return;
+    if (!themeBtn) return;
     // This handler re-renders the panel, which detaches the node that was
     // clicked. The document-level dismiss handler runs after it and asks
     // e.target whether it sits inside .builder-add-wrap — a detached node
@@ -546,22 +550,10 @@
     e.stopPropagation();
 
     const first = !theme;
-    if (themeBtn) {
-      theme = themeBtn.dataset.theme;
-      // Default to the shape this colour is paired with in the module, so one
-      // click still lands you on a real screen; changing it is then optional.
-      if (first) shape = theme === "blank" ? null : theme;
-      if (theme === "blank") shape = null;
-    } else {
-      shape = shapeBtn.dataset.shape || null;
-    }
-
+    theme = themeBtn.dataset.theme;
     renderBackdropPanel();
     renderAll();
 
-    // Only the very first choice closes the picker and hands over to the
-    // content menu — after that it stays open so colour and shape can be
-    // tried against each other.
     if (first && !pieces.length) {
       closeBackdropPanel();
       openAddPanel();
@@ -704,15 +696,18 @@
       return;
     }
 
-    // Picking an image/backdrop is a single click, not a fill-in-and-Done
-    // form — select it and close the editor immediately, same as adding a piece.
-    const swatchBtn = e.target.closest(".activity-pattern-swatch");
+    // A swatch used to select and close in one click. The Image builder now
+    // holds two choices — the scene and its corner shape — so closing on the
+    // first would make the second unreachable. Picks re-render the form in
+    // place and "Done" is what closes it.
+    const swatchBtn = e.target.closest(".activity-pattern-swatch, .shape-swatch");
     if (swatchBtn) {
       const pieceEl = swatchBtn.closest("[data-piece-id]");
       const piece = pieces.find((p) => p.id === Number(pieceEl.dataset.pieceId));
       if (piece) {
-        piece.data[swatchBtn.dataset.field] = swatchBtn.dataset.value;
-        setEditing(piece.id, false);
+        // "" is the None swatch, which means no shape rather than a shape named ""
+        piece.data[swatchBtn.dataset.field] = swatchBtn.dataset.value || null;
+        renderAll();
       }
       return;
     }
@@ -817,7 +812,7 @@ document.addEventListener('click', function (e) {
     // without this a takeaways list ran straight into the scenario chip below
     // it with nothing between them.
     const body = pieces
-      .map((p) => PIECES[p.type](p.data, { interactive: false, shape: patterned ? shape : null }))
+      .map((p) => PIECES[p.type](p.data, { interactive: false, themed: patterned }))
       .map((html) => `<div class="activity-export-piece">${html}</div>`)
       .join("\n");
     const needsScript = pieces.some((p) => p.type === "scenario");
