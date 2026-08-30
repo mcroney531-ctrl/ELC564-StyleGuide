@@ -740,3 +740,120 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 .callout.accent .callout-icon { background: var(--color-sage-600); }
 
 /* ---- Motion helpers ---- */
+
+/* ==========================================================================
+   Landscape
+   Embedded — in Rise, or any iframe — the frame is wide and short, and these
+   screens stacked are the wrong shape for it: at 1100x700 the info beat ran
+   1415px, so more than a whole frame of it sat below the fold and every
+   screen opened on a scroll.
+
+   Side by side, the illustration and the copy share the height instead of
+   adding to it. Done with grid on the view itself rather than by rearranging
+   the markup, so the DOM order stays the reading order for anyone using a
+   screen reader or arriving with CSS off.
+
+   Scoped to .is-active because views are shown and hidden with display, and
+   a bare .info-beat { display: grid } would light up all three at once.
+   ========================================================================== */
+@media (min-width: 900px) {
+  /* the column can afford to be wider once the art is beside it, not under it */
+  .section-inner { max-width: 1100px; }
+
+  /* Fill the frame. Sized to content, each screen ended wherever its copy ran
+     out — the completion screen closed 200px above the fold while the info
+     beat ran past it, so the card visibly changed shape from screen to
+     screen. A floor at the frame height makes them read as fixed slides;
+     anything taller still grows past it and scrolls.
+     Scoped to the expanded section: a collapsed .card-section holds one of
+     these too, and a floor there would blow out the overview grid. */
+  .card.is-expanded .section-inner { min-height: calc(100vh - 2 * var(--space-6)); }
+  /* .card-section carries min-height:100% for the stacked layout. Left on, it
+     stacks with the floor above: the inner's 24px top margin collapses out
+     through the section (no padding or border to stop it), offsetting a box
+     that is still a full frame tall, so every screen overflowed by exactly
+     that margin. The inner sets the height here, so the section doesn't. */
+  .card.is-expanded .card-section { min-height: 0; }
+
+  .section-content.is-active.info-beat,
+  .section-content.is-active.scenario,
+  .section-content.is-active.section-complete,
+  .cover-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 34%);
+    column-gap: var(--space-12);
+    align-content: start;
+  }
+  /* everything is copy except the illustration */
+  .section-content.is-active.info-beat > *,
+  .section-content.is-active.scenario > *,
+  .section-content.is-active.section-complete > *,
+  .cover-inner > * { grid-column: 1; }
+
+  .section-content.is-active.info-beat > .banner-wrap,
+  .section-content.is-active.scenario > .banner-wrap,
+  .section-content.is-active.section-complete > .banner-wrap,
+  .cover-inner > .cover-art {
+    grid-column: 2;
+    /* `1 / -1` does NOT do what it looks like here. -1 counts back from the
+       end of the EXPLICIT grid, and these grids declare columns only, so it
+       resolved to row 1 and the illustration sat in the first row alone —
+       forcing that row to the illustration's full height and stretching the
+       scenario's meta row to 432px to match. An explicit span reaches across
+       the implicit rows the copy actually creates; the extras collapse to
+       zero. */
+    grid-row: 1 / span 99;
+    align-self: center;
+    /* margin:0, not just the block margins. .banner-wrap centres itself with
+       `margin: 0 auto`, and auto side-margins on a grid item size it to its
+       content — which container-type: inline-size defines as zero. Left in,
+       the illustration collapsed to 0x0 and the column rendered empty. */
+    margin: 0;
+    width: 100%;
+  }
+
+  /* the completion screen centres itself when it is a single column; beside
+     an illustration that reads as a stray indent, so it left-aligns like the
+     other two */
+  .section-content.is-active.section-complete { text-align: left; padding-top: var(--space-12); }
+  .section-content.is-active.section-complete .badge-check { margin-left: 0; }
+  .section-content.is-active.section-complete .actions { justify-content: flex-start; }
+
+  /* A button sized itself to its label as a block-flow child; as a grid item
+     it stretches to the track, and "Start the scenarios" turned into a 604px
+     full-bleed bar. Only the info beat's CTA is a direct child — the other
+     two views wrap theirs in a flex .actions row, which already sizes them. */
+  .section-content.is-active > .btn { justify-self: start; }
+
+  .cover-inner { max-width: 1040px; text-align: left; align-content: center; }
+  .cover-inner > .cover-art { max-width: none; }
+  .cover-actions { justify-content: flex-start; }
+
+  /* Vertical rhythm, compressed.
+     Stacked, these gaps are spent out of a scroll that has more where that
+     came from. In a fixed frame they are the difference between a screen
+     that lands and a screen that opens already cut off: the info beat spends
+     152px on the margins between its six blocks alone. Every value here is
+     one or two steps down the existing space scale rather than a new number,
+     so the rhythm compresses without changing proportion. */
+  .section-inner {
+    padding-bottom: var(--space-8);
+    /* The answer/point card padding, one step down. Both objects read off
+       this same token by design, so it keeps them identical to each other
+       while taking ~8px off each of the four options and the four point
+       cards — the two blocks that decide whether the scenario and the info
+       beat land inside the frame. */
+    --answer-pad-y: 0.8rem;
+  }
+  .section-topbar { margin-bottom: var(--space-6); }
+  .info-beat .h1 { margin-bottom: var(--space-4); }
+  .info-beat .point-list { margin-top: var(--space-6); }
+  .info-beat .start-cta { margin-top: var(--space-6); }
+  .scenario-meta { margin-bottom: var(--space-4); }
+
+  /* The overview is already side-by-side, so it needs no restructuring — just
+     the same rhythm treatment. 96px of trailing padding under the cards was
+     sized for a page that scrolls past it, not a frame that has to hold it. */
+  .landing { padding-top: var(--space-4); padding-bottom: var(--space-12); }
+  .landing-intro { margin-bottom: var(--space-8); }
+}
