@@ -41,7 +41,7 @@
 .activity-hero-art {
   position: relative; flex: none;
   width: 253.5px; height: 214.5px;
-  transform: translateY(-10px);
+  transform: translateY(-18px);
 }
 @media (max-width: 760px) {
   /* 208x176 is also exact 13:11; the 213x180 it replaces was 1.18333 and drifted. */
