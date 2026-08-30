@@ -74,7 +74,10 @@
 /* ---- "About the exported file" ---- */
 .activity-about-wrap { max-width: 1180px; margin: 0 auto var(--space-12); padding: 0 var(--space-8); }
 .activity-about {
-  background: var(--color-white); border-radius: var(--radius-card); box-shadow: 0 0 0 var(--border) var(--color-line) inset, var(--activity-shadow-card);
+  background: var(--surface-panel);
+  border: 1px solid var(--line-panel);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--elev-panel);
   padding: var(--space-8);
   display: flex; gap: var(--space-6); align-items: flex-start;
 }
@@ -152,8 +155,10 @@
 .builder-add-toolbar {
   position: absolute; top: calc(100% + var(--space-3)); left: 50%; transform: translateX(-50%);
   z-index: 5; width: max-content; max-width: 100%;
-  background: var(--color-white); border-radius: var(--radius-card);
-  box-shadow: 0 0 0 var(--border) var(--color-line) inset, var(--shadow-raised);
+  background: var(--surface-panel);
+  border: 1px solid var(--line-panel);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-raised);
   padding: var(--space-4) var(--space-3);
   flex-wrap: wrap; justify-content: center;
   gap: var(--space-1);
@@ -175,7 +180,10 @@
 
 /* ---- preview ---- */
 .builder-preview {
-  background: var(--color-paper); border-radius: var(--radius-lg); box-shadow: 0 0 0 var(--border) var(--color-line) inset, var(--shadow-resting);
+  background: var(--color-paper);
+  border-radius: var(--radius-panel);
+  border: 1px solid var(--line-panel);
+  box-shadow: var(--elev-control);
   padding: var(--space-8) var(--space-6); min-height: 240px;
   display: flex; flex-direction: column; justify-content: center;
 }
@@ -253,9 +261,16 @@
 }
 
 /* ---- edit form ---- */
+/* ---- container system: page > panel > nested surface > control ----
+   Elevation and a hairline carry the panel, not an outline. The 2px
+   --color-line ring this replaced is the module's language, where a border
+   is the point; here it made every editor read as heavy as the content it
+   was editing. */
 .activity-edit-form {
-  background: var(--color-white); border-radius: var(--radius-md);
-  box-shadow: 0 0 0 var(--border) var(--color-line) inset;
+  background: var(--surface-panel);
+  border: 1px solid var(--line-panel);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--elev-panel);
   padding: var(--space-6);
   display: flex; flex-direction: column; gap: var(--space-4);
 }
@@ -266,13 +281,35 @@
 .activity-edit-header .label { color: var(--color-gray-500); text-transform: uppercase; letter-spacing: var(--tracking-caption); }
 
 .activity-field { display: flex; flex-direction: column; gap: var(--space-2); }
+/* A nested surface groups a CLUSTER of controls — the answer options, the
+   scene and shape grids. A lone input stays on the panel: giving every field
+   its own tinted box is the "excessive nested cards" failure, and it makes a
+   three-field form look like three unrelated things. Keyed on what a field
+   actually contains rather than on a class the markup has to remember to
+   set. */
+.activity-field:has(.activity-option-field),
+.activity-field:has(.activity-pattern-grid) {
+  background: var(--surface-nested);
+  border: 1px solid var(--line-nested);
+  border-radius: var(--radius-surface);
+  padding: var(--space-4);
+}
 .activity-field label { font: var(--text-label); color: var(--color-gray-700); }
 .activity-field input[type="text"],
 .activity-field textarea {
   width: 100%; font: var(--text-body); color: var(--color-charcoal);
-  background: var(--color-paper); border: var(--border) solid var(--color-line); border-radius: var(--radius-sm);
-  padding: var(--space-2) var(--space-3);
+  background: var(--surface-control);
+  border: 1px solid var(--line-control);
+  border-radius: var(--radius-control);
+  box-shadow: var(--elev-control);
+  padding: var(--space-3);
   transition: box-shadow var(--duration-micro) var(--ease-standard), border-color var(--duration-micro) var(--ease-standard);
+}
+.activity-field input[type="text"]:hover,
+.activity-field textarea:hover,
+.activity-option-field input[type="text"]:hover {
+  border-color: var(--line-control-hover);
+  box-shadow: var(--elev-control-hover);
 }
 .activity-field textarea { resize: vertical; font-family: inherit; line-height: 1.5; }
 .activity-field input[type="text"]:focus,
@@ -288,8 +325,12 @@
 .activity-option-field input[type="radio"] { flex: none; width: 18px; height: 18px; accent-color: var(--activity-accent-600); }
 .activity-option-field input[type="text"] {
   flex: 1; font: var(--text-body); color: var(--color-charcoal);
-  background: var(--color-paper); border: var(--border) solid var(--color-line); border-radius: var(--radius-sm);
-  padding: var(--space-2) var(--space-3);
+  background: var(--surface-control);
+  border: 1px solid var(--line-control);
+  border-radius: var(--radius-control);
+  box-shadow: var(--elev-control);
+  padding: var(--space-3);
+  transition: box-shadow var(--duration-micro) var(--ease-standard), border-color var(--duration-micro) var(--ease-standard);
 }
 .activity-option-field input[type="text"]:focus {
   outline: none; border-color: var(--activity-accent-500); box-shadow: var(--activity-shadow-focus);
@@ -383,8 +424,10 @@
 .builder-backdrop-panel {
   position: absolute; top: calc(100% + var(--space-3)); left: 50%; transform: translateX(-50%);
   z-index: 20; width: min(560px, calc(100vw - 2 * var(--space-6)));
-  background: var(--color-white); border-radius: var(--radius-lg);
-  box-shadow: 0 0 0 var(--border) var(--color-line) inset, var(--shadow-raised);
+  background: var(--surface-panel);
+  border: 1px solid var(--line-panel);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-raised);
   padding: var(--space-5);
 }
 .builder-backdrop-title {
@@ -478,4 +521,23 @@
 .activity-check { display: flex; align-items: center; gap: var(--space-2); font: var(--text-label); color: var(--color-ink-900); cursor: pointer; }
 .activity-check input { width: 16px; height: 16px; accent-color: var(--color-sage-600); }
 
+}
+
+/* ---- §4 primary action ----
+   Already the right hue (#759E96 family) and already --radius-md, so the
+   only thing missing was weight: a flat fill reads as a link with a
+   background. A restrained two-layer shadow and a real pressed state give it
+   presence without brightening the green.
+   Scoped to this page: .btn-primary is shared with the module, where the CTA
+   takes the backdrop's colour and is deliberately flat. */
+.activity-shell .btn-primary,
+.activity-about .btn-primary,
+.builder-preview .btn-primary {
+  box-shadow: 0 1px 1px rgba(20, 35, 50, 0.06), 0 2px 6px rgba(20, 35, 50, 0.10);
+}
+.activity-shell .btn-primary:active,
+.activity-about .btn-primary:active,
+.builder-preview .btn-primary:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 1px rgba(20, 35, 50, 0.08);
 }
