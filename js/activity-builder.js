@@ -387,6 +387,7 @@
     pieces.splice(insertIndex === null ? pieces.length : insertIndex, 0, piece);
     insertIndex = null;
     renderWithMotion();
+    revealFormOptions(piece.id);
     requestAnimationFrame(() => {
       const el = preview.querySelector(`[data-piece-id="${piece.id}"]`);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -415,10 +416,44 @@
     });
   }
 
+  /* The Image builder opens onto two grids — twelve scenes and eleven shapes.
+   * Rendered flat they all arrive in one hard cut, which by now is the only
+   * place in the builder that doesn't move. Same reveal the module gives its
+   * takeaways and answer rows: a short rise and fade, staggered, on the
+   * standard decelerating curve. Hand-rolled on the Web Animations API
+   * because this page doesn't load GSAP.
+   *
+   * Two things the obvious version gets wrong. The stagger is capped rather
+   * than linear — at a flat step the twenty-third swatch starts a third of a
+   * second after the first, and that tail reads as lag rather than sequence.
+   * And it fills backwards, or every swatch would sit fully visible through
+   * its own delay and then blink to transparent the instant its turn came. */
+  function revealFormOptions(pieceId) {
+    if (prefersReducedMotion.matches) return;
+    const form = preview.querySelector(`[data-piece-id="${pieceId}"] .activity-edit-form`);
+    if (!form) return;
+    form.querySelectorAll(".activity-pattern-swatch, .shape-swatch").forEach((el, i) => {
+      el.animate(
+        [
+          { opacity: 0, transform: "translateY(8px)" },
+          { opacity: 1, transform: "translateY(0)" },
+        ],
+        {
+          duration: 340,
+          // a beat after the panel itself lands, so the two read in sequence
+          delay: 100 + Math.min(i * 16, 260),
+          easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+          fill: "backwards",
+        }
+      );
+    });
+  }
+
   function setEditing(id, editing) {
     pieces.forEach((p) => (p.editing = p.id === id ? editing : false));
     renderAll();
     if (editing) {
+      revealFormOptions(id);
       requestAnimationFrame(() => {
         const el = preview.querySelector(`[data-piece-id="${id}"]`);
         if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
