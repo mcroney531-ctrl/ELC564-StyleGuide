@@ -37,7 +37,7 @@
   // (there's no sidebar checklist any more), so every .activity-piece gets
   // this small icon row rendered above it.
   // Solid tiles carrying white glyphs, tinted by the backdrop — see
-  // .piece-ctrl in activity-builder.css for why the colour comes from there.
+  // .piece-ctrl in activity-builder.css for why the color comes from there.
   // The pencil is a filled silhouette rather than an outline: at 16px an
   // outline pencil's interior closes up into a smudge, where a filled body
   // has no interior to lose. Arrows are full shaft-plus-head rather than
@@ -50,10 +50,10 @@
   };
 
 
-  // Colour and shape used to be one choice, because in the module each
+  // Color and shape used to be one choice, because in the module each
   // backdrop is a (hue, pattern) pair. They're separate here: the theme sets
-  // every colour on the slide, the shape is a silhouette painted in that
-  // colour. The keys are shared because both still key off the same
+  // every color on the slide, the shape is a silhouette painted in that
+  // color. The keys are shared because both still key off the same
   // data-pattern blocks in styles.css — THEMES reads their hue variables,
   // SHAPES reads their pattern file.
   const THEMES = [
@@ -108,7 +108,7 @@
       title: "Your activity title goes here",
       body: 'One or two sentences setting up what this teaches — the "why," not the whole lesson. Keep it short enough to read in one breath.',
     }),
-    // The first image defaults to the shape this colour is paired with in the
+    // The first image defaults to the shape this color is paired with in the
     // module, so a one-click build still lands on a real screen; a second
     // image starts with none, because no module screen shows two.
     text: () => ({
@@ -167,8 +167,8 @@
       </div>
     `;
       }
-      // The shape belongs to this image; only its colour comes from the slide,
-      // so the same silhouette recolours when the backdrop changes and no
+      // The shape belongs to this image; only its color comes from the slide,
+      // so the same silhouette recolors when the backdrop changes and no
       // combination can clash.
       const accent =
         d.shape && opts.themed
@@ -273,8 +273,8 @@
           </button>`
           ).join("")}
         </div>
-        <p class="activity-field-note">Sits in this illustration's top-right corner, painted in the backdrop's colour — so any shape works with any backdrop.</p>`
-            : `<p class="activity-field-note">Corner shapes take their colour from the backdrop, so they need one. Pick a colour under Change backdrop and they'll appear here.</p>`
+        <p class="activity-field-note">Sits in this illustration's top-right corner, painted in the backdrop's color — so any shape works with any backdrop.</p>`
+            : `<p class="activity-field-note">Corner shapes take their color from the backdrop, so they need one. Pick a color under Change backdrop and they'll appear here.</p>`
         }
       </div>
     `,
@@ -324,12 +324,12 @@
   const pieces = [];
 
   // The backdrop is not a piece — it's the surface every piece sits on, and
-  // it is now only a colour. The shape that used to live beside it here has
+  // it is now only a color. The shape that used to live beside it here has
   // moved onto the Image piece: a corner shape decorates an illustration, so
   // it belongs to the illustration and not to the slide. theme null means
   // nothing has been chosen yet, which is the state the builder opens in:
   // the first "+" asks for a backdrop before it will offer any content.
-  // "blank" is a deliberate choice of no colour, not the absence of one.
+  // "blank" is a deliberate choice of no color, not the absence of one.
   let theme = null;
   const isThemed = () => !!theme && theme !== "blank";
   const themeLabel = () =>
@@ -518,7 +518,7 @@
     // together, because they all already read those variables.
     const inner = body ? `<div class="info-beat">${body}</div>` : "";
     preview.innerHTML = !theme
-      ? `<p class="activity-stage-hint">Start by choosing a backdrop. It's the slide everything sits on — the frame, the tint, and the colour every piece you add will pick up.</p>`
+      ? `<p class="activity-stage-hint">Start by choosing a backdrop. It's the slide everything sits on — the frame, the tint, and the color every piece you add will pick up.</p>`
       : `<div class="activity-stage-bar">
            <span class="activity-stage-name">${esc(themeLabel())}</span>
            <button type="button" class="activity-stage-change" data-action="choose-backdrop">Change backdrop</button>
@@ -562,7 +562,7 @@
   // showed none of what actually changes.
   function renderBackdropPanel() {
     backdropPanel.innerHTML = `
-      <span class="builder-backdrop-title">Backdrop colour</span>
+      <span class="builder-backdrop-title">Backdrop color</span>
       <div class="builder-backdrop-grid">
         <button type="button" class="stage-swatch is-blank ${theme === "blank" ? "is-selected" : ""}" data-theme="blank" aria-pressed="${theme === "blank"}">
           <span class="stage-swatch-tile"></span>
@@ -576,7 +576,7 @@
         </button>`
         ).join("")}
       </div>
-      <p class="builder-backdrop-note">Sets every colour on the slide — the frame, the tint, the answer and takeaway borders, and the corner shapes on your images. Shapes are chosen per image, in the Image builder.</p>`;
+      <p class="builder-backdrop-note">Sets every color on the slide — the frame, the tint, the answer and takeaway borders, and the corner shapes on your images. Shapes are chosen per image, in the Image builder.</p>`;
   }
 
   function openBackdropPanel() {

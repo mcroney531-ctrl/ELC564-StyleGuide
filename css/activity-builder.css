@@ -131,14 +131,14 @@
    they act on, as a slim row above its content. Only shown in view mode
    (the edit form has its own Done button, so no redundant edit trigger). */
 /* ---- piece controls: solid tiles, tinted by the backdrop ----
-   The tile is the section frame's own colour — the identical value the
+   The tile is the section frame's own color — the identical value the
    option and takeaway borders, the progress ticks and the CTA already use —
-   so the controls join the slide's colour rather than sitting on it in a
+   so the controls join the slide's color rather than sitting on it in a
    neutral grey that belongs to nothing on screen. That was the whole problem
    with a fixed grey: it read as the loudest thing on the slide precisely
    because it matched nothing else.
    White glyphs land at 5.96:1 on every one of the ten backdrops, with a
-   spread of 0.02, because those stroke colours were already solved to equal
+   spread of 0.02, because those stroke colors were already solved to equal
    luminance. The contrast is uniform for free rather than needing a per-hue
    check.
    6px of gap, not the 2px the ghost buttons used: solid tiles that close
@@ -488,9 +488,9 @@
   container-type: inline-size;
   /* The stage's recipe, but deliberately not to scale. On the real slide the
      wash is barely-there ambient light across 780px; shrunk to a 120px tile
-     at those alphas every colour rendered as the same near-white square and
+     at those alphas every color rendered as the same near-white square and
      only the 2px frame told them apart. A swatch has one job — name the
-     colour — so the wash is pushed until it does that, and the saturation is
+     color — so the wash is pushed until it does that, and the saturation is
      taken off --canvas-bd-s (the frame's) rather than --canvas-bg-s (the
      ambient one) for the same reason. */
   background:
@@ -517,10 +517,10 @@
 .stage-swatch.is-selected .stage-swatch-label { color: var(--color-ink-900); }
 
 /* ---- shape row ----
-   The silhouettes are shown in the colour they'll actually come out in, which
+   The silhouettes are shown in the color they'll actually come out in, which
    is the whole point of separating them: the tile carries the chosen theme's
-   data-pattern, so switching colour above repaints this row rather than
-   invalidating it. Before a colour is picked there's nothing to paint them
+   data-pattern, so switching color above repaints this row rather than
+   invalidating it. Before a color is picked there's nothing to paint them
    in, so the row is disabled rather than shown in some placeholder grey that
    isn't an option. */
 .builder-backdrop-title.is-second { margin-top: var(--space-5); }
@@ -568,7 +568,7 @@
    background. A restrained two-layer shadow and a real pressed state give it
    presence without brightening the green.
    Scoped to this page: .btn-primary is shared with the module, where the CTA
-   takes the backdrop's colour and is deliberately flat. */
+   takes the backdrop's color and is deliberately flat. */
 .activity-shell .btn-primary,
 .activity-about .btn-primary,
 .builder-preview .btn-primary {
@@ -581,7 +581,7 @@
   box-shadow: 0 1px 1px rgba(20, 35, 50, 0.08);
 }
 
-/* ---- everything else on a chosen backdrop takes its colour ----
+/* ---- everything else on a chosen backdrop takes its color ----
    Once the controls went backdrop-aware the remaining sage stood out badly:
    on a dusty-rose slide a sage "+" and a sage Done button were the only
    things on screen belonging to another palette. Found by walking the
@@ -627,7 +627,7 @@
 .activity-stage[data-pattern] .activity-insert::before {
   background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l) / 0.3);
 }
-/* native controls: one property, and it takes a colour not a shadow */
+/* native controls: one property, and it takes a color not a shadow */
 .activity-stage[data-pattern] input[type="radio"],
 .activity-stage[data-pattern] input[type="checkbox"] {
   accent-color: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));

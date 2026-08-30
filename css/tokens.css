@@ -121,7 +121,7 @@
      padding than a plain bordered box, and a selected state built from the
      sage accent rather than ink. Grouped here so the whole component can be
      dialled up or down from one place.
-     Selection is deliberately a pale wash plus a coloured edge, not a filled
+     Selection is deliberately a pale wash plus a colored edge, not a filled
      block — a solid fill at this size reads as a pressed button rather than a
      chosen answer, and it fights the correct/wrong states that follow it. */
   --answer-bg:              var(--color-white);
@@ -176,7 +176,7 @@
   --canvas-bd-l: 30.4%;
 
   /* Corner shapes are painted through the pattern file's alpha rather than
-     taking the colour baked into it, so any shape can sit on any backdrop and
+     taking the color baked into it, so any shape can sit on any backdrop and
      still belong to it. One saturation for all of them, and a lightness solved
      per hue to a fixed luminance — the ten source files were drawn separately
      and range 14%-95% saturation and 32.8-60.8 luminance, so simply reusing
@@ -204,13 +204,13 @@
 
      The edge tokens are named --line-* and not --border-*, because
      --border-* in this file already means a WIDTH (1.5/2/3/4px). Two scales
-     sharing a prefix, one holding widths and one holding colours, is a trap
+     sharing a prefix, one holding widths and one holding colors, is a trap
      worth avoiding.
 
      Defined here so they are available to the whole app, but currently
      applied only to the activity builder's own chrome. The module's surfaces
      deliberately speak a different language — 2px borders and a 4px frame in
-     the backdrop's solved colour — and this system is not meant to overwrite
+     the backdrop's solved color — and this system is not meant to overwrite
      that. */
   --surface-panel:   #FFFFFF;
   --surface-nested:  #F7F9FA;

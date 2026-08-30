@@ -284,8 +284,8 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
    an ambient wash of the same hue behind everything. Stroke + pattern + wash
    together are what make the full backdrop.
 
-   The hsl() calls are written out here rather than composed into a colour on
-   :root. A colour composed on :root has its var() substituted there, so the
+   The hsl() calls are written out here rather than composed into a color on
+   :root. A color composed on :root has its var() substituted there, so the
    per-pattern hue set on this element would never reach it — the whole thing
    would silently stay sage. */
 /* The gutter comes from width, not from auto margins. Once the viewport is
@@ -451,9 +451,9 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   /* Painted through the file's alpha rather than shown as-is. The ten source
      files were drawn separately and their inks range 14-95% saturation and
      32.8-60.8 luminance, so some screens' accents read nearly twice as heavy
-     as others'; taking the colour from the solved backdrop palette instead
+     as others'; taking the color from the solved backdrop palette instead
      lands every one of them at the same weight. It also makes shape and
-     colour independent, which is what the activity builder needs.
+     color independent, which is what the activity builder needs.
      mask-image is set on the element rather than through a variable: a
      relative url() inside a custom property resolves against the stylesheet
      it is substituted into, not the document, so a path written for the page
@@ -472,7 +472,7 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 
 .info-beat .eyebrow { display: block; margin-bottom: var(--space-3); }
 /* The eyebrow was the last thing on a section still painted in the shared
-   teal while everything around it took the backdrop's colour. It swaps to the
+   teal while everything around it took the backdrop's color. It swaps to the
    backdrop's own stroke, which happens to sit at almost exactly the same
    luminance as the teal it replaces (12.6 against 13.0), so only the hue
    moves and the label keeps its weight in the hierarchy. */
@@ -501,7 +501,7 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
   content: ""; flex: none; width: 8px; height: 8px; margin-top: 9px; border-radius: 50%;
   background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
 }
-/* Fills with the same colour the frame stroke is drawn in, so the button, the
+/* Fills with the same color the frame stroke is drawn in, so the button, the
    border and the corner pattern are one tone rather than three shades of the
    backdrop's hue. That's --canvas-bd-*, not --pattern-accent: the accent was
    solved against white for the chip, and sitting it next to the deeper stroke
@@ -531,7 +531,7 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
    label lines up with the content column and the home icon above it. */
 .scenario-back { margin-left: calc(-1 * var(--space-3)); gap: var(--space-1); padding-left: var(--space-3); padding-right: var(--space-3); }
 .scenario-back svg { width: 18px; height: 18px; }
-/* Border and label take this slide's backdrop colour, the same way the info
+/* Border and label take this slide's backdrop color, the same way the info
    beat's CTA does — the frame, the corner pattern, and this chip are one hue.
    --pattern-accent is set on .section-inner from whichever view is active, so
    the chip retints as the reader moves between scenarios. It falls back to the
@@ -567,7 +567,7 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
    the radio and the copy sit inside the padding box and long options wrap
    against a predictable width; the shadow is what lifts the card, the border
    only draws its edge. Transitions name their properties so the resolved
-   correct/wrong states don't cross-fade through the hover colour. */
+   correct/wrong states don't cross-fade through the hover color. */
 .option {
   display: flex; align-items: center; gap: var(--answer-gap);
   width: 100%; text-align: left;
@@ -682,14 +682,14 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
 
 /* No badge on this one — the green panel says "correct" by itself, and a tick
    inside it was saying the same thing twice. The corrective panel keeps its
-   mark: it has to interrupt, and a colour alone is a weaker signal for the
+   mark: it has to interrupt, and a color alone is a weaker signal for the
    one state a reader needs to actually stop and read. */
 .feedback.is-success { background: var(--answer-correct-bg); box-shadow: 0 0 0 var(--border) var(--answer-correct) inset; }
 .feedback.is-success .label { color: var(--answer-correct-label); }
 
 /* The action sat indented under the copy in a neutral grey pill, reading as
    though it belonged to the page rather than to the panel. It now carries the
-   panel's own colour and spans its content width.
+   panel's own color and spans its content width.
    The negative margin backs it out of the icon column: the body is offset by
    the badge plus the gap, so without it the button sat 60px from the panel's
    left edge and 20px from its right — visibly lopsided. */
