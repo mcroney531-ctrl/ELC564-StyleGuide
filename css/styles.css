@@ -85,12 +85,32 @@ a { color: var(--color-teal-600); }
 a.brand { transition: opacity var(--duration-micro) var(--ease-standard); }
 a.brand:hover { opacity: 0.72; }
 a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-radius: var(--radius-sm); }
+/* Two overlapping rounded squares on an ink tile — the white one in front,
+   reading as one thing built from two. Drawn with the mark's own pseudo-
+   elements rather than an inline SVG: the brand appears in four places, and
+   an SVG would have meant four copies to keep in step. This way the shape
+   lives once, in one rule, and takes its colors straight from the tokens.
+   The teal is --color-teal-300 rather than the brighter mint of the
+   reference: it sits at 43.7 luma against that mint's 49.3, so it plays the
+   same role at the same weight while staying inside the app's own secondary
+   family. 7.45:1 against the tile, which a mark needs about 3:1 to hold.
+   Proportions taken off the reference rather than guessed: its squares are
+   about 48% of the tile overlapping by ~41%, so these are 14px on a 32px tile
+   offset by 8, which lands at 44% and 43% and leaves the pair centered with
+   5px clear on every side. */
 .brand-mark {
+  position: relative;
   width: 32px; height: 32px; border-radius: var(--radius-sm);
   background: var(--color-ink-900);
-  display: grid; place-items: center;
-  color: var(--color-white); font: 700 0.8rem var(--font-base);
+  flex: none;
 }
+.brand-mark::before,
+.brand-mark::after {
+  content: ""; position: absolute;
+  width: 14px; height: 14px; border-radius: 4px;
+}
+.brand-mark::before { top: 5px;  left: 5px;  background: var(--color-teal-300); }
+.brand-mark::after  { top: 13px; left: 13px; background: var(--color-white); }
 
 .app-main { position: relative; }
 
