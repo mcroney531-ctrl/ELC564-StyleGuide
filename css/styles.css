@@ -548,11 +548,20 @@ a.brand:focus-visible { outline: none; box-shadow: var(--shadow-focus); border-r
    4.80:1.
    Both rules need the same specificity as .btn-primary:hover, or the hover
    would win on source order and drop the button back to sage. */
-.info-beat .start-cta {
-  margin-top: var(--space-8);
+.info-beat .start-cta { margin-top: var(--space-8); }
+
+/* Both of the module's own primaries take the tint — the info beat's "Start
+   the scenarios" and the completion screen's "Back to overview". They are the
+   two buttons that sit on a themed canvas, and a sage button under a peach
+   frame was the last piece of chrome still ignoring the backdrop.
+   Not the feedback panels' buttons: those are the semantic green and red of
+   the panel they sit in, which is a different job. */
+.info-beat .start-cta,
+.section-complete .actions .btn-primary {
   background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l));
 }
-.info-beat .start-cta:hover {
+.info-beat .start-cta:hover,
+.section-complete .actions .btn-primary:hover {
   background: hsl(var(--canvas-bg-h) var(--canvas-bd-s) var(--canvas-bd-l-hover, var(--canvas-bd-l)));
 }
 
